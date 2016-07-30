@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="30dp"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
+    android:paddingTop="30dp"
+    android:orientation="vertical"
+    android:id="@+id/fragment_login">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log In"
+        android:textSize="30dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login or Create Your New Account"
+        android:textSize="20dp"
+        android:layout_weight="6"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:id="@+id/edt_login_mail"
+        android:textSize="18dp"
+        android:background="@drawable/shape_rounded_white_edit_text"
+        android:hint="Email"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp" />
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:textSize="18dp"
+        android:maxLength="15"
+        android:background="@drawable/shape_rounded_white_edit_text"
+        android:hint="Password"
+        android:id="@+id/edt_login_pwd"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:textSize="20dp"
+        android:textColor="#FFFFFF"
+        android:background = "@drawable/shape_rounded_green_button"
+        android:id="@+id/btn_login_login"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp"
+        android:layout_weight="0.4" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:layout_weight="4">
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Forgot Password?"
+            android:background="#00ff0000"
+            android:textSize="13dp"
+            android:id="@+id/btn_login_forgot_pwd"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="5"
+            android:layout_margin="3dp"
+            android:gravity="center_vertical" />
+
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="|"
+            android:textSize="30dp"
+            android:textColor="#585053"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="Create an Account"
+            android:background="#00ff0000"
+            android:textSize="13dp"
+            android:id="@+id/btn_login_create_account"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="5"
+            android:layout_margin="3dp"
+            android:gravity="center_vertical" />
+
+    </LinearLayout>
+
+</LinearLayout>
