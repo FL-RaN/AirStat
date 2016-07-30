@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AirDataViewPagerFragment"
+    android:id="@+id/lil_air_data_view_pager_root">
+
+    <!--
+        This fragment will be shown as each page for view pager inside fragment_air_data.
+        For more details, see fragment_air_data and AirDataFragment, AirDataViewPagerAdaptor,
+        and AirDataViewPagerFragment.
+    -->
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/lic_air_data_view_pager"/>
+</LinearLayout>

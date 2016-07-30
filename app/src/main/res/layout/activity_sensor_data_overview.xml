@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/lil_sensor_data_overview_root"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="@color/colorThemeDarkGery"
+    tools:context=".SensorDataOverviewActivity">
+
+    <!--
+        This activity is consist of fragment_air_data and fragment_heart_rate_data.
+        For more details, see those fragment layouts and classes.
+    -->
+
+    <fragment
+        android:name="com.qi.airstat.HeartRateDataFragment"
+        android:id="@+id/fm_sensor_data_overview_heart_rate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="5"
+        android:layout_marginBottom="8dp" />
+
+    <fragment
+        android:name="com.qi.airstat.AirDataFragment"
+        android:id="@+id/fm_sensor_data_overview_air_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="3" />
+
+</LinearLayout>

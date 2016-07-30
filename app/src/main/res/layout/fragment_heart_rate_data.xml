@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/rel_heart_rate_data_root"
+    android:padding="8dp"
+    tools:context=".HeartRateDataFragment"
+    android:background="@drawable/shape_rounded_border_root">
+
+    <!--
+        This fragment will show about heart rate sensor data in BPM value with graph.
+    -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/rel_heart_rate_data_bpm"
+        android:background="@drawable/shape_rounded_border_component"
+        android:padding="4dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/rel_heart_rate_data_graph"
+        android:layout_marginBottom="8dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/iv_heart_rate_data_bpm_icon"
+            android:background="@drawable/iv_heart_rate_data_bpm_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_heart_rate_data_bpm_value"
+            android:id="@+id/tv_heart_rate_data_bpm_value"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/colorThemeWhite"
+            android:textSize="42sp"
+            android:textIsSelectable="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tv_heart_rate_data_bpm_unit"
+            android:id="@+id/tv_heart_rate_data_bpm_unit"
+            android:textSize="12sp"
+            android:textColor="@color/colorHeartRed"
+            android:textStyle="bold"
+            android:layout_alignTop="@+id/tv_heart_rate_data_bpm_value"
+            android:layout_toEndOf="@+id/tv_heart_rate_data_bpm_value" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rel_heart_rate_data_bpm"
+        android:id="@+id/rel_heart_rate_data_graph">
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/lic_heart_rate_data_graph"/>
+    </RelativeLayout>
+</RelativeLayout>

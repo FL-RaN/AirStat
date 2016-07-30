@@ -1,0 +1,16 @@
+<resources>
+    <!-- App Title -->
+    <string name="app_name">Air Stat</string>
+
+    <!-- Common String -->
+    <string name="common_label_pm2.5">PM2.5</string>
+    <string name="common_label_co2">CO2</string>
+    <string name="common_label_co">CO</string>
+    <string name="common_label_so2">SO2</string>
+    <string name="common_label_no2">NO2</string>
+    <string name="common_label_o3">O3</string>
+
+    <!-- Heart Rate Data Fragment -->
+    <string name="tv_heart_rate_data_bpm_value">#</string>
+    <string name="tv_heart_rate_data_bpm_unit">BPM</string>
+</resources>

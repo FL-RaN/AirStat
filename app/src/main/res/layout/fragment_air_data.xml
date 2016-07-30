@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".AirDataFragment"
+    android:id="@+id/rel_air_data_root"
+    android:padding="8dp"
+    android:background="@drawable/shape_rounded_border_root">
+
+    <!--
+        This fragment will show air data values gathered from sensors with graph.
+        Also this fragment uses view pager to show graph of each element.
+    -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/lil_air_data_brief"
+        android:layout_marginBottom="8dp">
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lil_air_data_brief"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rounded_border_component"
+                android:padding="4dp"
+                android:layout_margin="2dp"
+                android:id="@+id/lil_air_data_brief_pm2.5">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/common_label_pm2.5"
+                    android:id="@+id/tv_air_data_brief_pm2.5_label"
+                    android:textColor="@color/colorThemeWhite"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|right"
+                    android:id="@+id/lil_air_data_brief_pm2.5_value">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="New Text"
+                        android:id="@+id/tv_air_data_brief_pm2.5_value"
+                        android:textColor="@color/colorThemeWhite"
+                        android:gravity="center_vertical|right"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rounded_border_component"
+                android:padding="4dp"
+                android:layout_margin="2dp"
+                android:id="@+id/lil_air_data_brief_co2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/common_label_co2"
+                    android:id="@+id/tv_air_data_brief_co2_label"
+                    android:textColor="@color/colorThemeWhite"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|right"
+                    android:id="@+id/lil_air_data_brief_co2_value">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="New Text"
+                        android:id="@+id/tv_air_data_brief_co2_value"
+                        android:textColor="@color/colorThemeWhite"
+                        android:gravity="center_vertical|right"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rounded_border_component"
+                android:padding="4dp"
+                android:layout_margin="2dp"
+                android:id="@+id/lil_air_data_brief_co">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/common_label_co"
+                    android:id="@+id/tv_air_data_brief_co_label"
+                    android:textColor="@color/colorThemeWhite"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|right"
+                    android:id="@+id/lil_air_data_brief_co_value">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="New Text"
+                        android:id="@+id/tv_air_data_brief_co_value"
+                        android:textColor="@color/colorThemeWhite"
+                        android:gravity="center_vertical|right"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lil_air_data_brief"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rounded_border_component"
+                android:padding="4dp"
+                android:layout_margin="2dp"
+                android:id="@+id/lil_air_data_brief_no2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/common_label_no2"
+                    android:id="@+id/tv_air_data_brief_no2_label"
+                    android:textColor="@color/colorThemeWhite"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|right"
+                    android:id="@+id/lil_air_data_brief_no2_value">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="New Text"
+                        android:id="@+id/tv_air_data_brief_no2_value"
+                        android:textColor="@color/colorThemeWhite"
+                        android:gravity="center_vertical|right"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rounded_border_component"
+                android:padding="4dp"
+                android:layout_margin="2dp"
+                android:id="@+id/lil_air_data_brief_so2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/common_label_so2"
+                    android:id="@+id/tv_air_data_brief_so2_label"
+                    android:textColor="@color/colorThemeWhite"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|right"
+                    android:id="@+id/lil_air_data_brief_so2_value">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="New Text"
+                        android:id="@+id/tv_air_data_brief_so2_value"
+                        android:textColor="@color/colorThemeWhite"
+                        android:gravity="center_vertical|right"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_rounded_border_component"
+                android:padding="4dp"
+                android:layout_margin="2dp"
+                android:id="@+id/lil_air_data_brief_o3">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/common_label_o3"
+                    android:id="@+id/tv_air_data_brief_o3_label"
+                    android:textColor="@color/colorThemeWhite"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:textSize="16sp" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|right"
+                    android:id="@+id/lil_air_data_brief_o3_value">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="New Text"
+                        android:id="@+id/tv_air_data_brief_o3_value"
+                        android:textColor="@color/colorThemeWhite"
+                        android:gravity="center_vertical|right"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lil_air_data_brief"
+        android:id="@+id/lil_air_data_graph">
+
+        <android.support.v4.view.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/vp_air_data_graph">
+
+        </android.support.v4.view.ViewPager>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/lil_air_data_graph_indicator">
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>
