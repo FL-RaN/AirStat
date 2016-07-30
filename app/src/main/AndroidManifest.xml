@@ -46,5 +46,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </service>
+        <activity android:name=".login.LoginBaseActivity"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
     </application>
 </manifest>
