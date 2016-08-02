@@ -1,7 +1,5 @@
 package com.qi.airstat;
 
-import java.net.HttpURLConnection;
-
 public class Constants {
     private static Constants instance = new Constants();
 
@@ -50,9 +48,24 @@ public class Constants {
     final static public String DATABASE_QUERY_DROP_TABLE_AIR = "DROP TABLE IF EXISTS air";
     final static public String DATABASE_QUERY_DROP_TABLE_HEART_RATE = "DROP TABLE IF EXISTS heart_rate";
 
+
+    final static public int COMMUNICATION_CONNECT_TIMEOUT = 10000;
+    final static public int COMMUNICATION_READ_TIMEOUT = 15000;
+
+    /*
+    Don't know exactly...;;
+     */
+    final static public String COMMUNICATION_MSG_ID = "msgid";
+    final static public String COMMUNICATION_USER_EMAIL = "email";
+    final static public String COMMUNICATION_USER_PASSWORD = "password";
+
+    final static public String COMMUNICATION_LOGIN_REQUEST = "1";
+
     private Constants() { /* DO NOTHING */ }
 
     public static Constants getInstance() {
         return instance;
     }
+
+
 }
