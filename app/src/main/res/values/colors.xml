@@ -12,4 +12,5 @@
     <color name="colorThemeWhite">#FFFFFF</color>
     <drawable name="translucent_background">#b0000000</drawable>
     <drawable name="transparent_background">#00000000</drawable>
+    <drawable name="theme_background">#6b6b6b</drawable>
 </resources>
