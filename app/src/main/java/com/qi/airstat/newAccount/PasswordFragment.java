@@ -1,5 +1,6 @@
 package com.qi.airstat.newAccount;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.qi.airstat.R;
 
@@ -19,6 +21,9 @@ import com.qi.airstat.R;
 public class PasswordFragment extends Fragment {
 
     private NewAccountUi newAccountUi = NewAccountUi.getInstance();
+
+    private String passwordInput;
+    private String confirmPassword;
 
     public static PasswordFragment create() {
         PasswordFragment fragment = new PasswordFragment();
@@ -48,9 +53,23 @@ public class PasswordFragment extends Fragment {
         newAccountUi.btnPasswordFinish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*NOT YET :D*/
+                if (!passwordInput.equals(confirmPassword)) {
+                    makeToast("Please check your password");
+                    return;
+                }
+                /*
+                Communication part HERE
+                 */
+                new NewAccountCommunication(getContext(), newAccountUi, NewAccountActivity.instance.getSupportFragmentManager());
+                /*
+                WAIT before connection success
+                 */
             }
         });
+    }
+
+    private void makeToast(String msg) {
+        Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
     }
 
     private class ButtonStateChanger implements TextWatcher {
@@ -61,17 +80,17 @@ public class PasswordFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            int passwordInputSize = newAccountUi.edtPassword.getText().toString().trim().length();
-            int comfirmInputSize = newAccountUi.edtConfirmPassword.getText().toString().trim().length();
-            if (passwordInputSize <= 0 || comfirmInputSize <= 0 || comparePassword()) {
+            passwordInput = newAccountUi.edtPassword.getText().toString().trim();
+            confirmPassword = newAccountUi.edtConfirmPassword.getText().toString().trim();
+            int passwordInputSize = passwordInput.length();
+            int comfirmInputSize = confirmPassword.length();
+            if (passwordInputSize <= 0 || comfirmInputSize <= 0) {
+                newAccountUi.btnPasswordFinish.setTextColor(Color.parseColor(newAccountUi.disabledButtonColor));
                 newAccountUi.btnPasswordFinish.setEnabled(false);
             } else {
+                newAccountUi.btnPasswordFinish.setTextColor(Color.parseColor(newAccountUi.enabledButtonColor));
                 newAccountUi.btnPasswordFinish.setEnabled(true);
             }
-        }
-
-        private boolean comparePassword() {
-            return !newAccountUi.edtPassword.getText().equals(newAccountUi.edtConfirmPassword.getText());
         }
 
         @Override

@@ -19,6 +19,7 @@ public class NewAccountPagerAdapter extends FragmentStatePagerAdapter {
         super(fm);
 
         creatingAccountFragments = new ArrayList<>();
+        creatingAccountFragments.add(WelcomeFragment.create());
         creatingAccountFragments.add(NameFragment.create());
         creatingAccountFragments.add(EmailFragment.create());
         creatingAccountFragments.add(PasswordFragment.create());

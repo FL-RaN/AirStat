@@ -13,12 +13,16 @@ import com.qi.airstat.R;
  * Created by JUMPSNACK on 8/1/2016.
  */
 public class NewAccountActivity extends FragmentActivity {
+    public static NewAccountActivity instance;
+
     ViewPager createAccountPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_account);
+
+        instance = NewAccountActivity.this;
 
         createAccountPager = (ViewPager) findViewById(R.id.vp_new_account_container);
         createAccountPager.setAdapter(new NewAccountPagerAdapter(this.getSupportFragmentManager()));

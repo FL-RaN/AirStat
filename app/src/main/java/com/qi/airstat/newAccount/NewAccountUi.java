@@ -14,9 +14,14 @@ public class NewAccountUi {
     static EditText edtEmail;
     static EditText edtPassword;
     static EditText edtConfirmPassword;
+    static Button btnWelcomeGetStart;
     static Button btnNameNext;
     static Button btnEmailNext;
     static Button btnPasswordFinish;
+
+    static String disabledButtonColor = "#C1C1C1";
+    static String enabledButtonColor = "#009688";
+//    static String enabledButtonColor = "#157FFE";
 
     private NewAccountUi() {
     }

@@ -49,17 +49,30 @@ public class Constants {
     final static public String DATABASE_QUERY_DROP_TABLE_HEART_RATE = "DROP TABLE IF EXISTS heart_rate";
 
 
-    final static public int COMMUNICATION_CONNECT_TIMEOUT = 10000;
-    final static public int COMMUNICATION_READ_TIMEOUT = 15000;
+    final static public int HTTP_CONNECT_TIMEOUT = 10000;
+    final static public int HTTP_READ_TIMEOUT = 15000;
 
     /*
     Don't know exactly...;;
      */
-    final static public String COMMUNICATION_MSG_ID = "msgid";
-    final static public String COMMUNICATION_USER_EMAIL = "email";
-    final static public String COMMUNICATION_USER_PASSWORD = "password";
+    final static public String HTTP_STR_URL = "http://";
+    
+    final static public String HTTP_MSG_ID = "msgid";
+    
+    final static public String HTTP_REQUEST_LOGIN = "1";
+    final static public String HTTP_DATA_LOGIN_EMAIL = "email";
+    final static public String HTTP_DATA_LOGIN_PASSWORD = "password";
+    
+    final static public String HTTP_REQUEST_FORGOT_PASSWORD = "2";
+    final static public String HTTP_DATA_FORGOT_PASSWORD_EMAIL = "email";
 
-    final static public String COMMUNICATION_LOGIN_REQUEST = "1";
+    final static public String HTTP_REQUEST_CREATE_NEW_ACCOUNT = "3";
+    final static public String HTTP_DATA_CREATE_NEW_ACCOUNT_FIRST_NAME = "firstname";
+    final static public String HTTP_DATA_CREATE_NEW_ACCOUNT_LAST_NAME = "lastname";
+    final static public String HTTP_DATA_CREATE_NEW_ACCOUNT_EMAIL = "email";
+    final static public String HTTP_DATA_CREATE_NEW_ACCOUNT_PASSWORD = "password";
+    
+    
 
     private Constants() { /* DO NOTHING */ }
 

@@ -1,10 +1,12 @@
 package com.qi.airstat.newAccount;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,7 @@ import com.qi.airstat.R;
 public class EmailFragment extends Fragment {
 
     private NewAccountUi newAccountUi = NewAccountUi.getInstance();
+    private String email;
 
     public static EmailFragment create() {
         EmailFragment fragment = new EmailFragment();
@@ -44,7 +47,7 @@ public class EmailFragment extends Fragment {
         newAccountUi.btnEmailNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((NewAccountActivity) getActivity()).setCurrentPagerItem(2);
+                ((NewAccountActivity) getActivity()).setCurrentPagerItem(3);
             }
         });
     }
@@ -57,10 +60,13 @@ public class EmailFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            int emailInputSize = newAccountUi.edtEmail.getText().toString().trim().length();
-            if (emailInputSize <= 0) {
+            email = newAccountUi.edtEmail.getText().toString().trim();
+            int emailInputSize = email.length();
+            if (emailInputSize <= 0 || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                newAccountUi.btnEmailNext.setTextColor(Color.parseColor(newAccountUi.disabledButtonColor));
                 newAccountUi.btnEmailNext.setEnabled(false);
             } else {
+                newAccountUi.btnEmailNext.setTextColor(Color.parseColor(newAccountUi.enabledButtonColor));
                 newAccountUi.btnEmailNext.setEnabled(true);
             }
         }

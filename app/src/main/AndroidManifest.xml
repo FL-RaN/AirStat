@@ -48,8 +48,7 @@
         </service>
         <activity android:name=".login.LoginBaseActivity"
             android:theme="@style/Theme.AppCompat.Translucent"/>
-        <activity android:name=".forgotPassword.ForgotPasswordActivity"
-            android:theme="@style/Theme.AppCompat.Translucent"/>
+        <activity android:name=".forgotPassword.ForgotPasswordActivity"/>
         <activity android:name=".newAccount.NewAccountActivity"/>
     </application>
 </manifest>

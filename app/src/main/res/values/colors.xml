@@ -10,6 +10,7 @@
     <color name="colorThemeDarkGery">#1F1F1F</color>
     <color name="colorThemeBlack">#000000</color>
     <color name="colorThemeWhite">#FFFFFF</color>
+    <color name="colorIOSThemeBlueFont">#157FFE</color>
     <drawable name="translucent_background">#b0000000</drawable>
     <drawable name="transparent_background">#00000000</drawable>
     <drawable name="theme_background">#6b6b6b</drawable>

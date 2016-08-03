@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.qi.airstat.R;
+import com.qi.airstat.forgotPassword.ForgotPasswordActivity;
 import com.qi.airstat.newAccount.NewAccountActivity;
 
 /**
@@ -56,7 +57,7 @@ public class LoginAdapter {
         loginUi.btnForgotPwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                activity.startActivity(new Intent(activity.getApplicationContext(), ForgotPasswordActivity.class));
+                activity.startActivity(new Intent(activity.getApplicationContext(), ForgotPasswordActivity.class));
             }
         });
     }

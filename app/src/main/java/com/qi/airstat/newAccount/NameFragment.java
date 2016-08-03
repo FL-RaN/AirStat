@@ -1,5 +1,6 @@
 package com.qi.airstat.newAccount;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -48,7 +49,7 @@ public class NameFragment extends Fragment {
         newAccountUi.btnNameNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((NewAccountActivity) getActivity()).setCurrentPagerItem(1);
+                ((NewAccountActivity) getActivity()).setCurrentPagerItem(2);
             }
         });
     }
@@ -64,8 +65,10 @@ public class NameFragment extends Fragment {
             int firstNameInputSize = newAccountUi.edtFirstName.getText().toString().trim().length();
             int lastNameInputSize = newAccountUi.edtLastName.getText().toString().trim().length();
             if (firstNameInputSize <= 0 || lastNameInputSize <= 0) {
+                newAccountUi.btnNameNext.setTextColor(Color.parseColor(newAccountUi.disabledButtonColor));
                 newAccountUi.btnNameNext.setEnabled(false);
             } else {
+                newAccountUi.btnNameNext.setTextColor(Color.parseColor(newAccountUi.enabledButtonColor));
                 newAccountUi.btnNameNext.setEnabled(true);
             }
         }
