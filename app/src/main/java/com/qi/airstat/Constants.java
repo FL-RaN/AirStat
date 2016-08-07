@@ -55,24 +55,41 @@ public class Constants {
     /*
     Don't know exactly...;;
      */
-    final static public String HTTP_STR_URL = "http://";
+    final static public String HTTP_STR_URL_LOGIN = "http://teamc-iot.calit2.net/IOT/public/Login";
+//    final static public String HTTP_STR_URL_LOGIN = "http://teama-iot.calit2.net/slim/recieveData.php/rcvJSON";
+    final static public String HTTP_STR_URL_CREATE_NEW_ACCOUNT = "http://teamc-iot.calit2.net/IOT/public/reg";
+    final static public String HTTP_STR_URL_FORGOT_PASSWORD = "http://teamc-iot.calit2.net/IOT/public/ResetPwd";
+
+    final static public String HTTP_STR_URL_TEST = "http://teamc-iot.calit2.net/IOT/public/rcv_json_data";
     
     final static public String HTTP_MSG_ID = "msgid";
     
     final static public String HTTP_REQUEST_LOGIN = "1";
     final static public String HTTP_DATA_LOGIN_EMAIL = "email";
-    final static public String HTTP_DATA_LOGIN_PASSWORD = "password";
+    final static public String HTTP_DATA_LOGIN_PASSWORD = "pwd";
     
     final static public String HTTP_REQUEST_FORGOT_PASSWORD = "2";
     final static public String HTTP_DATA_FORGOT_PASSWORD_EMAIL = "email";
 
     final static public String HTTP_REQUEST_CREATE_NEW_ACCOUNT = "3";
-    final static public String HTTP_DATA_CREATE_NEW_ACCOUNT_FIRST_NAME = "firstname";
-    final static public String HTTP_DATA_CREATE_NEW_ACCOUNT_LAST_NAME = "lastname";
+    final static public String HTTP_DATA_CREATE_NEW_ACCOUNT_FIRST_NAME = "fname";
+    final static public String HTTP_DATA_CREATE_NEW_ACCOUNT_LAST_NAME = "lname";
     final static public String HTTP_DATA_CREATE_NEW_ACCOUNT_EMAIL = "email";
     final static public String HTTP_DATA_CREATE_NEW_ACCOUNT_PASSWORD = "password";
     
-    
+
+    /*
+    GoogleMap
+     */
+    final static public String AQI_LEVEL_DEFAULT = "#6d6d6d";
+    final static public String AQI_LEVEL_GOOD = "#009865";
+    final static public String AQI_LEVEL_MODERATE = "#fede33";
+    final static public String AQI_LEVEL_SENSITIVE = "#ff9934";
+    final static public String AQI_LEVEL_UNHEALTHY = "#cc0033";
+    final static public String AQI_LEVEL_VERY_UNHEALTHY = "#670099";
+    final static public String AQI_LEVEL_HAZARDOUS = "#7e0123";
+
+
 
     private Constants() { /* DO NOTHING */ }
 
