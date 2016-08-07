@@ -4,13 +4,14 @@ import android.content.Context;
 
 import com.qi.airstat.Constants;
 import com.qi.airstat.HttpService;
+import com.qi.airstat.iHttpConnection;
 
 import java.util.ArrayList;
 
 /**
  * Created by JUMPSNACK on 8/1/2016.
  */
-public class LoginCommunication {
+public class LoginCommunication implements iHttpConnection {
     /*
     Widget Instance
      */
@@ -25,6 +26,9 @@ public class LoginCommunication {
 
     private String email;
     private String password;
+    private String receivedData;
+
+    ArrayList<String> params;
 
     /*
     Constructor
@@ -36,15 +40,16 @@ public class LoginCommunication {
         email = loginUi.edtEmail.getText().toString().trim();
         password = loginUi.edtPassword.getText().toString().trim();
 
-        ArrayList<String> params = new ArrayList<>();
-        params.add(Constants.HTTP_MSG_ID);
-        params.add(Constants.HTTP_REQUEST_LOGIN);
+        params = new ArrayList<>();
         params.add(Constants.HTTP_DATA_LOGIN_EMAIL);
         params.add(email);
         params.add(Constants.HTTP_DATA_LOGIN_PASSWORD);
         params.add(password);
 
+    }
+
+    public String executeHttpConn(){
         httpService = new HttpService();
-        httpService.excuteConn(context, params, null, null);
+        return receivedData = httpService.executeConn(context, Constants.HTTP_STR_URL_LOGIN, params, null, null);
     }
 }

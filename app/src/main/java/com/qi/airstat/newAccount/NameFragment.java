@@ -49,7 +49,7 @@ public class NameFragment extends Fragment {
         newAccountUi.btnNameNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((NewAccountActivity) getActivity()).setCurrentPagerItem(2);
+                ((NewAccountActivity) getActivity()).setCurrentPagerItem(2);//상수화
             }
         });
     }

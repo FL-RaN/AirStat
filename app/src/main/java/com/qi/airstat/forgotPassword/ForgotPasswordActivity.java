@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.qi.airstat.R;
+import com.qi.airstat.iHttpConnection;
 
 /**
  * Created by JUMPSNACK on 8/1/2016.
@@ -23,7 +24,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     public static Activity instance;
     public static FragmentManager fragmentManager;
-    private ForgotPasswordCommunication forgotPasswordCommunication;
+    private iHttpConnection forgotPasswordCommunication;
     private ForgotPasswordUi forgotPasswordUi;
 
     private String email;
@@ -58,6 +59,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 Communication Part HERE
                  */
                 forgotPasswordCommunication = new ForgotPasswordCommunication(context, forgotPasswordUi);
+                String receivedDataa = forgotPasswordCommunication.executeHttpConn();
+
+                /*
+                POST Process HERE
+                 */
+                new ForgotPasswordDialog().show(ForgotPasswordActivity.fragmentManager, "");
             }
         });
     }

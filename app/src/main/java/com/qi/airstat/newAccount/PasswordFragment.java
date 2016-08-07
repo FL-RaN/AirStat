@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.qi.airstat.R;
+import com.qi.airstat.iHttpConnection;
 
 /**
  * Created by JUMPSNACK on 8/1/2016.
@@ -24,6 +25,8 @@ public class PasswordFragment extends Fragment {
 
     private String passwordInput;
     private String confirmPassword;
+
+    private iHttpConnection newAccountCommunication;
 
     public static PasswordFragment create() {
         PasswordFragment fragment = new PasswordFragment();
@@ -60,9 +63,11 @@ public class PasswordFragment extends Fragment {
                 /*
                 Communication part HERE
                  */
-                new NewAccountCommunication(getContext(), newAccountUi, NewAccountActivity.instance.getSupportFragmentManager());
+                newAccountCommunication = new NewAccountCommunication(getContext(), newAccountUi, NewAccountActivity.fragmentManager);
+                String receivedData = newAccountCommunication.executeHttpConn();
+
                 /*
-                WAIT before connection success
+                POST Process HERE
                  */
             }
         });

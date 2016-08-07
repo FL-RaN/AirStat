@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.qi.airstat.R;
 import com.qi.airstat.forgotPassword.ForgotPasswordActivity;
+import com.qi.airstat.iHttpConnection;
 import com.qi.airstat.newAccount.NewAccountActivity;
 
 /**
@@ -19,7 +20,7 @@ public class LoginAdapter {
     private View view;
     private Activity activity;
     private LoginUi loginUi;
-    private LoginCommunication loginCommunication;
+    private iHttpConnection loginCommunication;
 
     public LoginAdapter(View view, Activity activity) {
         this.view = view;
@@ -41,9 +42,26 @@ public class LoginAdapter {
     private void setEvent(final LoginUi loginUi) {
         loginUi.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                if (checkFormat(loginUi))
+            public void onClick(final View view) {
+                view.setEnabled(false);
+                if (checkFormat(loginUi)) {
                     loginCommunication = new LoginCommunication(view.getContext(), loginUi);
+                    String receivedData = loginCommunication.executeHttpConn();
+                    /*
+                    POST Process HERE
+                    */
+
+//                    switch (receivedData.charAt(10)) {
+//                        case '0':
+//                            makeToast("Verification Failed");
+//                            break;
+//                        case '1':
+//                            makeToast("Welcome! verified");
+//                            break;
+//                    }
+
+                }
+                view.setEnabled(true); //Temporary setting
             }
         });
 

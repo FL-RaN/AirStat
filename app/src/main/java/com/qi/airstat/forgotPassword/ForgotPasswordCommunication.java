@@ -5,13 +5,14 @@ import android.support.v4.app.DialogFragment;
 
 import com.qi.airstat.Constants;
 import com.qi.airstat.HttpService;
+import com.qi.airstat.iHttpConnection;
 
 import java.util.ArrayList;
 
 /**
  * Created by JUMPSNACK on 8/2/2016.
  */
-public class ForgotPasswordCommunication {
+public class ForgotPasswordCommunication implements iHttpConnection {
 
     private static DialogFragment dialogFragment;
     private HttpService httpService;
@@ -21,19 +22,23 @@ public class ForgotPasswordCommunication {
 
     private String email;
 
+    ArrayList<String> params;
+
     public ForgotPasswordCommunication(Context context, ForgotPasswordUi forgotPasswordUi) {
         this.context = context;
         this.forgotPasswordUi = forgotPasswordUi;
         this.dialogFragment = new ForgotPasswordDialog();
         this.email = forgotPasswordUi.edtEmail.getText().toString().trim();
 
-        ArrayList<String> params = new ArrayList<>();
-        params.add(Constants.HTTP_MSG_ID);
-        params.add(Constants.HTTP_REQUEST_FORGOT_PASSWORD);
+        params = new ArrayList<>();
         params.add(Constants.HTTP_DATA_FORGOT_PASSWORD_EMAIL);
         params.add(email);
+    }
 
+    @Override
+    public String executeHttpConn() {
         httpService = new HttpService();
-        httpService.excuteConn(context, params, dialogFragment, ForgotPasswordActivity.fragmentManager);
+//        return httpService.executeConn(context, Constants.HTTP_STR_URL_FORGOT_PASSWORD, params, dialogFragment, ForgotPasswordActivity.fragmentManager);
+        return httpService.executeConn(context, Constants.HTTP_STR_URL_TEST, params, dialogFragment, ForgotPasswordActivity.fragmentManager);
     }
 }
