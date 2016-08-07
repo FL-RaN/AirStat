@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/slider_data_map_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    sothree:umanoPanelHeight="68dp"
+    sothree:umanoParallaxOffset="100dp"
+    sothree:umanoDragView="@+id/dragView"
+    sothree:umanoOverlay="false"
+    sothree:umanoScrollableView="@+id/main"
+    android:gravity="bottom">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="20dp"
+        android:orientation="vertical">
+
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.google.android.gms.maps.MapFragment"
+            android:id="@+id/fragment_data_map"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="18">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="2">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/textView5"
+                    android:layout_weight="10"
+                    android:background="#6d6d6d"
+                    android:text=" " />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="15">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="10">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="#009865"
+                            android:id="@+id/button"
+                            android:layout_weight="1"
+                            android:textColor="#ffffff" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/AQI_MODERATE"
+                            android:id="@+id/button2"
+                            android:layout_weight="1"
+                            android:textColor="#ffffff" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/AQI_SENSITIVE"
+                            android:id="@+id/button3"
+                            android:layout_weight="1"
+                            android:textColor="#ffffff" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/AQI_UNHEALTHY"
+                            android:id="@+id/button4"
+                            android:layout_weight="1"
+                            android:textColor="#ffffff" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/AQI_VERY_UNHEALTHY"
+                            android:id="@+id/button5"
+                            android:layout_weight="1"
+                            android:textColor="#ffffff" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/AQI_HAZARDOUS"
+                            android:id="@+id/button6"
+                            android:layout_weight="1"
+                            android:textColor="#ffffff" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="7" >
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/textView7"
+                            android:layout_weight="1"
+                            android:text=" "
+                            android:gravity="left|bottom|center" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/textView8"
+                            android:layout_weight="1"
+                            android:text=" "
+                            android:gravity="bottom|center|right" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/textView6"
+                    android:layout_weight="10"
+                    android:background="#6d6d6d"
+                    android:text=" " />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/textView10"
+                    android:layout_weight="1"
+                    android:text="0"
+                    android:gravity="left|bottom|center" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/textView4"
+                    android:layout_weight="1"
+                    android:text="500"
+                    android:gravity="bottom|center|right" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:id="@+id/slider_data_map_panel"
+       android:orientation="vertical"
+       android:layout_weight="50">
+<!--FROM HERE-->
+
+       <LinearLayout
+           android:orientation="horizontal"
+           android:layout_width="match_parent"
+           android:background="@drawable/transparent_background"
+           android:id="@+id/bar_data_map_title"
+           android:layout_height="match_parent"
+           android:layout_weight="8"
+           android:padding="10dp">
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text=""
+               android:textSize="18sp"
+               android:id="@+id/tv_data_map_title"
+               android:layout_weight="1"
+               android:layout_gravity="left" />
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text=""
+               android:id="@+id/tv_data_map_grade"
+               android:textSize="20sp"
+               android:textColor="#ffffff"
+               android:textStyle="bold"
+               android:layout_weight="1"
+               android:gravity="bottom|right" />
+       </LinearLayout>
+
+       <LinearLayout
+           android:orientation="vertical"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_weight="2">
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:id="@+id/tv_data_map_temp"
+               android:textSize="50sp"
+               android:text="asdf"/>
+
+       </LinearLayout>
+
+       <!--TO HERE-->
+
+   </LinearLayout>
+
+
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
