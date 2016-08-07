@@ -14,4 +14,13 @@
     <drawable name="translucent_background">#b0000000</drawable>
     <drawable name="transparent_background">#00000000</drawable>
     <drawable name="theme_background">#6b6b6b</drawable>
+
+    <drawable name="AQI_GOOD">#009865</drawable>
+    <drawable name="AQI_MODERATE">#fede33</drawable>
+    <drawable name="AQI_SENSITIVE">#ff9932</drawable>
+    <drawable name="AQI_UNHEALTHY">#cc0033</drawable>
+    <drawable name="AQI_VERY_UNHEALTHY">#670099</drawable>
+    <drawable name="AQI_HAZARDOUS">#7e0123</drawable>
+    <drawable name="AQI_DEFAULT">#6d6d6d</drawable>
+
 </resources>
