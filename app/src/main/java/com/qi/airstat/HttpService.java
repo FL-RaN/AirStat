@@ -5,8 +5,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -37,16 +35,16 @@ public class HttpService extends AsyncTask<String, String, String> {
     String strUrl;
     URL url;
 
-    DialogFragment dialogFragment;
-    FragmentManager fragmentManager;
+//    DialogFragment dialogFragment;
+//    FragmentManager fragmentManager;
 
     String receivedData;
 
-    public String executeConn(Context context, String strUrl, ArrayList<String> params, DialogFragment dialogFragment, FragmentManager fragmentManager) {
+    public String executeConn(Context context, String strUrl, ArrayList<String> params) {
         this.context = context;
         this.params = params;
-        this.dialogFragment = dialogFragment;
-        this.fragmentManager = fragmentManager;
+//        this.dialogFragment = dialogFragment;
+//        this.fragmentManager = fragmentManager;
 
         this.pdLoading = new ProgressDialog(context);
 
@@ -244,7 +242,7 @@ public class HttpService extends AsyncTask<String, String, String> {
 //
 //                switch (result.charAt(0)) {
 //                    case '0':
-//                        new NewAccountFailureDialog().show(fragmentManager, "");
+//                        new ewAccountFailureDialog().show(fragmentManager, "");
 //                        break;
 //                    case '1':
 //                        if (dialogFragment != null)

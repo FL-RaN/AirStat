@@ -13,8 +13,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.qi.airstat.ActivityClosingDialog;
+import com.qi.airstat.Constants;
 import com.qi.airstat.R;
 import com.qi.airstat.iHttpConnection;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by JUMPSNACK on 8/1/2016.
@@ -63,14 +68,36 @@ public class PasswordFragment extends Fragment {
                 /*
                 Communication part HERE
                  */
-                newAccountCommunication = new NewAccountCommunication(getContext(), newAccountUi, NewAccountActivity.fragmentManager);
+                newAccountCommunication = new NewAccountCommunication(getContext(), newAccountUi);
                 String receivedData = newAccountCommunication.executeHttpConn();
 
-                /*
-                POST Process HERE
-                 */
+                resultHandler(receivedData);
             }
         });
+    }
+
+    private void resultHandler(String receivedData) {
+        int responseCode = -1;
+        try {
+            JSONObject jObj = new JSONObject(receivedData);
+            responseCode = jObj.getInt(Constants.HTTP_RESPONSE_RESULT);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            makeToast("Sorry, try again later...");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        switch (responseCode) {
+            case Constants.HTTP_RESPONSE_OK:
+                new ActivityClosingDialog("Congraturation!", "Your account is ready to go", NewAccountActivity.instance).show(getFragmentManager(), "");
+                break;
+            case Constants.HTTP_RESPONSE_FAIL:
+                new ActivityClosingDialog("Failed!", "You are already registered :(", NewAccountActivity.instance).show(getFragmentManager(), "");
+                break;
+            default:
+
+        }
     }
 
     private void makeToast(String msg) {

@@ -91,6 +91,10 @@ public class Constants {
     final static public String HTTP_DATA_CREATE_NEW_ACCOUNT_EMAIL = "email";
     final static public String HTTP_DATA_CREATE_NEW_ACCOUNT_PASSWORD = "password";
 
+    final static public String HTTP_RESPONSE_RESULT = "result";
+    final static public int HTTP_RESPONSE_OK = 0;
+    final static public int HTTP_RESPONSE_FAIL = 1;
+
     /*
     GoogleMap
      */

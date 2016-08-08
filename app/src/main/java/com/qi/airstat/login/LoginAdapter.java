@@ -8,10 +8,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.qi.airstat.ActivityClosingDialog;
+import com.qi.airstat.Constants;
 import com.qi.airstat.R;
 import com.qi.airstat.forgotPassword.ForgotPasswordActivity;
 import com.qi.airstat.iHttpConnection;
 import com.qi.airstat.newAccount.NewAccountActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by JUMPSNACK on 7/29/2016.
@@ -47,19 +52,8 @@ public class LoginAdapter {
                 if (checkFormat(loginUi)) {
                     loginCommunication = new LoginCommunication(view.getContext(), loginUi);
                     String receivedData = loginCommunication.executeHttpConn();
-                    /*
-                    POST Process HERE
-                    */
 
-//                    switch (receivedData.charAt(10)) {
-//                        case '0':
-//                            makeToast("Verification Failed");
-//                            break;
-//                        case '1':
-//                            makeToast("Welcome! verified");
-//                            break;
-//                    }
-
+                    resultHandler(receivedData);
                 }
                 view.setEnabled(true); //Temporary setting
             }
@@ -78,6 +72,31 @@ public class LoginAdapter {
                 activity.startActivity(new Intent(activity.getApplicationContext(), ForgotPasswordActivity.class));
             }
         });
+    }
+
+    private void resultHandler(String receivedData) {
+        int responseCode = -1;
+        try {
+            JSONObject jObj = new JSONObject(receivedData);
+            responseCode = jObj.getInt(Constants.HTTP_RESPONSE_RESULT);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            makeToast("Sorry, try again later...");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        switch (responseCode) {
+            case Constants.HTTP_RESPONSE_OK:
+                makeToast("Welcome!");
+                activity.finish();
+                break;
+            case Constants.HTTP_RESPONSE_FAIL:
+                new ActivityClosingDialog("Failed!", "Please check your email or password", null).show(LoginBaseActivity.fragmentManager, "");
+                break;
+            default:
+
+        }
     }
 
     private boolean checkFormat(LoginUi loginUi) {

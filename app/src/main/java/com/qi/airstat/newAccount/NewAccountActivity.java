@@ -3,7 +3,6 @@ package com.qi.airstat.newAccount;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,7 +14,6 @@ import com.qi.airstat.R;
  */
 public class NewAccountActivity extends FragmentActivity {
     public static NewAccountActivity instance;
-    public static FragmentManager fragmentManager;
 
     ViewPager createAccountPager;
 
@@ -25,7 +23,6 @@ public class NewAccountActivity extends FragmentActivity {
         setContentView(R.layout.activity_new_account);
 
         instance = NewAccountActivity.this;
-        fragmentManager = getSupportFragmentManager();
 
         createAccountPager = (ViewPager) findViewById(R.id.vp_new_account_container);
         createAccountPager.setAdapter(new NewAccountPagerAdapter(this.getSupportFragmentManager()));

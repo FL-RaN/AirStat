@@ -1,11 +1,9 @@
 package com.qi.airstat.forgotPassword;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,17 +11,21 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.qi.airstat.ActivityClosingDialog;
+import com.qi.airstat.Constants;
 import com.qi.airstat.R;
 import com.qi.airstat.iHttpConnection;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Created by JUMPSNACK on 8/1/2016.
  */
 public class ForgotPasswordActivity extends AppCompatActivity {
 
-    public static Activity instance;
-    public static FragmentManager fragmentManager;
     private iHttpConnection forgotPasswordCommunication;
     private ForgotPasswordUi forgotPasswordUi;
 
@@ -35,8 +37,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
-        instance = ForgotPasswordActivity.this;
-        fragmentManager = getSupportFragmentManager();
         forgotPasswordUi = new ForgotPasswordUi();
 
         setWidgets();
@@ -59,14 +59,31 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 Communication Part HERE
                  */
                 forgotPasswordCommunication = new ForgotPasswordCommunication(context, forgotPasswordUi);
-                String receivedDataa = forgotPasswordCommunication.executeHttpConn();
+                String receivedData = forgotPasswordCommunication.executeHttpConn();
 
-                /*
-                POST Process HERE
-                 */
-                new ForgotPasswordDialog().show(ForgotPasswordActivity.fragmentManager, "");
+                resultHandler(receivedData);
             }
         });
+    }
+
+    private void resultHandler(String receivedData) {
+        int responseCode = -1;
+        try {
+            JSONObject jObj = new JSONObject(receivedData);
+            responseCode = jObj.getInt(Constants.HTTP_RESPONSE_RESULT);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            makeToast("Sorry, try again later...");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        switch (responseCode) {
+            case Constants.HTTP_RESPONSE_OK:
+                new ActivityClosingDialog("Password Reset Email Sent", "Follow the directions in the email to reset your password", this).show(getSupportFragmentManager(), "");
+                break;
+            default:
+        }
     }
 
     private class ButtonStateChanger implements TextWatcher {
@@ -91,5 +108,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         @Override
         public void afterTextChanged(Editable editable) {
         }
+    }
+
+    private void makeToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 }

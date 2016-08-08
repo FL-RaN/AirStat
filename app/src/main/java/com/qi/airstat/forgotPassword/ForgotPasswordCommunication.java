@@ -18,7 +18,7 @@ public class ForgotPasswordCommunication implements iHttpConnection {
     private HttpService httpService;
 
     private Context context;
-    private ForgotPasswordUi forgotPasswordUi;
+//    private ForgotPasswordUi forgotPasswordUi;
 
     private String email;
 
@@ -26,8 +26,7 @@ public class ForgotPasswordCommunication implements iHttpConnection {
 
     public ForgotPasswordCommunication(Context context, ForgotPasswordUi forgotPasswordUi) {
         this.context = context;
-        this.forgotPasswordUi = forgotPasswordUi;
-        this.dialogFragment = new ForgotPasswordDialog();
+//        this.forgotPasswordUi = forgotPasswordUi;
         this.email = forgotPasswordUi.edtEmail.getText().toString().trim();
 
         params = new ArrayList<>();
@@ -38,7 +37,7 @@ public class ForgotPasswordCommunication implements iHttpConnection {
     @Override
     public String executeHttpConn() {
         httpService = new HttpService();
-//        return httpService.executeConn(context, Constants.HTTP_STR_URL_FORGOT_PASSWORD, params, dialogFragment, ForgotPasswordActivity.fragmentManager);
-        return httpService.executeConn(context, Constants.HTTP_STR_URL_TEST, params, dialogFragment, ForgotPasswordActivity.fragmentManager);
+        return httpService.executeConn(context, Constants.HTTP_STR_URL_FORGOT_PASSWORD, params);
+//        return httpService.executeConn(context, Constants.HTTP_STR_URL_TEST, params, dialogFragment, ForgotPasswordActivity.fragmentManager);
     }
 }
