@@ -64,58 +64,33 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
         int clusterColor = 0;
         if (0 <= avgAqiValue && avgAqiValue <= 50) {
             clusterColor = Color.parseColor(Constants.AQI_LEVEL_GOOD);
-        } else if (51 <= avgAqiValue && avgAqiValue <= 100) {
+        } else if (50 < avgAqiValue && avgAqiValue <= 100) {
             clusterColor = Color.parseColor(Constants.AQI_LEVEL_MODERATE);
-        } else if (101 <= avgAqiValue && avgAqiValue <= 150) {
+        } else if (100 < avgAqiValue && avgAqiValue <= 150) {
             clusterColor = Color.parseColor(Constants.AQI_LEVEL_SENSITIVE);
-        } else if (151 <= avgAqiValue && avgAqiValue <= 200) {
+        } else if (150 < avgAqiValue && avgAqiValue <= 200) {
             clusterColor = Color.parseColor(Constants.AQI_LEVEL_UNHEALTHY);
-        } else if (201 <= avgAqiValue && avgAqiValue <= 300) {
+        } else if (200 < avgAqiValue && avgAqiValue <= 300) {
             clusterColor = Color.parseColor(Constants.AQI_LEVEL_VERY_UNHEALTHY);
-        } else if (301 <= avgAqiValue && avgAqiValue <= 500) {
+        } else if (300 < avgAqiValue && avgAqiValue <= 500) {
             clusterColor = Color.parseColor(Constants.AQI_LEVEL_HAZARDOUS);
         } else {
             clusterColor = Color.parseColor(Constants.AQI_LEVEL_DEFAULT);
         }
-//
-//        if (cluster.getSize() < 10) {
-//            clusterIconGenerator.setContentPadding(100, 20, 0, 0);
-//        }
-//        else {
-//            clusterIconGenerator.setContentPadding(30, 20, 0, 0);
-//        }
 
         Drawable clusterIcon = ResourcesCompat.getDrawable(context.getResources(), R.drawable.cluster_background, null);
         clusterIcon.setColorFilter(clusterColor, PorterDuff.Mode.SRC_ATOP);
 
         clusterIconGenerator.setBackground(clusterIcon);
 
-        Bitmap icon = clusterIconGenerator.makeIcon(String.format("%.1f", avgAqiValue));
+//        Bitmap icon = clusterIconGenerator.makeIcon(String.format("%.1f", avgAqiValue));
+        Bitmap icon = clusterIconGenerator.makeIcon();
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
     }
-
-//    private LayerDrawable makeClusterBackground() {
-//        // Outline color
-//        int clusterOutlineColor = Color.WHITE);
-//
-//        this.mColoredCircleBackground = new ShapeDrawable(new OvalShape());
-//        ShapeDrawable outline = new ShapeDrawable(new OvalShape());
-//        outline.getPaint().setColor(clusterOutlineColor);
-//        LayerDrawable background = new LayerDrawable(
-//                new Drawable[]{outline, this.mColoredCircleBackground});
-//        int strokeWidth = (int) (this.mDensity * 3.0F);
-//        background.setLayerInset(1, strokeWidth, strokeWidth, strokeWidth, strokeWidth);
-//        return background;
-//    }
-
 
     @Override
     protected void onBeforeClusterItemRendered(DataMapMarker item, MarkerOptions markerOptions) {
         super.onBeforeClusterItemRendered(item, markerOptions);
-
-//        if(item.getTitle().equals("test3")){
-//            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-//        } 1
 
         double aqiValue = item.getAqiValue();
         String snippetMsg = "";
@@ -148,20 +123,13 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
         } else {
             tvMarker.setText("");
         }
-//        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.map_maroon));
-//        setMarkerColor(markerOptions, generateMarkerIcon(colorCode));
-
-
-//        tvMarker.setText(item.getTitle());
-//        tvMarker.setTextColor(Color.WHITE);
-//        tvMarker.setBackgroundResource(R.drawable.ic_marker_phone);
 
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(DataMapActivity.context, view)));
         markerOptions.title(item.getTitle());
         markerOptions.snippet(snippetMsg + " (" + String.format("%.1f", item.getAqiValue()) + ")");
     }
 
-    // View를 Bitmap으로 변환
+    // Convert view to bmp
     private Bitmap createDrawableFromView(Context context, View view) {
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -177,83 +145,4 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
 
         return bitmap;
     }
-
-//    private void setMarkerColor(MarkerOptions markerOptions, BitmapDescriptor bitmapDescriptor) {
-////        markerOptions.icon(bitmapDescriptor);
-//        markerOptions.icon(BitmapDescriptorFactory.fromResource(R.drawable.map_maroon));
-//    }
-//
-//
-//    private BitmapDescriptor generateMarkerIcon(String color) {
-//        float[] hsv = new float[3];
-//        Color.colorToHSV(Color.parseColor(color), hsv);
-//        return BitmapDescriptorFactory.defaultMarker(hsv[0]);
-//    }
-//
-
-
-/*Second version
-    private Context context;
-    private IconGenerator mClusterIconGenerator;
-
-    public DataMapClusterRenderer(Context context, GoogleMap map, ClusterManager<DataMapMarker> clusterManager) {
-        super(context, map, clusterManager);
-        this.context = context;
-        mClusterIconGenerator = new IconGenerator(this.context);
-    }
-
-    @Override
-    protected void onBeforeClusterItemRendered(DataMapMarker item, MarkerOptions markerOptions) {
-        BitmapDescriptor markerDescriptor = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA);
-        markerOptions.icon(markerDescriptor);
-    }
-
-    @Override
-    protected void onBeforeClusterRendered(Cluster<DataMapMarker> cluster, MarkerOptions markerOptions) {
-//        final Drawable clusterIcon = getResources().getDrawable(R.drawable.ic_lens_black_24dp);
-//        clusterIcon.setColorFilter(getResources().getColor(android.R.color.holo_orange_light), PorterDuff.Mode.SRC_ATOP);
-//
-//        mClusterIconGenerator.setBackground(clusterIcon);
-
-        if(cluster.getSize() < 10){
-            mClusterIconGenerator.setContentPadding(40,20,0,0);
-        } else {
-            mClusterIconGenerator.setContentPadding(30,20,0,0);
-        }
-
-        Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
-    }*/
-
-
-
-/* First version
-    private Context context;
-    private GoogleMap map;
-    private ClusterManager<DataMapMarker> clusterManager;
-
-    public DataMapClusterRenderer(Context context, GoogleMap map, ClusterManager<DataMapMarker> clusterManager) {
-        super(context, map, clusterManager);
-
-        this.context = context;
-        this.map = map;
-        this.clusterManager = clusterManager;
-
-    }
-
-    @Override
-    protected void onBeforeClusterRendered(Cluster<DataMapMarker> cluster, MarkerOptions markerOptions) {
-        // Main color
-        int clusterColor = context.getResources().getColor(R.color.colorIOSThemeBlueFont);
-
-        int bucket = this.getBucket(cluster);
-        BitmapDescriptor descriptor =  this.mIcons.get(bucket);
-        if(descriptor == null){
-            this.mColoredCircleBackground.getPaint().setColor(clusterColor);
-            descriptor = BitmapDescriptorFactory.fromBitmap(
-                    this.mIconGenerator.makeIcon(this.getClusterText(bucket)));
-            this.mIcons.put(bucket, descriptor);
-        }
-        markerOptions.icon(descriptor);
-    }*/
 }

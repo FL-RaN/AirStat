@@ -6,10 +6,10 @@
     android:id="@+id/slider_data_map_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    sothree:umanoPanelHeight="68dp"
+    sothree:umanoPanelHeight="100dp"
     sothree:umanoParallaxOffset="100dp"
     sothree:umanoDragView="@+id/dragView"
-    sothree:umanoOverlay="false"
+    sothree:umanoOverlay="true"
     sothree:umanoScrollableView="@+id/main"
     android:gravity="bottom">
 
@@ -172,6 +172,7 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:id="@+id/slider_data_map_panel"
+       android:background="#ffffff"
        android:orientation="vertical"
        android:layout_weight="50">
 <!--FROM HERE-->
@@ -179,10 +180,8 @@
        <LinearLayout
            android:orientation="horizontal"
            android:layout_width="match_parent"
-           android:background="@drawable/transparent_background"
            android:id="@+id/bar_data_map_title"
-           android:layout_height="match_parent"
-           android:layout_weight="8"
+           android:layout_height="100dp"
            android:padding="10dp">
 
            <TextView
@@ -210,7 +209,7 @@
            android:orientation="vertical"
            android:layout_width="match_parent"
            android:layout_height="match_parent"
-           android:layout_weight="2">
+           >
 
            <TextView
                android:layout_width="wrap_content"
