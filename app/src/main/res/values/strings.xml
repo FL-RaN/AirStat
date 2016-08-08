@@ -10,7 +10,19 @@
     <string name="common_label_no2">NO2</string>
     <string name="common_label_o3">O3</string>
 
+    <!-- Sensor Data Overview Activity -->
+    <string name="tv_sensor_data_overview_location_disabled_label">LOCATION SERVICE IS NOT ALLOWED</string>
+    <string name="tv_sensor_data_overview_location_disabled_tool_button">ALLOW LOCATION SERVICE</string>
+    <string name="tv_sensor_data_overview_bluetooth_disabled_label">BLUETOOTH IS DISABLED</string>
+    <string name="tv_sensor_data_overview_bluetooth_disabled_tool_button">ENABLE BLUETOOTH</string>
+    <string name="tv_sensor_data_overview_bluetooth_not_supported">BLUETOOTH IS NOT SUPPORTED</string>
+
     <!-- Heart Rate Data Fragment -->
     <string name="tv_heart_rate_data_bpm_value">#</string>
     <string name="tv_heart_rate_data_bpm_unit">BPM</string>
+
+    <!-- Bluetooth Scan Activity -->
+    <string name="activity_bluetooth_scan_select_device">Select device</string>
+    <string name="lv_bluetooth_scan_paired_devices_empty_entry">&lt;New device&gt;</string>
+    <string name="lv_bluetooth_scan_scanned_devices_not_found">Not found</string>
 </resources>

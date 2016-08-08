@@ -22,8 +22,11 @@ public class DatabaseManager extends SQLiteOpenHelper {
     }
 
     public void rebuild() {
-        getReadableDatabase().execSQL(Constants.DATABASE_QUERY_DROP_TABLE_HEART_RATE);
-        getReadableDatabase().execSQL(Constants.DATABASE_QUERY_DROP_TABLE_AIR);
-        onCreate(getReadableDatabase());
+        SQLiteDatabase database = getWritableDatabase();
+        database.execSQL(Constants.DATABASE_QUERY_DROP_TABLE_HEART_RATE);
+        database.execSQL(Constants.DATABASE_QUERY_DROP_TABLE_AIR);
+        database.execSQL(Constants.DATABASE_QUERY_CREATE_AIR_TABLE);
+        database.execSQL(Constants.DATABASE_QUERY_CREATE_HEART_RATE_TABLE);
+        database.close();
     }
 }

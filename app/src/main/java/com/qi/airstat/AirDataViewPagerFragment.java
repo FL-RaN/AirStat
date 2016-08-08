@@ -1,19 +1,30 @@
 package com.qi.airstat;
 
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.data.LineData;
+
 public class AirDataViewPagerFragment extends Fragment {
-    private int currentIndex = 0;
+    public int currentIndex = 0;
+    public LineChart lineChart = null;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_air_data_view_pager, container, false);
+        ViewGroup root = (ViewGroup)inflater.inflate(R.layout.fragment_air_data_view_pager, container, false);
+
+        lineChart = (LineChart)root.findViewById(R.id.lic_air_data_view_pager);
+        if (lineChart.getData() == null) {
+            lineChart.setData(new LineData());
+        }
+
+        return root;
     }
 
     @Override
@@ -39,5 +50,9 @@ public class AirDataViewPagerFragment extends Fragment {
 
     public int getCurrentIndex() {
         return currentIndex;
+    }
+
+    public LineChart getLineChart() {
+        return lineChart;
     }
 }
