@@ -9,6 +9,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -31,7 +33,6 @@ import java.util.Collection;
  * Created by JUMPSNACK on 8/5/2016.
  */
 public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker> {
-
 
     View view;
     ImageView imgMarker;
@@ -89,11 +90,56 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
     }
 
     @Override
+    protected void onClusterItemRendered(DataMapMarker clusterItem, Marker marker) {
+        super.onClusterItemRendered(clusterItem, marker);
+
+        double aqiValue = clusterItem.getAqiValue();
+        String snippetMsg = "";
+
+        Log.w("RenderedITem", clusterItem.getTitle());
+
+        if (0 <= aqiValue && aqiValue <= 50) {
+            imgMarker.setBackgroundResource(R.drawable.marker_good);
+            snippetMsg += "GOOD";
+        } else if (50 < aqiValue && aqiValue <= 100) {
+            imgMarker.setBackgroundResource(R.drawable.marker_moderate);
+            snippetMsg += "MODERATE";
+        } else if (100 < aqiValue && aqiValue <= 150) {
+            imgMarker.setBackgroundResource(R.drawable.marker_sensitive);
+            snippetMsg += "SENSITIVE";
+        } else if (150 < aqiValue && aqiValue <= 200) {
+            imgMarker.setBackgroundResource(R.drawable.marker_unhealthy);
+            snippetMsg += "UNHEALTHY";
+        } else if (200 < aqiValue && aqiValue <= 300) {
+            imgMarker.setBackgroundResource(R.drawable.marker_very_unhealthy);
+            snippetMsg += "VERY UNHEALTHY";
+        } else if (300 < aqiValue && aqiValue <= 500) {
+            imgMarker.setBackgroundResource(R.drawable.marker_hazardous);
+            snippetMsg += "HAZARDOUS";
+        } else {
+            imgMarker.setBackgroundResource(R.drawable.marker_default);
+            snippetMsg += "NO DATA";
+        }
+
+        if (clusterItem.getTitle().equals("ME")) {
+            tvMarker.setText("ME");
+        } else {
+            tvMarker.setText("");
+        }
+
+        marker.setIcon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(DataMapActivity.context, view)));
+        marker.setTitle(clusterItem.getTitle());
+        marker.setSnippet(snippetMsg + " (" + String.format("%.1f", clusterItem.getAqiValue()) + ")");
+    }
+
+    @Override
     protected void onBeforeClusterItemRendered(DataMapMarker item, MarkerOptions markerOptions) {
         super.onBeforeClusterItemRendered(item, markerOptions);
 
         double aqiValue = item.getAqiValue();
         String snippetMsg = "";
+
+        Log.w("BEFORE___RenderedITem", item.getTitle());
 
         if (0 <= aqiValue && aqiValue <= 50) {
             imgMarker.setBackgroundResource(R.drawable.marker_good);

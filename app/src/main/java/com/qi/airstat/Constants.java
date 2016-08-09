@@ -1,5 +1,7 @@
 package com.qi.airstat;
 
+import java.util.regex.Pattern;
+
 public class Constants {
     private static Constants instance = new Constants();
 
@@ -56,7 +58,7 @@ public class Constants {
     final static public String DATABASE_QUERY_CREATE_HEART_RATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + DATABASE_HEART_RATE_TABLE + " ("
                     + DATABASE_COMMON_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + DATABASE_COMMON_COLUMN_TIME_STAMP +" CHAR(12), "
+                    + DATABASE_COMMON_COLUMN_TIME_STAMP + " CHAR(12), "
                     + DATABASE_HEART_RATE_COLUMN_HEART_RATE + " INT" +
                     ")";
 
@@ -78,22 +80,27 @@ public class Constants {
 
     final static public String HTTP_MSG_ID = "msgid";
 
-    final static public String HTTP_REQUEST_LOGIN = "1";
+    final static public int HTTP_REQUEST_LOGIN = 1;
     final static public String HTTP_DATA_LOGIN_EMAIL = "email";
     final static public String HTTP_DATA_LOGIN_PASSWORD = "pwd";
 
-    final static public String HTTP_REQUEST_FORGOT_PASSWORD = "2";
+    final static public int HTTP_REQUEST_FORGOT_PASSWORD = 2;
     final static public String HTTP_DATA_FORGOT_PASSWORD_EMAIL = "email";
 
-    final static public String HTTP_REQUEST_CREATE_NEW_ACCOUNT = "3";
+    final static public int HTTP_REQUEST_CREATE_NEW_ACCOUNT = 3;
     final static public String HTTP_DATA_CREATE_NEW_ACCOUNT_FIRST_NAME = "fname";
     final static public String HTTP_DATA_CREATE_NEW_ACCOUNT_LAST_NAME = "lname";
     final static public String HTTP_DATA_CREATE_NEW_ACCOUNT_EMAIL = "email";
     final static public String HTTP_DATA_CREATE_NEW_ACCOUNT_PASSWORD = "password";
+    final static public String HTTP_DATA_CREATE_NEW_ACCOUNT_CONFIRM_PASSWORD = "cpassword";
+
+    public static final Pattern VALID_PASSWOLD_REGEX_ALPHA_NUM = Pattern.compile("^[a-zA-Z0-9]{6,16}$");
 
     final static public String HTTP_RESPONSE_RESULT = "result";
-    final static public int HTTP_RESPONSE_OK = 0;
-    final static public int HTTP_RESPONSE_FAIL = 1;
+    final static public int HTTP_RESPONSE_RESULT_OK = 0;
+    final static public int HTTP_RESPONSE_RESULT_FAIL = 1;
+
+    static public int UID = -1;
 
     /*
     GoogleMap
@@ -105,6 +112,28 @@ public class Constants {
     final static public String AQI_LEVEL_UNHEALTHY = "#cc0033";
     final static public String AQI_LEVEL_VERY_UNHEALTHY = "#670099";
     final static public String AQI_LEVEL_HAZARDOUS = "#7e0123";
+
+    final static public int HTTP_DATA_MAP_ONGOING_TIME_QUALTUM = 10000;
+
+    final static public String HTTP_STR_URL_ONGOING_SESSION = "http://";
+
+    final static public int HTTP_REQUEST_ONGOING_SESSION = 3000;
+    final static public String HTTP_DATA_MAP_RANGE_MIN_LAT = "minlat";
+    final static public String HTTP_DATA_MAP_RANGE_MAX_LAT = "maxlat";
+    final static public String HTTP_DATA_MAP_RANGE_MIN_LNG = "minlng";
+    final static public String HTTP_DATA_MAP_RANGE_MAX_LNG = "maxlng";
+
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_COUNT = "count";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_DATA = "data";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_CO = "co";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_NO2 = "no2";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_O3 = "o3";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_PM = "pm";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_SO2 = "so2";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_TEMP = "temp";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_LAT = "lat";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_LNG = "lng";
+
 
     private Constants() { /* DO NOTHING */ }
 

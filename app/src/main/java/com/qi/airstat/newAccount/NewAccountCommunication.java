@@ -21,6 +21,7 @@ public class NewAccountCommunication implements iHttpConnection {
     private String lastName;
     private String email;
     private String password;
+    private String cpassword;
 
     ArrayList<String> params;
 
@@ -33,6 +34,8 @@ public class NewAccountCommunication implements iHttpConnection {
         lastName = newAccountUi.edtLastName.getText().toString().trim();
         email = newAccountUi.edtEmail.getText().toString().trim();
         password = newAccountUi.edtPassword.getText().toString().trim();
+        cpassword = newAccountUi.edtConfirmPassword.getText().toString().trim();
+
 
         params = new ArrayList<>();
         params.add(Constants.HTTP_DATA_CREATE_NEW_ACCOUNT_FIRST_NAME);
@@ -43,6 +46,9 @@ public class NewAccountCommunication implements iHttpConnection {
         params.add(email);
         params.add(Constants.HTTP_DATA_CREATE_NEW_ACCOUNT_PASSWORD);
         params.add(password);
+        params.add(Constants.HTTP_DATA_CREATE_NEW_ACCOUNT_CONFIRM_PASSWORD);
+        params.add(cpassword);
+
     }
 
     @Override

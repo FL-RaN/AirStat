@@ -76,8 +76,9 @@ public class LoginAdapter {
 
     private void resultHandler(String receivedData) {
         int responseCode = -1;
+        JSONObject jObj = null;
         try {
-            JSONObject jObj = new JSONObject(receivedData);
+            jObj = new JSONObject(receivedData);
             responseCode = jObj.getInt(Constants.HTTP_RESPONSE_RESULT);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -87,11 +88,20 @@ public class LoginAdapter {
         }
 
         switch (responseCode) {
-            case Constants.HTTP_RESPONSE_OK:
+            case Constants.HTTP_RESPONSE_RESULT_OK:
                 makeToast("Welcome!");
+
+                try {
+                    Constants.UID = jObj.getInt("uid");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    makeToast("Sorry, try again later...");
+                    return ;
+                }
+
                 activity.finish();
                 break;
-            case Constants.HTTP_RESPONSE_FAIL:
+            case Constants.HTTP_RESPONSE_RESULT_FAIL:
                 new ActivityClosingDialog("Failed!", "Please check your email or password", null).show(LoginBaseActivity.fragmentManager, "");
                 break;
             default:

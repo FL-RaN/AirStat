@@ -79,7 +79,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         }
 
         switch (responseCode) {
-            case Constants.HTTP_RESPONSE_OK:
+            case Constants.HTTP_RESPONSE_RESULT_OK:
                 new ActivityClosingDialog("Password Reset Email Sent", "Follow the directions in the email to reset your password", this).show(getSupportFragmentManager(), "");
                 break;
             default:

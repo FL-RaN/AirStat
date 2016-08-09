@@ -21,6 +21,8 @@ import com.qi.airstat.iHttpConnection;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.regex.Matcher;
+
 /**
  * Created by JUMPSNACK on 8/1/2016.
  */
@@ -89,10 +91,10 @@ public class PasswordFragment extends Fragment {
         }
 
         switch (responseCode) {
-            case Constants.HTTP_RESPONSE_OK:
+            case Constants.HTTP_RESPONSE_RESULT_OK:
                 new ActivityClosingDialog("Congraturation!", "Your account is ready to go", NewAccountActivity.instance).show(getFragmentManager(), "");
                 break;
-            case Constants.HTTP_RESPONSE_FAIL:
+            case Constants.HTTP_RESPONSE_RESULT_FAIL:
                 new ActivityClosingDialog("Failed!", "You are already registered :(", NewAccountActivity.instance).show(getFragmentManager(), "");
                 break;
             default:
@@ -116,13 +118,18 @@ public class PasswordFragment extends Fragment {
             confirmPassword = newAccountUi.edtConfirmPassword.getText().toString().trim();
             int passwordInputSize = passwordInput.length();
             int comfirmInputSize = confirmPassword.length();
-            if (passwordInputSize <= 0 || comfirmInputSize <= 0) {
+            if (passwordInputSize <= 0 || comfirmInputSize <= 0 || !pwdFormatChecker(passwordInput) || !pwdFormatChecker(confirmPassword)) {
                 newAccountUi.btnPasswordFinish.setTextColor(Color.parseColor(newAccountUi.disabledButtonColor));
                 newAccountUi.btnPasswordFinish.setEnabled(false);
             } else {
                 newAccountUi.btnPasswordFinish.setTextColor(Color.parseColor(newAccountUi.enabledButtonColor));
                 newAccountUi.btnPasswordFinish.setEnabled(true);
             }
+        }
+
+        private boolean pwdFormatChecker(String password){
+            Matcher matcher = Constants.VALID_PASSWOLD_REGEX_ALPHA_NUM.matcher(password);
+            return matcher.matches();
         }
 
         @Override
