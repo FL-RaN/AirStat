@@ -175,6 +175,7 @@ public class HttpService extends AsyncTask<String, String, String> {
             int responseCode = conn.getResponseCode();
 
             if (responseCode == HttpURLConnection.HTTP_OK) {
+//                Log.w("RESPONSE", ""+HttpURLConnection.HTTP_OK);
                 InputStream inputStream = conn.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
                 StringBuilder result = new StringBuilder();
