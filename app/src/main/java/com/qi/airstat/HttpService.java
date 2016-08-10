@@ -22,6 +22,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by JUMPSNACK on 8/2/2016.
@@ -35,22 +37,19 @@ public class HttpService extends AsyncTask<String, String, String> {
     String strUrl;
     URL url;
 
-//    DialogFragment dialogFragment;
-//    FragmentManager fragmentManager;
-
     String receivedData;
 
     public String executeConn(Context context, String strUrl, ArrayList<String> params) {
         this.context = context;
         this.params = params;
-//        this.dialogFragment = dialogFragment;
-//        this.fragmentManager = fragmentManager;
 
-        this.pdLoading = new ProgressDialog(context);
+        if (context != null)
+            this.pdLoading = new ProgressDialog(context);
 
         this.strUrl = strUrl;
         try {
-            receivedData = this.execute(strUrl).get();
+            Log.w("HTTPSERVICE", "FIRST");
+            receivedData = this.execute(strUrl).get(600, TimeUnit.MILLISECONDS);
             return receivedData;
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -58,16 +57,21 @@ public class HttpService extends AsyncTask<String, String, String> {
         } catch (ExecutionException e) {
             e.printStackTrace();
             return null;
+        } catch (TimeoutException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-
-        pdLoading.setMessage("\tLoading...");
-        pdLoading.setCancelable(false);
-        pdLoading.show();
+        if (context != null) {
+            pdLoading.setMessage("\tLoading...");
+            pdLoading.setCancelable(false);
+            pdLoading.show();
+        }
+        Log.w("HTTPSERVICE", "SECOND");
     }
 
     @Override
@@ -81,7 +85,6 @@ public class HttpService extends AsyncTask<String, String, String> {
             e.printStackTrace();
             return "Exception";
         }
-
         String sendingResult = sendToServer(strings);
         if (sendingResult != null) return sendingResult;
 
@@ -105,6 +108,8 @@ public class HttpService extends AsyncTask<String, String, String> {
             conn.setRequestProperty("Cache-Control", "no-cache");
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("Accept", "application/json");
+
+            Log.w("URL", strUrl);
 
                 /*
                 SetDoInput and setDoOutput method depict handling of both send and receive
@@ -175,7 +180,6 @@ public class HttpService extends AsyncTask<String, String, String> {
             int responseCode = conn.getResponseCode();
 
             if (responseCode == HttpURLConnection.HTTP_OK) {
-//                Log.w("RESPONSE", ""+HttpURLConnection.HTTP_OK);
                 InputStream inputStream = conn.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
                 StringBuilder result = new StringBuilder();
@@ -199,6 +203,7 @@ public class HttpService extends AsyncTask<String, String, String> {
 //                        return strResult; //Temporary setting
 //                }
 
+                Log.w("HTTPSERVICE", "THIRD");
                 return strResult;
             } else {
                 Log.w("RSP CODE", String.valueOf(responseCode));
@@ -217,48 +222,19 @@ public class HttpService extends AsyncTask<String, String, String> {
 
     @Override
     protected void onPostExecute(String result) {
-        pdLoading.dismiss();
+        if (context != null)
+            pdLoading.dismiss();
 
         /* Err CASE*/
         if (result.equalsIgnoreCase("MalformedURLException") || result.equalsIgnoreCase("Exception") || result.equalsIgnoreCase("IOException") || result.equalsIgnoreCase("unsuccessful")) {
             makeToast("Something went wrong. Connection Problem");
         } else { /* Success CASE */
-            Log.w("RCV", receivedData);
-
-            if (strUrl.equals(Constants.HTTP_STR_URL_LOGIN)) {
-//                switch (receivedData.charAt(10)){
-//                    case '0':
-//                        makeToast("Verification Failed"); break;
-//                    case '1':
-//                        makeToast("Welcome! verified");
-//                        if (dialogFragment != null)
-//                            dialogFragment.show(fragmentManager, "");
-//                        break;
-//                }
-            } else if (strUrl.equals(Constants.HTTP_STR_URL_CREATE_NEW_ACCOUNT)) {
-//                if (result.equals("")) {
-//                    makeToast("NULL!");
-//                    return;
-//                }
-//
-//                switch (result.charAt(0)) {
-//                    case '0':
-//                        new ewAccountFailureDialog().show(fragmentManager, "");
-//                        break;
-//                    case '1':
-//                        if (dialogFragment != null)
-//                            dialogFragment.show(fragmentManager, "");
-//                        break;
-//                }
-            } else if (strUrl.equals(Constants.HTTP_STR_URL_FORGOT_PASSWORD)) {
-//                if (dialogFragment != null)
-//                    dialogFragment.show(fragmentManager, "");
-            }
         }
     }
 
     private void makeToast(String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+        if (context != null)
+            Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 }
 
