@@ -46,13 +46,16 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".SensorDataUpdateService">
+        <activity
+            android:name=".BluetoothScanActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/DialogTheme">
             <intent-filter>
-                <action android:name="com.qi.airstat.SensorDataUpdateServicew" />
+                <action android:name="com.qi.airstat.BluetoothScanActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </service>
+        </activity>
 
         <service android:name=".FakeDataTransmitService">
             <intent-filter>
@@ -60,6 +63,10 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+        </service>
+
+        <service android:name=".BluetoothClassicService"
+            android:enabled="true">
         </service>
 
         <activity

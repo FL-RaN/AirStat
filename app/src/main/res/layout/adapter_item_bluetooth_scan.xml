@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/lil_adapter_item_bluetooth_scan"
+    android:background="@drawable/shape_scanner_item_border">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/tv_adapter_item_bluetooth_scan"
+        android:textSize="16sp"
+        android:textColor="#FFFFFF" />
+</LinearLayout>

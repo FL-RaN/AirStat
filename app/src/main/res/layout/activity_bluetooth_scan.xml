@@ -5,42 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.qi.airstat.BluetoothScanActivity"
-    android:background="@color/colorThemeHeavyGrey"
-    android:id="@+id/lil_bluetooth_scan_root">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/tv_bluetooth_scan_paired_devices_label"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp" />
+    android:background="@drawable/shape_rounded_border_root"
+    android:id="@+id/lil_bluetooth_scan_root"
+    android:gravity="center_vertical|center_horizontal"
+    android:padding="4dp">
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/lv_bluetooth_scan_paired_devices"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="1" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/tv_bluetooth_scan_scanned_devices_label"
-        android:textColor="#FFFFFF"
-        android:textSize="24sp" />
+        android:layout_weight="1"
+        android:background="@drawable/shape_rounded_border_component"
+        android:layout_marginBottom="4dp"
+        android:padding="8dp" />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/lv_bluetooth_scan_scanned_devices"
         android:layout_gravity="center_horizontal"
-        android:layout_weight="2" />
+        android:layout_weight="2"
+        android:background="@drawable/shape_rounded_border_component"
+        android:layout_marginBottom="4dp"
+        android:padding="8dp" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Button"
-        android:id="@+id/btn_bluetooth_scan_scan" />
+        android:text="@string/btn_bluetooth_scan_scan"
+        android:id="@+id/btn_bluetooth_scan_scan"
+        android:onClick="onClickScan" />
 </LinearLayout>

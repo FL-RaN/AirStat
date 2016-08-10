@@ -36,7 +36,8 @@
                 android:background="@drawable/shape_rounded_border_component"
                 android:padding="4dp"
                 android:layout_margin="2dp"
-                android:id="@+id/lil_air_data_brief_pm2.5">
+                android:id="@+id/lil_air_data_brief_pm2.5"
+                android:onClick="onClickAirDataItem">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -57,7 +58,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="New Text"
+                        android:text="@string/common_air_initial_value"
                         android:id="@+id/tv_air_data_brief_pm2.5_value"
                         android:textColor="@color/colorThemeWhite"
                         android:gravity="center_vertical|right"
@@ -74,29 +75,30 @@
                 android:background="@drawable/shape_rounded_border_component"
                 android:padding="4dp"
                 android:layout_margin="2dp"
-                android:id="@+id/lil_air_data_brief_co2">
+                android:id="@+id/lil_air_data_brief_temperature"
+                android:onClick="onClickAirDataItem">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/common_label_co2"
-                    android:id="@+id/tv_air_data_brief_co2_label"
+                    android:text="@string/common_label_temperature"
+                    android:id="@+id/tv_air_data_brief_temperature_label"
                     android:textColor="@color/colorThemeWhite"
                     android:gravity="center_vertical|center_horizontal"
-                    android:textSize="16sp" />
+                    android:textSize="15sp" />
 
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical|right"
-                    android:id="@+id/lil_air_data_brief_co2_value">
+                    android:id="@+id/lil_air_data_brief_temperature_value">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="New Text"
-                        android:id="@+id/tv_air_data_brief_co2_value"
+                        android:text="@string/common_air_initial_value"
+                        android:id="@+id/tv_air_data_brief_temperature_value"
                         android:textColor="@color/colorThemeWhite"
                         android:gravity="center_vertical|right"
                         android:textSize="20sp" />
@@ -111,7 +113,8 @@
                 android:background="@drawable/shape_rounded_border_component"
                 android:padding="4dp"
                 android:layout_margin="2dp"
-                android:id="@+id/lil_air_data_brief_co">
+                android:id="@+id/lil_air_data_brief_co"
+                android:onClick="onClickAirDataItem">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -132,7 +135,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="New Text"
+                        android:text="@string/common_air_initial_value"
                         android:id="@+id/tv_air_data_brief_co_value"
                         android:textColor="@color/colorThemeWhite"
                         android:gravity="center_vertical|right"
@@ -157,7 +160,8 @@
                 android:background="@drawable/shape_rounded_border_component"
                 android:padding="4dp"
                 android:layout_margin="2dp"
-                android:id="@+id/lil_air_data_brief_no2">
+                android:id="@+id/lil_air_data_brief_no2"
+                android:onClick="onClickAirDataItem">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -178,7 +182,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="New Text"
+                        android:text="@string/common_air_initial_value"
                         android:id="@+id/tv_air_data_brief_no2_value"
                         android:textColor="@color/colorThemeWhite"
                         android:gravity="center_vertical|right"
@@ -194,7 +198,8 @@
                 android:background="@drawable/shape_rounded_border_component"
                 android:padding="4dp"
                 android:layout_margin="2dp"
-                android:id="@+id/lil_air_data_brief_so2">
+                android:id="@+id/lil_air_data_brief_so2"
+                android:onClick="onClickAirDataItem">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -215,7 +220,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="New Text"
+                        android:text="@string/common_air_initial_value"
                         android:id="@+id/tv_air_data_brief_so2_value"
                         android:textColor="@color/colorThemeWhite"
                         android:gravity="center_vertical|right"
@@ -231,7 +236,8 @@
                 android:background="@drawable/shape_rounded_border_component"
                 android:padding="4dp"
                 android:layout_margin="2dp"
-                android:id="@+id/lil_air_data_brief_o3">
+                android:id="@+id/lil_air_data_brief_o3"
+                android:onClick="onClickAirDataItem">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -252,7 +258,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="New Text"
+                        android:text="@string/common_air_initial_value"
                         android:id="@+id/tv_air_data_brief_o3_value"
                         android:textColor="@color/colorThemeWhite"
                         android:gravity="center_vertical|right"

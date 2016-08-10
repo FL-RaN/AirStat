@@ -75,7 +75,7 @@ public class FakeDataTransmitService extends Service {
                     values.put(Constants.DATABASE_AIR_COLUMN_LAT, 0.0f);
                     values.put(Constants.DATABASE_AIR_COLUMN_LON, 0.0f);
                     values.put(Constants.DATABASE_AIR_COLUMN_CO, (float)Math.random() * 500f);
-                    values.put(Constants.DATABASE_AIR_COLUMN_CO2, (float)Math.random() * 500f);
+                    values.put(Constants.DATABASE_AIR_COLUMN_TEMPERATURE, (float)Math.random() * 38f);
                     values.put(Constants.DATABASE_AIR_COLUMN_SO2, (float)Math.random() * 500f);
                     values.put(Constants.DATABASE_AIR_COLUMN_NO2, (float)Math.random() * 500f);
                     values.put(Constants.DATABASE_AIR_COLUMN_O3, (float)Math.random() * 500f);

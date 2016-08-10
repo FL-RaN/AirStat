@@ -25,7 +25,48 @@ public class Constants {
 
     final static public int LOCATION_PERMISSION_REQUEST = 200;
 
-    final static public String BLUETOOTH_SCAN_ACTIVITY_EXTRA_MAC = "BLUETOOTH_SCAN_ACTIVITY_EXTRA_MAC";
+    final static public int AIR_LABEL_INDEX_PM25 = 0;
+    final static public int AIR_LABEL_INDEX_TEMPERATURE = 1;
+    final static public int AIR_LABEL_INDEX_CO = 2;
+    final static public int AIR_LABEL_INDEX_SO2 = 3;
+    final static public int AIR_LABEL_INDEX_NO2 = 4;
+    final static public int AIR_LABEL_INDEX_O3 = 5;
+
+    // Intent request codes
+    final static public int REQUEST_CONNECT_DEVICE = 1;
+    final static public int REQUEST_ENABLE_BT = 2;
+
+    // Message types sent from the DeviceConnector Handler
+    final static public int MESSAGE_STATE_CHANGE = 1;
+    final static public int MESSAGE_READ = 2;
+    final static public int MESSAGE_WRITE = 3;
+    final static public int MESSAGE_DEVICE_NAME = 4;
+    final static public int MESSAGE_TOAST = 5;
+
+    final static public int STATE_NONE = 0;       // we're doing nothing
+    final static public int STATE_CONNECTING = 1; // now initiating an outgoing connection
+    final static public int STATE_CONNECTED = 2;  // now connected to a remote device
+
+    final static public int BLUETOOTH_SCANNED_TEXT_MAC_OFFSET = 17;
+
+    final static public int SENSOR_REALTIME_RECORD_LIMIT = 60;
+
+    final static public String BLUETOOTH_MESSAGE_STATE_CHANGE = "BLUETOOTH_MESSAGE_STATE_CHANGE";
+    final static public String BLUETOOTH_MESSAGE_STATE_READ = "MESSAGE_READ";
+    final static public String BLUETOOTH_MESSAGE_MESSAGE_WRITE = "BLUETOOTH_MESSAGE_MESSAGE_WRITE";
+    final static public String BLUETOOTH_MESSAGE_MESSAGE_DEVICE_NAME = "BLUETOOTH_MESSAGE_MESSAGE_DEVICE_NAME";
+    final static public String BLUETOOTH_MESSAGE_MESSAGE_TOAST = "BLUETOOTH_MESSAGE_MESSAGE_TOAST";
+
+    final static public String BLUETOOTH_UNKNOWN_DEVICE = "UNKNOWN DEVICE";
+    final static public String BLC_SCAN_RESULT_MAC = "BLC_SCAN_RESULT_MAC";
+    final static public String BLC_SCAN_RESULT_DEV = "BLC_SCAN_RESULT_DEV";
+
+    final static public String AIR_GRAPH_DESCRIPTION_PM25 = "PM2.5";
+    final static public String AIR_GRAPH_DESCRIPTION_TEMPERATURE = "TEMPERATURE";
+    final static public String AIR_GRAPH_DESCRIPTION_CO = "CO";
+    final static public String AIR_GRAPH_DESCRIPTION_SO2 = "SO2";
+    final static public String AIR_GRAPH_DESCRIPTION_NO2 = "NO2";
+    final static public String AIR_GRAPH_DESCRIPTION_O3 = "O3";
 
     final static public String AIR_DATA_VIEW_PAGER_BUNDLE_PAGE_INDEX = "AIR_DATA_VIEW_PAGER_BUNDLE_PAGE_INDEX";
 
@@ -38,7 +79,7 @@ public class Constants {
     final static public String DATABASE_HEART_RATE_COLUMN_HEART_RATE = "SIGNAL";
     final static public String DATABASE_MAP_COLUMN_CID = "CID";
     final static public String DATABASE_AIR_COLUMN_CO = "CO";
-    final static public String DATABASE_AIR_COLUMN_CO2 = "CO2";
+    final static public String DATABASE_AIR_COLUMN_TEMPERATURE = "TEMPERATURE";
     final static public String DATABASE_AIR_COLUMN_SO2 = "SO2";
     final static public String DATABASE_AIR_COLUMN_NO2 = "NO2";
     final static public String DATABASE_AIR_COLUMN_O3 = "O3";
@@ -52,7 +93,7 @@ public class Constants {
                     + DATABASE_AIR_COLUMN_LAT + " REAL, "
                     + DATABASE_AIR_COLUMN_LON + " REAL, "
                     + DATABASE_AIR_COLUMN_CO + " REAL, "
-                    + DATABASE_AIR_COLUMN_CO2 + " REAL, "
+                    + DATABASE_AIR_COLUMN_TEMPERATURE + " REAL, "
                     + DATABASE_AIR_COLUMN_SO2 + " REAL, "
                     + DATABASE_AIR_COLUMN_NO2 + " REAL, "
                     + DATABASE_AIR_COLUMN_O3 + " REAL, "

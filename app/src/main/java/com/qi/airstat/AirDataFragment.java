@@ -30,6 +30,9 @@ public class AirDataFragment extends Fragment {
         pagerAdapter = new AirDataViewPagerAdaptor(getFragmentManager());
         // Attach pager adapter to view pager.
         viewPager.setAdapter(pagerAdapter);
+        // Page limitation is 2 by default
+        // It decides how many pages are going to instantiated.
+        viewPager.setOffscreenPageLimit(Constants.AIR_DATA_VIEW_PAGER_MAX_PAGES);
 
         return root;
     }
