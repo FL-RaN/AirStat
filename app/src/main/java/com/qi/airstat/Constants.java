@@ -1,5 +1,7 @@
 package com.qi.airstat;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 public class Constants {
@@ -105,17 +107,17 @@ public class Constants {
     /*
     GoogleMap
      */
-    final static public String AQI_LEVEL_DEFAULT = "#6d6d6d";
-    final static public String AQI_LEVEL_GOOD = "#009865";
-    final static public String AQI_LEVEL_MODERATE = "#fede33";
-    final static public String AQI_LEVEL_SENSITIVE = "#ff9934";
-    final static public String AQI_LEVEL_UNHEALTHY = "#cc0033";
-    final static public String AQI_LEVEL_VERY_UNHEALTHY = "#670099";
-    final static public String AQI_LEVEL_HAZARDOUS = "#7e0123";
+    final static public String AQI_LEVEL_DEFAULT = "#dd6d6d6d";
+    final static public String AQI_LEVEL_GOOD = "#dd009865";
+    final static public String AQI_LEVEL_MODERATE = "#ddfede33";
+    final static public String AQI_LEVEL_SENSITIVE = "#ddff9934";
+    final static public String AQI_LEVEL_UNHEALTHY = "#ddcc0033";
+    final static public String AQI_LEVEL_VERY_UNHEALTHY = "#dd670099";
+    final static public String AQI_LEVEL_HAZARDOUS = "#dd7e0123";
 
-    final static public int HTTP_DATA_MAP_ONGOING_TIME_QUALTUM = 10000;
+    final static public int HTTP_DATA_MAP_GET_ONGOING_SESSION_TIME_QUALTUM = 1000;
 
-    final static public String HTTP_STR_URL_ONGOING_SESSION = "http://";
+    final static public String HTTP_STR_URL_ONGOING_SESSION = "http://teamc-iot.calit2.net/IOT/public/realtime_json";
 
     final static public int HTTP_REQUEST_ONGOING_SESSION = 3000;
     final static public String HTTP_DATA_MAP_RANGE_MIN_LAT = "minlat";
@@ -123,17 +125,21 @@ public class Constants {
     final static public String HTTP_DATA_MAP_RANGE_MIN_LNG = "minlng";
     final static public String HTTP_DATA_MAP_RANGE_MAX_LNG = "maxlng";
 
-    final static public String HTTP_DATA_MAP_ONGOING_SESSION_COUNT = "count";
-    final static public String HTTP_DATA_MAP_ONGOING_SESSION_DATA = "data";
-    final static public String HTTP_DATA_MAP_ONGOING_SESSION_CO = "co";
-    final static public String HTTP_DATA_MAP_ONGOING_SESSION_NO2 = "no2";
-    final static public String HTTP_DATA_MAP_ONGOING_SESSION_O3 = "o3";
-    final static public String HTTP_DATA_MAP_ONGOING_SESSION_PM = "pm";
-    final static public String HTTP_DATA_MAP_ONGOING_SESSION_SO2 = "so2";
-    final static public String HTTP_DATA_MAP_ONGOING_SESSION_TEMP = "temp";
-    final static public String HTTP_DATA_MAP_ONGOING_SESSION_LAT = "lat";
-    final static public String HTTP_DATA_MAP_ONGOING_SESSION_LNG = "lng";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_CID = "connectionID";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_TIME_STAMP = "timeStamp";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_AIR = "AIR";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_CO = "CO";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_NO2 = "NO2";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_O3 = "O3";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_PM = "PM";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_SO2 = "SO2";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_TEMP = "temperature";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_LAT = "latitude";
+    final static public String HTTP_DATA_MAP_ONGOING_SESSION_LNG = "longitude";
 
+    public static long getSystemTime() {
+        return Long.parseLong(new SimpleDateFormat("yymmddhhmmss").format(new Date()));
+    }
 
     private Constants() { /* DO NOTHING */ }
 
