@@ -12,10 +12,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        startActivity(new Intent(this, DataMapActivity.class));
+        //startActivity(new Intent(this, DataMapActivity.class));
 
-        //startService(new Intent(this, FakeDataTransmitService.class));
-        //startActivity(new Intent(this, SensorDataOverviewActivity.class));
+        startService(new Intent(this, FakeDataTransmitService.class));
+        startActivity(new Intent(this, SensorDataOverviewActivity.class));
         finish();
     }
 }

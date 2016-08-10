@@ -1,12 +1,15 @@
 package com.qi.airstat;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -14,31 +17,37 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.qi.airstat.blc.BluetoothConnector;
+import com.qi.airstat.blc.DeviceData;
 
 public class SensorDataOverviewActivity extends FragmentActivity {
-    static private int graphCountHeartRate = 0;
-    static private int graphCountAir = 0;
+    final private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+    private RelativeLayout locationDisabledLayout = null;
+    private RelativeLayout bluetoothDisabledLayout = null;
+    private RelativeLayout bluetoothUnsupportedLayout = null;
+    private RelativeLayout polarDisabledLayout = null;
+    private RelativeLayout udooDisabledLayout = null;
+    private TextView hrValue = null;
+    // Amount of labels are same as pages inside view pager.
+    private TextView[] airLabels = new TextView[Constants.AIR_DATA_VIEW_PAGER_MAX_PAGES];
+    private LineChart[] airGraphs = new LineChart[Constants.AIR_DATA_VIEW_PAGER_MAX_PAGES];
+    private ViewPager airViewPager = null;
 
     // It'll be binded to the SensorDataUpdateService.
     // So, this messenger can send message to service.
     private Messenger messageTransmitter = null;
 
     private boolean isBinded = false;
-
-    private RelativeLayout locationDisabledLayout = null;
-    private RelativeLayout bluetoothDisabledLayout = null;
-    private RelativeLayout bluetoothUnsupportedLayout = null;
 
     // It'll receive message from SensorDataUpdateService and will behave for each pre-defined message.
     // That is, this messenger will be client for service.
@@ -74,7 +83,7 @@ public class SensorDataOverviewActivity extends FragmentActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case Constants.QUEUED_AIR_DATA:
-                    updateAirData();
+                    updateAirDataGraph();
                     break;
                 case Constants.QUEUED_HEART_RATE_DATA:
                     updateHeartRateData();
@@ -85,18 +94,58 @@ public class SensorDataOverviewActivity extends FragmentActivity {
         }
     }
 
+    private BroadcastReceiver bluetoothBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            switch (action) {
+                case Constants.BLUETOOTH_MESSAGE_MESSAGE_DEVICE_NAME:
+                    break;
+                case Constants.BLUETOOTH_MESSAGE_MESSAGE_TOAST:
+                    break;
+                case Constants.BLUETOOTH_MESSAGE_MESSAGE_WRITE:
+                    break;
+                case Constants.BLUETOOTH_MESSAGE_STATE_READ:
+                    break;
+                case Constants.BLUETOOTH_MESSAGE_STATE_CHANGE:
+                    int state = intent.getIntExtra(Constants.BLUETOOTH_MESSAGE_STATE_CHANGE, Constants.STATE_NONE);
+
+                    if (state == Constants.STATE_CONNECTED) {
+                        udooDisabledLayout.setVisibility(View.GONE);
+                    }
+
+                    String startMessage = "start," + (long)(System.currentTimeMillis() / 1000L);
+                    BluetoothState.getBluetoothConnector().write(startMessage.getBytes());
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+    private BluetoothClassicService BLCService = null;
+    private boolean isBLCServiceBound = false;
+    private ServiceConnection BLCServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            BLCService = ((BluetoothClassicService.LocalBinder) iBinder).getService();
+            isBLCServiceBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            BLCService = null;
+            isBLCServiceBound = false;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensor_data_overview);
 
-        locationDisabledLayout = (RelativeLayout)findViewById(R.id.rel_sensor_data_overview_location_disabled);
-        bluetoothDisabledLayout = (RelativeLayout)findViewById(R.id.rel_sensor_data_overview_bluetooth_disabled);
-        bluetoothUnsupportedLayout = (RelativeLayout)findViewById(R.id.rel_sensor_data_overview_bluetooth_not_supported);
-
-        DatabaseManager databaseManager = new DatabaseManager(this);
-        databaseManager.rebuild();
-        databaseManager.close();
+        initialize();
 
         if (!BluetoothState.isBluetoothSupported(this)) {
             locationDisabledLayout.setVisibility(View.GONE);
@@ -121,11 +170,25 @@ public class SensorDataOverviewActivity extends FragmentActivity {
                 bluetoothDisabledLayout.setVisibility(View.GONE);
             }
         }
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Constants.BLUETOOTH_MESSAGE_MESSAGE_DEVICE_NAME);
+        intentFilter.addAction(Constants.BLUETOOTH_MESSAGE_MESSAGE_TOAST);
+        intentFilter.addAction(Constants.BLUETOOTH_MESSAGE_STATE_CHANGE);
+        intentFilter.addAction(Constants.BLUETOOTH_MESSAGE_STATE_READ);
+        intentFilter.addAction(Constants.BLUETOOTH_MESSAGE_MESSAGE_WRITE);
+        registerReceiver(bluetoothBroadcastReceiver, intentFilter);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+
+        bindService(
+                new Intent(this, BluetoothClassicService.class),
+                BLCServiceConnection,
+                Context.BIND_AUTO_CREATE
+        );
 
         bindService(
                 new Intent(this, FakeDataTransmitService.class),
@@ -137,11 +200,6 @@ public class SensorDataOverviewActivity extends FragmentActivity {
     @Override
     protected void onStop() {
         super.onStop();
-
-        if (isBinded) {
-            unbindService(serviceConnection);
-            isBinded = false;
-        }
     }
 
     @Override
@@ -157,6 +215,18 @@ public class SensorDataOverviewActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        if (isBinded) {
+            unbindService(serviceConnection);
+            isBinded = false;
+        }
+
+        if (isBLCServiceBound) {
+            unbindService(BLCServiceConnection);
+            isBLCServiceBound = false;
+        }
+
+        unregisterReceiver(bluetoothBroadcastReceiver);
     }
 
     @Override
@@ -186,9 +256,49 @@ public class SensorDataOverviewActivity extends FragmentActivity {
                     }
                 }
                 break;
+            case Constants.BLUETOOTH_SCAN_REQEUST:
+                if (resultCode == RESULT_OK) {
+                    String mac = data.getStringExtra(Constants.BLC_SCAN_RESULT_MAC);
+                    //String dev = data.getStringExtra(Constants.BLC_SCAN_RESULT_DEV);
+
+                    BluetoothDevice bluetoothDevice = bluetoothAdapter.getRemoteDevice(mac);
+                    DeviceData deviceData = new DeviceData(bluetoothDevice, "Unknown Device");
+                    BLCService.connect(deviceData);
+                }
+                break;
             default:
                 break;
         }
+    }
+
+    private void initialize() {
+        locationDisabledLayout = (RelativeLayout)findViewById(R.id.rel_sensor_data_overview_location_disabled);
+        bluetoothDisabledLayout = (RelativeLayout)findViewById(R.id.rel_sensor_data_overview_bluetooth_disabled);
+        bluetoothUnsupportedLayout = (RelativeLayout)findViewById(R.id.rel_sensor_data_overview_bluetooth_not_supported);
+        polarDisabledLayout = (RelativeLayout)findViewById(R.id.rel_sensor_data_overview_heart_rate_disabled);
+        udooDisabledLayout = (RelativeLayout)findViewById(R.id.rel_sensor_data_overview_air_data_disabled);
+
+        udooDisabledLayout.setVisibility(View.VISIBLE);
+
+        airViewPager = (ViewPager)findViewById(R.id.vp_air_data_graph);
+        AirDataViewPagerAdaptor adaptor = (AirDataViewPagerAdaptor)airViewPager.getAdapter();
+
+        for (int i = 0; i < Constants.AIR_DATA_VIEW_PAGER_MAX_PAGES; ++i) {
+            airGraphs[i] = ((AirDataViewPagerFragment)adaptor.getItem(i)).graph;
+        }
+
+        hrValue = (TextView)findViewById(R.id.tv_heart_rate_data_bpm_value);
+
+        airLabels[Constants.AIR_LABEL_INDEX_PM25] = (TextView)findViewById(R.id.tv_air_data_brief_pm2_5_value);
+        airLabels[Constants.AIR_LABEL_INDEX_TEMPERATURE] = (TextView)findViewById(R.id.tv_air_data_brief_temperature_value);
+        airLabels[Constants.AIR_LABEL_INDEX_CO] = (TextView)findViewById(R.id.tv_air_data_brief_co_value);
+        airLabels[Constants.AIR_LABEL_INDEX_SO2] = (TextView)findViewById(R.id.tv_air_data_brief_so2_value);
+        airLabels[Constants.AIR_LABEL_INDEX_NO2] = (TextView)findViewById(R.id.tv_air_data_brief_no2_value);
+        airLabels[Constants.AIR_LABEL_INDEX_O3] = (TextView)findViewById(R.id.tv_air_data_brief_o3_value);
+
+        DatabaseManager databaseManager = new DatabaseManager(this);
+        databaseManager.rebuild();
+        databaseManager.close();
     }
 
     private void updateHeartRateData() {
@@ -196,130 +306,111 @@ public class SensorDataOverviewActivity extends FragmentActivity {
         SQLiteDatabase database = databaseManager.getReadableDatabase();
         Cursor cursor = null;
 
+        int signal = 0;
+
         LineChart lineChart = (LineChart)findViewById(R.id.lic_heart_rate_data_graph);
+
         if (lineChart != null) {
-            LineData data = lineChart.getData();
+            LineData lineData = lineChart.getData();
 
-            if (data != null) {
-                ILineDataSet set = data.getDataSetByIndex(0);
-
-                if (set == null) {
-                    set = new LineDataSet(null, "DynChart");
-                    set.setAxisDependency(YAxis.AxisDependency.LEFT);
-                    set.setValueTextColor(ColorTemplate.getHoloBlue());
-                    set.setHighlightEnabled(true);
-                    set.setValueTextColor(Color.WHITE);
-                    set.setValueTextSize(9f);
-                    set.setDrawValues(true);
-                    data.addDataSet(set);
-                }
-
-                if (data.getEntryCount() >= 5) {
-                    database.execSQL("DELETE FROM heart_rate WHERE id IN (SELECT id FROM heart_rate ORDER BY id ASC LIMIT 1)");
-                    data.removeEntry(0, 0);
-                }
-
+            if (lineData != null) {
                 cursor = database.rawQuery("SELECT * FROM heart_rate", null);
-                int lastValue = 0;
 
                 if (cursor != null && cursor.moveToLast()) {
-                    lastValue = cursor.getInt(cursor.getColumnIndex(Constants.DATABASE_HEART_RATE_COLUMN_HEART_RATE));
+                    signal = cursor.getInt(cursor.getColumnIndex(Constants.DATABASE_HEART_RATE_COLUMN_HEART_RATE));
 
                     do {
-                        //Entry newEntry = new Entry(set.getEntryCount(), lastValue);
-                        Entry newEntry = new Entry(graphCountHeartRate++, lastValue);
-                        data.addEntry(newEntry, 0);
+                        if (lineData != null) {
+                            if (lineData.getEntryCount() > Constants.SENSOR_REALTIME_RECORD_LIMIT) {
+                                database.execSQL("DELETE FROM heart_rate WHERE id IN (SELECT id FROM heart_rate ORDER BY id ASC LIMIT 1)");
+                                ILineDataSet set = lineData.getDataSetByIndex(0);
+                                set.removeFirst();
+
+                                for (int j = 0; j < set.getEntryCount(); ++j) {
+                                    Entry entry = set.getEntryForIndex(j);
+                                    entry.setX(entry.getX() - 1);
+                                }
+                            }
+
+                            lineData.addEntry(new Entry(lineData.getEntryCount(), signal), 0);
+                        }
                     } while (cursor.moveToNext());
                 }
 
                 database.close();
 
-                ((TextView) findViewById(R.id.tv_heart_rate_data_bpm_value)).setText("" + lastValue);
+                hrValue.setText(String.valueOf(signal));
 
-                data.notifyDataChanged();
+                lineData.notifyDataChanged();
                 lineChart.notifyDataSetChanged();
                 lineChart.invalidate();
             }
         }
     }
 
-    private void updateAirData() {
+    private void updateAirDataGraph() {
+        LineData[] lineData = new LineData[Constants.AIR_DATA_VIEW_PAGER_MAX_PAGES];
+        float[] data = new float[Constants.AIR_DATA_VIEW_PAGER_MAX_PAGES];
+
+        AirDataViewPagerAdaptor adaptor = (AirDataViewPagerAdaptor)airViewPager.getAdapter();
+
+        for (int i = 0; i < Constants.AIR_DATA_VIEW_PAGER_MAX_PAGES; ++i) {
+            airGraphs[i] = ((AirDataViewPagerFragment)adaptor.getItem(i)).graph;
+        }
+
+        for (int i = 0; i < Constants.AIR_DATA_VIEW_PAGER_MAX_PAGES; ++i) {
+            if (airGraphs[i] != null) {
+                lineData[i] = airGraphs[i].getData();
+            }
+        }
+
         DatabaseManager databaseManager = new DatabaseManager(this);
         SQLiteDatabase database = databaseManager.getReadableDatabase();
         Cursor cursor = null;
 
-            LineChart lineChart = (LineChart)findViewById(R.id.lic_air_data_view_pager);
+        cursor = database.rawQuery("SELECT * FROM air", null);
 
-            if (lineChart != null) {
-                LineData data = lineChart.getData();
+        if (cursor != null && cursor.moveToLast()) {
+            do {
+                data[Constants.AIR_LABEL_INDEX_PM25] = cursor.getFloat(cursor.getColumnIndex(Constants.DATABASE_AIR_COLUMN_PM25));
+                data[Constants.AIR_LABEL_INDEX_TEMPERATURE] = cursor.getFloat(cursor.getColumnIndex(Constants.DATABASE_AIR_COLUMN_TEMPERATURE));
+                data[Constants.AIR_LABEL_INDEX_CO] = cursor.getFloat(cursor.getColumnIndex(Constants.DATABASE_AIR_COLUMN_CO));
+                data[Constants.AIR_LABEL_INDEX_SO2] = cursor.getFloat(cursor.getColumnIndex(Constants.DATABASE_AIR_COLUMN_SO2));
+                data[Constants.AIR_LABEL_INDEX_NO2] = cursor.getFloat(cursor.getColumnIndex(Constants.DATABASE_AIR_COLUMN_NO2));
+                data[Constants.AIR_LABEL_INDEX_O3] = cursor.getFloat(cursor.getColumnIndex(Constants.DATABASE_AIR_COLUMN_O3));
 
-                if (data != null) {
-                    ILineDataSet set = data.getDataSetByIndex(0);
+                for (int i = 0; i < Constants.AIR_DATA_VIEW_PAGER_MAX_PAGES; ++i) {
+                    if (lineData[i] != null) {
+                        if (lineData[i].getEntryCount() > Constants.SENSOR_REALTIME_RECORD_LIMIT) {
+                            database.execSQL("DELETE FROM air WHERE id IN (SELECT id FROM air ORDER BY id ASC LIMIT 1)");
+                            ILineDataSet set = lineData[i].getDataSetByIndex(0);
+                            set.removeFirst();
 
-                    if (set == null) {
-                        set = new LineDataSet(null, "DynChart");
-                        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-                        set.setValueTextColor(ColorTemplate.getHoloBlue());
-                        set.setHighlightEnabled(true);
-                        set.setValueTextColor(Color.WHITE);
-                        set.setValueTextSize(9f);
-                        set.setDrawValues(true);
-                        data.addDataSet(set);
-                    }
-
-                    if (data.getEntryCount() >= 5) {
-                        database.execSQL("DELETE FROM air WHERE id IN (SELECT id FROM air ORDER BY id ASC LIMIT 1)");
-                        data.removeEntry(0, 0);
-                    }
-
-                    cursor = database.rawQuery("SELECT * FROM air", null);
-                    float co2 = 0f, co = 0f, so2 = 0f, no2 = 0f, o3 = 0f, pm25 = 0f;
-
-                    if (cursor != null && cursor.moveToLast()) {
-                        do {
-                            Entry newEntry = null;
-                            co2 = cursor.getFloat(cursor.getColumnIndex(Constants.DATABASE_AIR_COLUMN_CO2));
-                            co = cursor.getFloat(cursor.getColumnIndex(Constants.DATABASE_AIR_COLUMN_CO));
-                            so2 = cursor.getFloat(cursor.getColumnIndex(Constants.DATABASE_AIR_COLUMN_SO2));
-                            no2 = cursor.getFloat(cursor.getColumnIndex(Constants.DATABASE_AIR_COLUMN_NO2));
-                            o3 = cursor.getFloat(cursor.getColumnIndex(Constants.DATABASE_AIR_COLUMN_O3));
-                            pm25 = cursor.getFloat(cursor.getColumnIndex(Constants.DATABASE_AIR_COLUMN_PM25));
-                            switch (0) {
-                                case 0:
-                                    newEntry = new Entry(graphCountHeartRate++, co2);
-                                    break;
-                                case 1:
-                                    newEntry = new Entry(graphCountHeartRate++, co);
-                                    break;
-                                case 2:
-                                    newEntry = new Entry(graphCountHeartRate++, so2);
-                                    break;
-                                case 3:
-                                    newEntry = new Entry(graphCountHeartRate++, no2);
-                                    break;
-                                case 4:
-                                    newEntry = new Entry(graphCountHeartRate++, o3);
-                                    break;
-                                case 5:
-                                    newEntry = new Entry(graphCountHeartRate++, pm25);
-                                    break;
+                            for (int j = 0; j < set.getEntryCount(); ++j) {
+                                Entry entry = set.getEntryForIndex(j);
+                                entry.setX(entry.getX() - 1);
                             }
-                            data.addEntry(newEntry, 0);
-                        } while (cursor.moveToNext());
+                        }
+
+                        lineData[i].addEntry(new Entry(lineData[i].getEntryCount(), data[i]), 0);
                     }
+                }
+            } while(cursor.moveToNext());
+        }
 
-                    database.close();
+        cursor.close();
+        database.close();
 
-                    ((TextView) findViewById(R.id.tv_air_data_brief_co2_value)).setText(String.format("%.2f", co2));
-                    ((TextView) findViewById(R.id.tv_air_data_brief_co_value)).setText(String.format("%.2f", co));
-                    ((TextView) findViewById(R.id.tv_air_data_brief_so2_value)).setText(String.format("%.2f", so2));
-                    ((TextView) findViewById(R.id.tv_air_data_brief_no2_value)).setText(String.format("%.2f", no2));
-                    ((TextView) findViewById(R.id.tv_air_data_brief_o3_value)).setText(String.format("%.2f", o3));
-                    ((TextView) findViewById(R.id.tv_air_data_brief_pm2_5_value)).setText(String.format("%.2f", pm25));
+        for (int i = 0; i < Constants.AIR_DATA_VIEW_PAGER_MAX_PAGES; ++i) {
+            airLabels[i].setText(String.format("%.2f", data[i]));
 
-                    data.notifyDataChanged();
-                    lineChart.notifyDataSetChanged();
-                    lineChart.invalidate();
+            if (lineData[i] != null) {
+                lineData[i].notifyDataChanged();
+            }
+
+            if (airGraphs[i] != null) {
+                airGraphs[i].notifyDataSetChanged();
+                airGraphs[i].invalidate();
             }
         }
     }
@@ -330,5 +421,40 @@ public class SensorDataOverviewActivity extends FragmentActivity {
 
     public void onClickRequestBluetoothPermission(View view) {
         BluetoothState.requestBluetoothPermission(this);
+    }
+
+    public void onClickAirDataItem(View view) {
+        int index = 0;
+
+        switch (view.getId()) {
+            case R.id.lil_air_data_brief_pm2_5:
+                index = Constants.AIR_LABEL_INDEX_PM25;
+                break;
+            case R.id.lil_air_data_brief_temperature:
+                index = Constants.AIR_LABEL_INDEX_TEMPERATURE;
+                break;
+            case R.id.lil_air_data_brief_co:
+                index = Constants.AIR_LABEL_INDEX_CO;
+                break;
+            case R.id.lil_air_data_brief_so2:
+                index = Constants.AIR_LABEL_INDEX_SO2;
+                break;
+            case R.id.lil_air_data_brief_no2:
+                index = Constants.AIR_LABEL_INDEX_NO2;
+                break;
+            case R.id.lil_air_data_brief_o3:
+                index = Constants.AIR_LABEL_INDEX_O3;
+                break;
+        }
+
+        airViewPager.setCurrentItem(index);
+    }
+
+    public void onClickConnectAirDevice(View view) {
+        BluetoothState.displayScanner(this);
+    }
+
+    public void onClickConnectHeartRateDevice(View view) {
+        // Do BLE stuffs...
     }
 }

@@ -17,6 +17,7 @@
     <color name="colorThemeLimeGreen">#ABFFA3</color>
     <color name="colorThemePastelSkyBlue">#C1DBFF</color>
     <color name="colorThemeSkyBlue">#76B6FF</color>
+    <color name="colorThemeLemonYellow">#F1FF37</color>
     <drawable name="translucent_background">#b0000000</drawable>
     <drawable name="transparent_background">#00000000</drawable>
     <drawable name="theme_background">#6b6b6b</drawable>
