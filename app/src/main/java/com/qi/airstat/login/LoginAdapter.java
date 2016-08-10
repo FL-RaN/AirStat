@@ -2,6 +2,7 @@ package com.qi.airstat.login;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -53,6 +54,7 @@ public class LoginAdapter {
                     loginCommunication = new LoginCommunication(view.getContext(), loginUi);
                     String receivedData = loginCommunication.executeHttpConn();
 
+                    Log.w("TEST", receivedData);
                     resultHandler(receivedData);
                 }
                 view.setEnabled(true); //Temporary setting

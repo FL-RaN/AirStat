@@ -50,6 +50,6 @@ public class LoginCommunication implements iHttpConnection {
 
     public String executeHttpConn(){
         httpService = new HttpService();
-        return receivedData = httpService.executeConn(context, Constants.HTTP_STR_URL_LOGIN, params);
+        return receivedData = httpService.executeConn(context,"POST", Constants.HTTP_STR_URL_LOGIN, params);
     }
 }

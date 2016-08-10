@@ -37,7 +37,7 @@ public class ForgotPasswordCommunication implements iHttpConnection {
     @Override
     public String executeHttpConn() {
         httpService = new HttpService();
-        return httpService.executeConn(context, Constants.HTTP_STR_URL_FORGOT_PASSWORD, params);
+        return httpService.executeConn(context,"POST", Constants.HTTP_STR_URL_FORGOT_PASSWORD, params);
 //        return httpService.executeConn(context, Constants.HTTP_STR_URL_TEST, params, dialogFragment, ForgotPasswordActivity.fragmentManager);
     }
 }

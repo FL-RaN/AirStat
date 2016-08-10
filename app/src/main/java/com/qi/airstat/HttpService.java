@@ -36,12 +36,22 @@ public class HttpService extends AsyncTask<String, String, String> {
     HttpURLConnection conn;
     String strUrl;
     URL url;
+    String type;
 
     String receivedData;
 
-    public String executeConn(Context context, String strUrl, ArrayList<String> params) {
+    public String executeConn(String strUrl) {
+        return executeConn(null, null, strUrl, null);
+    }
+
+    public String executeConn(String type, String strUrl, ArrayList<String> params) {
+        return executeConn(null, type, strUrl, params);
+    }
+
+    public String executeConn(Context context, String type, String strUrl, ArrayList<String> params) {
         this.context = context;
         this.params = params;
+        this.type = type;
 
         if (context != null)
             this.pdLoading = new ProgressDialog(context);
@@ -49,7 +59,7 @@ public class HttpService extends AsyncTask<String, String, String> {
         this.strUrl = strUrl;
         try {
             Log.w("HTTPSERVICE", "FIRST");
-            receivedData = this.execute(strUrl).get(600, TimeUnit.MILLISECONDS);
+            receivedData = this.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, strUrl).get(600, TimeUnit.MILLISECONDS);
             return receivedData;
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -104,65 +114,42 @@ public class HttpService extends AsyncTask<String, String, String> {
             conn = (HttpURLConnection) url.openConnection();
             conn.setConnectTimeout(Constants.HTTP_CONNECT_TIMEOUT);
             conn.setReadTimeout(Constants.HTTP_READ_TIMEOUT);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Cache-Control", "no-cache");
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Accept", "application/json");
+
+            if (type.equals("POST")) {
+                conn.setRequestProperty("Cache-Control", "no-cache");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Accept", "application/json");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+            } else {
+                type = "GET";
+            }
+            conn.setRequestMethod(type);
 
             Log.w("URL", strUrl);
 
                 /*
-                SetDoInput and setDoOutput method depict handling of both send and receive
-                 */
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
-
-                /*
                 JSON - Append parameters to JSON
                  */
-            JSONObject jsonQuery = new JSONObject();
-            for (int i = 0; i < params.size(); i++) {
-                jsonQuery.put(params.get(i), params.get(++i));
+            if (params != null) {
+                JSONObject jsonQuery = new JSONObject();
+                for (int i = 0; i < params.size(); i++) {
+                    jsonQuery.put(params.get(i), params.get(++i));
+                }
+                String query = jsonQuery.toString();
+                OutputStream outputStream = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
+                writer.write(query);
+                writer.flush();
+                writer.close();
+                outputStream.close();
+                Log.w("SND", query);
             }
-            String query = jsonQuery.toString();
-
-            /*!!!!! JUST FOR TEST !!!!!*/
-            if (strUrl.equals(Constants.HTTP_STR_URL_TEST))
-                query = "{\n" +
-                        "   \"HR\":[{\"timeStamp\":\"190408031123\",\n" +
-                        "    \"connectionID\":1,\n" +
-                        "    \"heartrate\":80,\n" +
-                        "    \"latitude\":33.88,\n" +
-                        "    \"longitude\":-101.11\n" +
-                        "    }],\n" +
-                        "    \"AIR\":[{\n" +
-                        "    \"timeStamp\":\"190805141222\",\n" +
-                        "    \"connectionID\":1,\n" +
-                        "    \"SO2\":23.3,\n" +
-                        "    \"NO2\":13.1,\n" +
-                        "    \"O3\":22.1,\n" +
-                        "    \"CO\":40.1,\n" +
-                        "    \"PM\":7.3,\n" +
-                        "    \"temperature\":38.6,\n" +
-                        "    \"latitude\":33.88,\n" +
-                        "    \"longitude\":-101.11\n" +
-                        "    }]\n" +
-                        "}";
-
-
-            Log.w("SND", query);
 
                 /*
                 Open connection for sending data
                  */
-            OutputStream outputStream = conn.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
-            writer.write(query);
-            writer.flush();
-            writer.close();
-            outputStream.close();
             conn.connect();
-
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -191,19 +178,7 @@ public class HttpService extends AsyncTask<String, String, String> {
 
                 String strResult = result.toString();
 
-                /* Processing for PROTOCOL */
-//                switch (strResult.charAt(0)) {
-//                    case '1':
-////                        receivedData = strResult;
-//                        return strResult;
-//                    case '2':
-//                        return "false";
-//                    default:
-////                        receivedData = strResult;
-//                        return strResult; //Temporary setting
-//                }
-
-                Log.w("HTTPSERVICE", "THIRD");
+                Log.w("RCV", strResult);
                 return strResult;
             } else {
                 Log.w("RSP CODE", String.valueOf(responseCode));
@@ -227,7 +202,7 @@ public class HttpService extends AsyncTask<String, String, String> {
 
         /* Err CASE*/
         if (result.equalsIgnoreCase("MalformedURLException") || result.equalsIgnoreCase("Exception") || result.equalsIgnoreCase("IOException") || result.equalsIgnoreCase("unsuccessful")) {
-            makeToast("Something went wrong. Connection Problem");
+            makeToast("Something went wrong. Connection Problem - " + result);
         } else { /* Success CASE */
         }
     }

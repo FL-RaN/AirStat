@@ -121,6 +121,8 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
         icon = Bitmap.createScaledBitmap(icon, icon.getWidth() * 2 / scale, icon.getHeight() * 2 / scale, false);
 
         marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
+
+        marker.setPosition(DataMapActivity.findMarker(clusterItem.getConnectionID()).getLocation());
     }
 
     @Override
@@ -128,32 +130,23 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
         super.onBeforeClusterItemRendered(item, markerOptions);
 
 //        double aqiValue = item.getAqiValue();
-//        String snippetMsg = "";
-//
-////        Log.w("BEFORE___RenderedITem", item.getTitle());
 //
 //        if (0 <= aqiValue && aqiValue <= 50) {
 //            imgMarker.setBackgroundResource(R.drawable.marker_good);
-//            snippetMsg += "GOOD";
 //        } else if (50 < aqiValue && aqiValue <= 100) {
 //            imgMarker.setBackgroundResource(R.drawable.marker_moderate);
-//            snippetMsg += "MODERATE";
 //        } else if (100 < aqiValue && aqiValue <= 150) {
 //            imgMarker.setBackgroundResource(R.drawable.marker_sensitive);
-//            snippetMsg += "SENSITIVE";
 //        } else if (150 < aqiValue && aqiValue <= 200) {
 //            imgMarker.setBackgroundResource(R.drawable.marker_unhealthy);
-//            snippetMsg += "UNHEALTHY";
 //        } else if (200 < aqiValue && aqiValue <= 300) {
 //            imgMarker.setBackgroundResource(R.drawable.marker_very_unhealthy);
-//            snippetMsg += "VERY UNHEALTHY";
 //        } else if (300 < aqiValue && aqiValue <= 500) {
 //            imgMarker.setBackgroundResource(R.drawable.marker_hazardous);
-//            snippetMsg += "HAZARDOUS";
 //        } else {
 //            imgMarker.setBackgroundResource(R.drawable.marker_default);
-//            snippetMsg += "NO DATA";
 //        }
+//
 //        int scale;
 //        if (item.getConnectionID() == -1) {
 //            tvMarker.setText("ME");
@@ -165,11 +158,7 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
 //        Bitmap icon = createDrawableFromView(DataMapActivity.context, view);
 //        icon = Bitmap.createScaledBitmap(icon, icon.getWidth() * 2 / scale, icon.getHeight() * 2 / scale, false);
 //
-//
 //        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
-////        markerOptions.title(item.getTitle());
-////        markerOptions.snippet(snippetMsg + " (" + String.format("%.1f", item.getAqiValue()) + ")");
-        markerOptions.icon(null);
     }
 
     // Convert view to bmp

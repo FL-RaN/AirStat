@@ -58,6 +58,7 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:focusable="false"
         android:text="Login"
         android:textSize="20dp"
         android:textColor="#FFFFFF"
@@ -81,6 +82,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Forgot Password?"
+            android:focusable="false"
             android:background="#00ff0000"
             android:textSize="13dp"
             android:id="@+id/btn_login_forgot_pwd"
@@ -104,6 +106,7 @@
             android:text="Create an Account"
             android:background="#00ff0000"
             android:textSize="13dp"
+            android:focusable="false"
             android:id="@+id/btn_login_create_account"
             android:layout_gravity="center_horizontal"
             android:layout_weight="5"

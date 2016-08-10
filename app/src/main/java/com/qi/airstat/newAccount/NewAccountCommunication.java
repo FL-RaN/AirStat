@@ -54,6 +54,6 @@ public class NewAccountCommunication implements iHttpConnection {
     @Override
     public String executeHttpConn() {
         httpService = new HttpService();
-        return httpService.executeConn(context, Constants.HTTP_STR_URL_CREATE_NEW_ACCOUNT, params);
+        return httpService.executeConn(context,"POST", Constants.HTTP_STR_URL_CREATE_NEW_ACCOUNT, params);
     }
 }

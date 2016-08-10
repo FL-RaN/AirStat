@@ -79,13 +79,14 @@ public class PasswordFragment extends Fragment {
     }
 
     private void resultHandler(String receivedData) {
+        makeToast(receivedData);
         int responseCode = -1;
         try {
             JSONObject jObj = new JSONObject(receivedData);
             responseCode = jObj.getInt(Constants.HTTP_RESPONSE_RESULT);
         } catch (JSONException e) {
             e.printStackTrace();
-            makeToast("Sorry, try again later...");
+//            makeToast("Sorry, try again later...");
         } catch (Exception e) {
             e.printStackTrace();
         }

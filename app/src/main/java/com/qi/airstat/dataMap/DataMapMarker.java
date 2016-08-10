@@ -40,6 +40,10 @@ public class DataMapMarker implements ClusterItem {
         this.dataSet = dataSet;
     }
 
+    public DataMapDataSet getDataSet(){
+        return dataSet;
+    }
+
     public int getConnectionID() {
         return connectionID;
     }

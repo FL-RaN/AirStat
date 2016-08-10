@@ -32,9 +32,11 @@ public class Constants {
     final static public String DATABASE_NAME = "AirStat.db";
     final static public String DATABASE_AIR_TABLE = "AIR";
     final static public String DATABASE_HEART_RATE_TABLE = "HEART_RATE";
+    final static public String DATABASE_MAP_TABLE = "MAP";
     final static public String DATABASE_COMMON_COLUMN_ID = "ID";
     final static public String DATABASE_COMMON_COLUMN_TIME_STAMP = "TIME_STAMP";
     final static public String DATABASE_HEART_RATE_COLUMN_HEART_RATE = "SIGNAL";
+    final static public String DATABASE_MAP_COLUMN_CID = "CID";
     final static public String DATABASE_AIR_COLUMN_CO = "CO";
     final static public String DATABASE_AIR_COLUMN_CO2 = "CO2";
     final static public String DATABASE_AIR_COLUMN_SO2 = "SO2";
@@ -56,6 +58,23 @@ public class Constants {
                     + DATABASE_AIR_COLUMN_O3 + " REAL, "
                     + DATABASE_AIR_COLUMN_PM25 + " REAL" +
                     ")";
+
+
+    final static public String DATABASE_QUERY_CREATE_MAP_TABLE =
+            "CREATE TABLE IF NOT EXISTS " + DATABASE_MAP_TABLE + " ("
+                    + DATABASE_COMMON_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                    + DATABASE_MAP_COLUMN_CID + " INTEGER, "
+                    + DATABASE_COMMON_COLUMN_TIME_STAMP + " CHAR(12), "
+                    + DATABASE_AIR_COLUMN_LAT + " REAL, "
+                    + DATABASE_AIR_COLUMN_LON + " REAL, "
+                    + DATABASE_AIR_COLUMN_CO + " REAL, "
+                    + DATABASE_AIR_COLUMN_CO2 + " REAL, "
+                    + DATABASE_AIR_COLUMN_SO2 + " REAL, "
+                    + DATABASE_AIR_COLUMN_NO2 + " REAL, "
+                    + DATABASE_AIR_COLUMN_O3 + " REAL, "
+                    + DATABASE_AIR_COLUMN_PM25 + " REAL" +
+                    ")";
+
 
     final static public String DATABASE_QUERY_CREATE_HEART_RATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + DATABASE_HEART_RATE_TABLE + " ("
@@ -98,7 +117,7 @@ public class Constants {
 
     public static final Pattern VALID_PASSWOLD_REGEX_ALPHA_NUM = Pattern.compile("^[a-zA-Z0-9]{6,16}$");
 
-    final static public String HTTP_RESPONSE_RESULT = "result";
+    final static public String HTTP_RESPONSE_RESULT = "status";
     final static public int HTTP_RESPONSE_RESULT_OK = 0;
     final static public int HTTP_RESPONSE_RESULT_FAIL = 1;
 
