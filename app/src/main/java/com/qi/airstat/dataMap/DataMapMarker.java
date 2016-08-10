@@ -9,22 +9,22 @@ import com.google.maps.android.clustering.ClusterItem;
 public class DataMapMarker implements ClusterItem {
 
     private LatLng location;
-    private String title;
-
-//    private float aqiValue;
-//    private float temparature = 75.3f;
-//    private float co = 10f;
-//    private float so2 = 30f;
-//    private float no2 = 72.2f;
-//    private float o3 = 14.3f;
-//    private float pm = 123.3f;
+    private int connectionID;
+    private long timeStamp;
 
     private DataMapDataSet dataSet = new DataMapDataSet();
 
-    public DataMapMarker(String title, LatLng location, float aqiValue) {
+    public DataMapMarker(int connectionID, long timeStamp, LatLng location) {
         this.location = location;
-        this.title = title;
-        dataSet.setAqiValue(aqiValue);
+        this.connectionID = connectionID;
+        this.timeStamp = timeStamp;
+    }
+
+    public DataMapMarker(int connectionID, long timeStamp, DataMapDataSet dataSet, LatLng location){
+        this.connectionID = connectionID;
+        this.timeStamp = timeStamp;
+        setDataSet(dataSet);
+        this.location = location;
     }
 
     public void setData(float temp, float co, float so2, float no2, float o3, float pm) {
@@ -40,6 +40,21 @@ public class DataMapMarker implements ClusterItem {
         this.dataSet = dataSet;
     }
 
+    public int getConnectionID() {
+        return connectionID;
+    }
+
+    public void setConnectionID(int connectionID) {
+        this.connectionID = connectionID;
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 
     public float getTemparature() {
         return Float.parseFloat(String.format("%.1f", dataSet.getTemperature()));
@@ -89,14 +104,6 @@ public class DataMapMarker implements ClusterItem {
         dataSet.setPm(pm);
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public LatLng getLocation() {
         return location;
     }
@@ -108,11 +115,6 @@ public class DataMapMarker implements ClusterItem {
     public float getAqiValue() {
         return Float.parseFloat(String.format("%.1f", dataSet.getAqiValue()));
     }
-
-    public void setAqiValue(float aqiValue) {
-        dataSet.setAqiValue(aqiValue);
-    }
-
 
     @Override
     public LatLng getPosition() {

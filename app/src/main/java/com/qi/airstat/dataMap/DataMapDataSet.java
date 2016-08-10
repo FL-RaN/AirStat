@@ -5,12 +5,12 @@ package com.qi.airstat.dataMap;
  */
 public class DataMapDataSet {
     private float aqiValue;
-    private double temperature = 7.3f;
-    private double co = 10f;
-    private double so2 = 30f;
-    private double no2 = 72.2f;
-    private double o3 = 14.3f;
-    private double pm = 123.3f;
+    private double temperature = -1f;
+    private double co = -1f;
+    private double so2 = -1f;
+    private double no2 = -1f;
+    private double o3 = -1f;
+    private double pm = -1f;
 
     public DataMapDataSet() {
     }
@@ -24,26 +24,26 @@ public class DataMapDataSet {
         this.pm = pm;
     }
 
-    public double getAqiValue() {
-        int count = 0;
-        double coResult = getCoGrade(co);
-        double so2Result = getSo2Grade(so2);
-        double no2Result = getNo2Grade(no2);
-        double o3Result = getO3Grade(o3);
-        double pmResult = getPmGrade(pm);
-
-        if (coResult != -1) count++;
-        if (so2Result != -1) count++;
-        if (no2Result != -1) count++;
-        if (o3Result != -1) count++;
-        if (pmResult != -1) count++;
-
-//        return (coResult + so2Result + no2Result + o3Result + pmResult) / count;
-        return aqiValue;
+    public void dataReset(double temparature, double co, double so2, double no2, double o3, double pm) {
+        this.temperature = temparature;
+        this.co = co;
+        this.so2 = so2;
+        this.no2 = no2;
+        this.o3 = o3;
+        this.pm = pm;
     }
 
-    public void setAqiValue(float aqiValue) {
-        this.aqiValue = aqiValue;
+    public double getAqiValue() {
+        int count = 0;
+        double coResult, so2Result, no2Result, o3Result, pmResult;
+
+        if ((coResult = getCoGrade(co)) != -1) count++;
+        if ((so2Result = getSo2Grade(so2)) != -1) count++;
+        if ((no2Result = getNo2Grade(no2)) != -1) count++;
+        if ((o3Result = getO3Grade(o3)) != -1) count++;
+        if ((pmResult = getPmGrade(pm)) != -1) count++;
+
+        return (coResult + so2Result + no2Result + o3Result + pmResult) / count;
     }
 
     public double getTemperature() {

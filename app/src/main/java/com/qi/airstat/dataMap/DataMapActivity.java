@@ -1,13 +1,16 @@
 package com.qi.airstat.dataMap;
 
 import android.Manifest;
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -28,6 +31,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.qi.airstat.Constants;
 import com.qi.airstat.R;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -106,12 +110,12 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         PermissionListener permissionListener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
-                makeToast("Acctected");
+
             }
 
             @Override
             public void onPermissionDenied(ArrayList<String> arrayList) {
-                makeToast("Rejected");
+                makeToast("Please check your permission setting");
             }
         };
 
@@ -131,6 +135,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         dataMapPanelUi.slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.slider_data_map_container);
         dataMapPanelUi.barTitle = (LinearLayout) findViewById(R.id.bar_data_map_title);
         dataMapPanelUi.tvTitle = (TextView) findViewById(R.id.tv_data_map_title);
+        dataMapPanelUi.tvSubTitle = (TextView) findViewById(R.id.tv_data_map_sub_title);
         dataMapPanelUi.tvAqiGrade = (TextView) findViewById(R.id.tv_data_map_grade);
 
         dataMapPanelUi.tvAqiValue = (TextView) findViewById(R.id.tv_data_map_panel_aqi);
@@ -143,7 +148,6 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         dataMapPanelUi.imgPanelArrow = (ImageView) findViewById(R.id.iv_data_map_panel_arrow);
 
-//        dataMapPanelUi.slidingUpPanelLayout.setShadowHeight(0);
         dataMapPanelUi.slidingUpPanelLayout.setAnchorPoint(0.14f);
         dataMapPanelUi.slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         dataMapPanelUi.slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
@@ -187,8 +191,8 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         /*
         Start Communication service
          */
-        dataMapCommunication = new DataMapCommunication(this, this);
-        dataMapCommunication.executeHttpConn();
+        dataMapCommunication = new DataMapCommunication(null, this);
+        dataMapCommunication.start();
     }
 
     /*
@@ -232,9 +236,9 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         mClusterManager.setOnClusterClickListener(clusterTouchDetector);
     }
 
-    private DataMapMarker findMarker(String title) {
+    private DataMapMarker findMarker(int cid) {
         for (DataMapMarker marker : markers) {
-            if (marker.getTitle().equals(title)) {
+            if (marker.getConnectionID() == cid) {
                 return marker;
             }
         }
@@ -250,30 +254,28 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         /*
         Initialized user location with FAKE data
          */
-        markers.add(new DataMapMarker("ME", START_POINT, 259));
-        renderMarker(markers.get(markers.size() - 1));
-        map.animateCamera(CameraUpdateFactory.newLatLng(START_POINT));
-
-        for (int i = 1; i < 10; i++) {
-            markers.add(new DataMapMarker("test" + i, new LatLng(START_POINT.latitude + (i / 50d), START_POINT.longitude + (i / 200d)), (float) (Math.random() * 300)));
-        }
-        LatLng test = new LatLng(32.736422, -117.148093);
-        for (int i = 0; i < 10; i++) {
-            markers.add(new DataMapMarker("testtest" + i, new LatLng(test.latitude + (i / 50d), test.longitude + (i / 200d)), (float) (Math.random() * 300)));
-        }
-        test = new LatLng(32.513823, -116.962939);
-        for (int i = 0; i < 10; i++) {
-            markers.add(new DataMapMarker("testtest" + i, new LatLng(test.latitude + (i / 50000d), test.longitude + (i / 200d)), (float) (Math.random() * 300)));
-        }
-        test = new LatLng(32.829234, -116.526494);
-        for (int i = 0; i < 10; i++) {
-            markers.add(new DataMapMarker("testtest" + i, new LatLng(test.latitude + (i / 30d), test.longitude + (i / 20d)), 0));
-        }
-        removeAndDrawMarkers();
-
-        appendMarker("La Jolla shores", 32.858625, -117.256091, 10);
-        appendMarker("La Jolla Village Square", 32.865494, -117.228736, 200);
-        appendMarker("WestField UTC", 32.870661, -117.206321, 140);
+//        map.animateCamera(CameraUpdateFactory.newLatLng(START_POINT));
+//
+//        for (int i = 1; i < 10; i++) {
+//            markers.add(new DataMapMarker("test" + i, new LatLng(START_POINT.latitude + (i / 50d), START_POINT.longitude + (i / 200d)), (float) (Math.random() * 300)));
+//        }
+//        LatLng test = new LatLng(32.736422, -117.148093);
+//        for (int i = 0; i < 10; i++) {
+//            markers.add(new DataMapMarker("testtest" + i, new LatLng(test.latitude + (i / 50d), test.longitude + (i / 200d)), (float) (Math.random() * 300)));
+//        }
+//        test = new LatLng(32.513823, -116.962939);
+//        for (int i = 0; i < 10; i++) {
+//            markers.add(new DataMapMarker("testtest" + i, new LatLng(test.latitude + (i / 50000d), test.longitude + (i / 200d)), (float) (Math.random() * 300)));
+//        }
+//        test = new LatLng(32.829234, -116.526494);
+//        for (int i = 0; i < 10; i++) {
+//            markers.add(new DataMapMarker("testtest" + i, new LatLng(test.latitude + (i / 30d), test.longitude + (i / 20d)), 0));
+//        }
+//        removeAndDrawMarkers();
+//
+//        appendMarker("La Jolla shores", 32.858625, -117.256091, 10);
+//        appendMarker("La Jolla Village Square", 32.865494, -117.228736, 200);
+//        appendMarker("WestField UTC", 32.870661, -117.206321, 140);
     }
 
     /*
@@ -284,18 +286,29 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         mClusterManager.clearItems();
     }// Call First
 
-    public void addMarker(String title, DataMapDataSet dataSet, LatLng location) {
-        DataMapMarker marker = new DataMapMarker(title, location, 100);
-        marker.setDataSet(dataSet);
+    public void addMarker(int cid, long timeStamp, DataMapDataSet dataSet, LatLng location) {
+        DataMapMarker marker = new DataMapMarker(cid, timeStamp, dataSet, location);
+//        marker.setDataSet(dataSet);
 
         markers.add(marker);
         mClusterManager.addItem(marker);
 
-        mClusterManager.cluster();
+//        mClusterManager.cluster();
     }// Call Second
 
-    private void appendMarker(String title, double lat, double lng, float aqiValue) {
-        markers.add(new DataMapMarker(title, new LatLng(lat, lng), aqiValue));
+    public void refreshMap() {
+        mClusterManager.cluster();
+    }
+
+    public void addMarker(DataMapMarker marker) {
+        markers.add(marker);
+        mClusterManager.addItem(marker);
+
+//        mClusterManager.cluster();
+    }// Call Second
+
+    private void appendMarker(int cid, long timeStamp, DataMapDataSet dataSet, double lat, double lng) {
+        markers.add(new DataMapMarker(cid, timeStamp, dataSet, new LatLng(lat, lng)));
         mClusterManager.addItem(markers.get(markers.size() - 1));
         mClusterManager.cluster();
     }
@@ -303,11 +316,12 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
     /*
     Refresh Marker data
      */
-    private void refreshMarker(String title, double lat, double lng, float aqiValue) {
+    private void refreshMarker(int cid, long timeStamp, DataMapDataSet dataSet, double lat, double lng) {
         for (DataMapMarker marker : markers) {
-            if (marker.getTitle().equals(title)) {
+            if (marker.getConnectionID() == cid) {
+                marker.setDataSet(dataSet);
                 marker.setLocation(new LatLng(lat, lng));
-                marker.setAqiValue(aqiValue);
+                marker.setTimeStamp(timeStamp);
                 break;
             }
         }
@@ -332,17 +346,15 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         double lat = location.getLatitude();
         double lng = location.getLongitude();
 
-        DataMapCurrentLocation.getInstance().setLat(lat);
-        DataMapCurrentLocation.getInstance().setLng(lng);
+        DataMapCurrentUser.getInstance().setLat(lat);
+        DataMapCurrentUser.getInstance().setLng(lng);
 
-        refreshMarker("ME", lat, lng, (float) Math.random() * 500);
-
-        DataMapMarker myMarker = findMarker("ME");
-        Log.w("-----------------MARKER", myMarker.toString());
+        Log.w("RealTime", "" + lat + "/" + lng);
 
         if (firstCall) {
-            renderMarker(myMarker);
-            map.animateCamera(CameraUpdateFactory.newLatLng(myMarker.getLocation()));
+            addMarker(DataMapCurrentUser.create());
+            panelValueChanger(findMarker(-1));
+            map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));
             firstCall = false;
         }
     }
@@ -362,35 +374,34 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
     /*
     Rendering Marker
      */
-    private void renderMarker(DataMapMarker clusterItem) {
+    private void panelValueChanger(DataMapMarker clusterItem) {
         if (clusterItem == null) return;
 
         DataMapMarker marker = clusterItem;
-        dataMapPanelUi.tvTitle.setText(marker.getTitle());
 
         float aqiValue = marker.getAqiValue();
         String grade;
 
         if (0 <= aqiValue && aqiValue <= 50) {
-            dataMapPanelUi.barTitle.setBackgroundResource(R.drawable.AQI_GOOD);
+            backgroundAnimator(Constants.AQI_LEVEL_GOOD);
             grade = "GOOD";
         } else if (50 < aqiValue && aqiValue <= 100) {
-            dataMapPanelUi.barTitle.setBackgroundResource(R.drawable.AQI_MODERATE);
+            backgroundAnimator(Constants.AQI_LEVEL_MODERATE);
             grade = "MODERATE";
         } else if (100 < aqiValue && aqiValue <= 150) {
-            dataMapPanelUi.barTitle.setBackgroundResource(R.drawable.AQI_SENSITIVE);
+            backgroundAnimator(Constants.AQI_LEVEL_SENSITIVE);
             grade = "SENSITIVE";
         } else if (150 < aqiValue && aqiValue <= 200) {
-            dataMapPanelUi.barTitle.setBackgroundResource(R.drawable.AQI_UNHEALTHY);
+            backgroundAnimator(Constants.AQI_LEVEL_UNHEALTHY);
             grade = "UNHEALTHY";
         } else if (200 < aqiValue && aqiValue <= 300) {
-            dataMapPanelUi.barTitle.setBackgroundResource(R.drawable.AQI_VERY_UNHEALTHY);
+            backgroundAnimator(Constants.AQI_LEVEL_VERY_UNHEALTHY);
             grade = "VERY UNHEALTHY";
         } else if (300 < aqiValue && aqiValue <= 500) {
-            dataMapPanelUi.barTitle.setBackgroundResource(R.drawable.AQI_HAZARDOUS);
+            backgroundAnimator(Constants.AQI_LEVEL_HAZARDOUS);
             grade = "HAZARDOUS";
         } else {
-            dataMapPanelUi.barTitle.setBackgroundResource(R.drawable.AQI_DEFAULT);
+            backgroundAnimator(Constants.AQI_LEVEL_DEFAULT);
             grade = "WAITING...";
         }
 
@@ -398,16 +409,20 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
     }
 
     public void panelMarkerValueSetter(DataMapMarker marker, String grade) {
-        dataMapPanelUi.tvTitle.setText(marker.getTitle());
         dataMapPanelUi.tvAqiGrade.setText(grade);
 
-        dataMapPanelUi.tvAqiValue.setText("" + marker.getAqiValue());
-        dataMapPanelUi.tvTemperature.setText("" + marker.getTemparature());
-        dataMapPanelUi.tvCo.setText("" + marker.getCo());
-        dataMapPanelUi.tvSo2.setText("" + marker.getSo2());
-        dataMapPanelUi.tvNo2.setText("" + marker.getNo2());
-        dataMapPanelUi.tvO3.setText("" + marker.getO3());
-        dataMapPanelUi.tvPm.setText("" + marker.getPm());
+        if (grade.equals("WAITING...")) {
+            dataMapPanelUi.slidingUpPanelLayout.setTouchEnabled(false);
+        } else {
+            dataMapPanelUi.slidingUpPanelLayout.setTouchEnabled(true);
+            dataMapPanelUi.tvAqiValue.setText("" + marker.getAqiValue());
+            dataMapPanelUi.tvTemperature.setText("" + marker.getTemparature());
+            dataMapPanelUi.tvCo.setText("" + marker.getCo());
+            dataMapPanelUi.tvSo2.setText("" + marker.getSo2());
+            dataMapPanelUi.tvNo2.setText("" + marker.getNo2());
+            dataMapPanelUi.tvO3.setText("" + marker.getO3());
+            dataMapPanelUi.tvPm.setText("" + marker.getPm());
+        }
     }
 
     /*
@@ -444,28 +459,30 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         avgO3 /= markers.size();
         avgPm /= markers.size();
 
+        ValueAnimator colorAnimator = null;
+        int priviousBackground = ((ColorDrawable) (dataMapPanelUi.barTitle.getBackground())).getColor();
         //Check grade by aqi value
         String grade;
         if (0 <= avgAqiValue && avgAqiValue <= 50) {
-            dataMapPanelUi.barTitle.setBackgroundResource(R.drawable.AQI_GOOD);
+            backgroundAnimator(Constants.AQI_LEVEL_GOOD);
             grade = "GOOD";
         } else if (50 < avgAqiValue && avgAqiValue <= 100) {
-            dataMapPanelUi.barTitle.setBackgroundResource(R.drawable.AQI_MODERATE);
+            backgroundAnimator(Constants.AQI_LEVEL_MODERATE);
             grade = "MODERATE";
         } else if (100 < avgAqiValue && avgAqiValue <= 150) {
-            dataMapPanelUi.barTitle.setBackgroundResource(R.drawable.AQI_SENSITIVE);
+            backgroundAnimator(Constants.AQI_LEVEL_SENSITIVE);
             grade = "SENSITIVE";
         } else if (150 < avgAqiValue && avgAqiValue <= 200) {
-            dataMapPanelUi.barTitle.setBackgroundResource(R.drawable.AQI_UNHEALTHY);
+            backgroundAnimator(Constants.AQI_LEVEL_UNHEALTHY);
             grade = "UNHEALTHY";
         } else if (200 < avgAqiValue && avgAqiValue <= 300) {
-            dataMapPanelUi.barTitle.setBackgroundResource(R.drawable.AQI_VERY_UNHEALTHY);
+            backgroundAnimator(Constants.AQI_LEVEL_VERY_UNHEALTHY);
             grade = "VERY UNHEALTHY";
         } else if (300 < avgAqiValue && avgAqiValue <= 500) {
-            dataMapPanelUi.barTitle.setBackgroundResource(R.drawable.AQI_HAZARDOUS);
+            backgroundAnimator(Constants.AQI_LEVEL_HAZARDOUS);
             grade = "HAZARDOUS";
         } else {
-            dataMapPanelUi.barTitle.setBackgroundResource(R.drawable.AQI_DEFAULT);
+            backgroundAnimator(Constants.AQI_LEVEL_DEFAULT);
             grade = "WAITING...";
         }
 
@@ -480,6 +497,22 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         dataMapPanelUi.tvPm.setText(String.format("%.1f", avgPm));
     }
 
+    public void backgroundAnimator(String color) {
+        int from = ((ColorDrawable) (dataMapPanelUi.barTitle.getBackground())).getColor();
+        int to = Color.parseColor(color);
+        ValueAnimator colorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), from, to);
+        if (colorAnimator != null) {
+            colorAnimator.setDuration(100);
+            colorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    dataMapPanelUi.barTitle.setBackgroundColor((int) valueAnimator.getAnimatedValue());
+                }
+            });
+            colorAnimator.start();
+        }
+    }
+
     private class MarkerTouchDetector implements ClusterManager.OnClusterItemClickListener {
         @Override
         public boolean onClusterItemClick(ClusterItem clusterItem) {
@@ -491,15 +524,15 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
                 backgroundClusterChanger.stop();
                 backgroundClusterChanger.cancel(true);
             }
-            DataMapMarker marker = findMarker(((DataMapMarker) clusterItem).getTitle());
-            Log.w("TOUCHED", marker.toString());
-            backgroundMarkerChanger = new BackgroundMarkerChanger(findMarker(((DataMapMarker) clusterItem).getTitle()));
+            dataMapPanelUi.tvTitle.setText("");
+            dataMapPanelUi.tvSubTitle.setText("");
+            dataMapPanelUi.tvAqiGrade.setText("");
+            DataMapMarker marker = (DataMapMarker) clusterItem;
+            backgroundMarkerChanger = new BackgroundMarkerChanger(marker);
             backgroundMarkerChanger.execute();
-//            renderMarker((DataMapMarker) clusterItem);
 
-
-            map.animateCamera(CameraUpdateFactory.newLatLng(clusterItem.getPosition()));
             dataMapPanelUi.slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            map.animateCamera(CameraUpdateFactory.newLatLng(clusterItem.getPosition()));
             return true;
         }
     }
@@ -516,16 +549,18 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
                 backgroundMarkerChanger.stop();
                 backgroundMarkerChanger.cancel(true);
             }
-
             if (backgroundClusterChanger != null) {
                 backgroundClusterChanger.stop();
                 backgroundClusterChanger.cancel(true);
             }
+            dataMapPanelUi.tvTitle.setText("");
+            dataMapPanelUi.tvSubTitle.setText("");
+            dataMapPanelUi.tvAqiGrade.setText("");
             backgroundClusterChanger = new BackgroundClusterChanger(lat, lng);
             backgroundClusterChanger.execute(cluster);
 
-            map.animateCamera(CameraUpdateFactory.newLatLng(cluster.getPosition()));
             dataMapPanelUi.slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            map.animateCamera(CameraUpdateFactory.newLatLng(cluster.getPosition()));
             return true;
         }
     }
@@ -535,15 +570,11 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         public void onCameraIdle() {
             LatLng northeast = map.getProjection().getVisibleRegion().latLngBounds.northeast;
             LatLng southwest = map.getProjection().getVisibleRegion().latLngBounds.southwest;
-            //Requesting Area to DB
-            //southwest.latitude < WHAT < northeast.latitude , northeast.longitude < WHAT < southwest.longitude
 
-            DataMapCurrentLocation.getInstance().setMinLat(southwest.latitude);
-            DataMapCurrentLocation.getInstance().setMaxLat(northeast.latitude);
-            DataMapCurrentLocation.getInstance().setMinLng(northeast.longitude);
-            DataMapCurrentLocation.getInstance().setMaxLng(southwest.longitude);
-
-//            makeToast("(" + northeast.latitude + "," + northeast.longitude + "), (" + southwest.latitude + "," + southwest.longitude + ")");
+            DataMapCurrentUser.getInstance().setMinLat(southwest.latitude);
+            DataMapCurrentUser.getInstance().setMaxLat(northeast.latitude);
+            DataMapCurrentUser.getInstance().setMinLng(northeast.longitude);
+            DataMapCurrentUser.getInstance().setMaxLng(southwest.longitude);
         }
     }
 
@@ -556,38 +587,17 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         Log.w("-------------PRINT", msg);
     }
 
-       /* Someone's code*/
-//    private void setMarkers(JSONObject response) {
-//
-//        mClusterManager.clearItems();
-//
-//        try {
-//            JSONArray venues = response.getJSONArray("venues");
-//
-//            for (int i = 0; i < venues.length(); i++) {
-//                Venue venue = new Gson().fromJson(venues.getJSONObject(i).toString(), Venue.class);
-//                MarkerItem marker = new MarkerItem(venue.getLat(), venue.getLng(), venue, R.drawable.pin_quente);
-//                mClusterManager.addItem(marker);
-//            }
-//
-//            mClusterManager.cluster();
-//
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     private class BackgroundMarkerChanger extends AsyncTask<DataMapMarker, DataMapMarker, Void> {
         private boolean flow = true;
         private DataMapMarker marker;
-        String regionAddress = null;
+        String[] regionAddress = null;
 
         public void stop() {
             this.flow = false;
         }
 
-        public boolean whoIsHost(String title) {
-            if (marker.getTitle().equals(title)) return true;
+        public boolean whoIsHost(int cid) {
+            if (marker.getConnectionID() == cid) return true;
             return false;
         }
 
@@ -597,16 +607,15 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         @Override
         protected Void doInBackground(DataMapMarker... values) {
-            if (!marker.getTitle().equals("ME"))
+            if (marker.getConnectionID() != -1)
                 regionAddress = getRegionAddress(marker.getLocation().latitude, marker.getLocation().longitude);
             while (flow) {
                 publishProgress(marker);
-                SystemClock.sleep(400);
-//                try {
-//                    Thread.sleep(3000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }
@@ -614,10 +623,13 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         @Override
         protected void onProgressUpdate(DataMapMarker... values) {
             super.onProgressUpdate(values);
-            Log.w("---------OnTHREAD", values[0].toString());
-            renderMarker(values[0]);
-            if (regionAddress != null)
-                dataMapPanelUi.tvTitle.setText(regionAddress);
+            panelValueChanger(values[0]);
+            if (regionAddress != null) {
+                dataMapPanelUi.tvTitle.setText(regionAddress[0]);
+                dataMapPanelUi.tvSubTitle.setText(regionAddress[1]);
+            } else {
+                dataMapPanelUi.tvTitle.setText("ME");
+            }
         }
 
         @Override
@@ -632,7 +644,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         private boolean flow = true;
         double latitude;
         double longitude;
-        String regionAddress;
+        String[] regionAddress;
 
         public void stop() {
             this.flow = false;
@@ -648,14 +660,13 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
             regionAddress = getRegionAddress(latitude, longitude);
             while (flow) {
                 publishProgress(clusters[0]);
-//                SystemClock.sleep(3000);
+//                SystemClock.sleep(600);
                 try {
-                    Thread.sleep(600);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-
             return null;
         }
 
@@ -669,7 +680,8 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
                 return;
             }
             renderCluster(clusters[0]);
-            dataMapPanelUi.tvTitle.setText(regionAddress);
+            dataMapPanelUi.tvTitle.setText(regionAddress[0]);
+            dataMapPanelUi.tvSubTitle.setText(regionAddress[1]);
         }
 
         @Override
@@ -677,18 +689,26 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
             super.onCancelled();
             stop();
         }
-
-
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        dataMapCommunication.stop();
+//        dataMapCommunication.stopThread();
+//        backgroundMarkerChanger.stop();
+//        backgroundClusterChanger.stop();
 
     }
 
-    public String getRegionAddress(double lat, double lng) {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dataMapCommunication.stopThread();
+        backgroundMarkerChanger.stop();
+        backgroundClusterChanger.stop();
+    }
+
+    public String[] getRegionAddress(double lat, double lng) {
         String apiURL = "http://maps.googleapis.com/maps/api/geocode/json?latlng="
                 + lat + "," + lng;
 
@@ -703,6 +723,8 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
             while ((buf = br.readLine()) != null) {
                 jsonString += buf;
             }
+
+            br.close();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -710,19 +732,21 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         }
 
         JSONObject jObj = null;
-        String result = null;
+        String[] result = new String[2];
         try {
             jObj = new JSONObject(jsonString);
             JSONArray jArray = jObj.getJSONArray("results");
             jObj = (JSONObject) jArray.get(0);
             jArray = jObj.getJSONArray("address_components");
-            result = (String) ((JSONObject) jArray.get(3)).get("short_name");
-//            result = (String) jObj.get("formatted_address");
+            Object checker;
+            for (int i = 2; i < 4; i++) {
+                checker = ((JSONObject) jArray.get(i)).get("short_name");
+                if (checker != null)
+                    result[i - 2] = checker + " ";
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         return result;
     }
-
 }

@@ -13,6 +13,7 @@ public class DataMapPanelUi {
     public SlidingUpPanelLayout slidingUpPanelLayout;
     public LinearLayout barTitle;
     public TextView tvTitle;
+    public TextView tvSubTitle;
     public TextView tvAqiGrade;
 
     public ImageView imgPanelArrow;

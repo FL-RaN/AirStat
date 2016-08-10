@@ -29,4 +29,12 @@
     <drawable name="AQI_HAZARDOUS">#7e0123</drawable>
     <drawable name="AQI_DEFAULT">#6d6d6d</drawable>
 
+    <drawable name="AQI_GOOD_FADED">#dd009865</drawable>
+    <drawable name="AQI_MODERATE_FADED">#ddfede33</drawable>
+    <drawable name="AQI_SENSITIVE_FADED">#ddff9932</drawable>
+    <drawable name="AQI_UNHEALTHY_FADED">#ddcc0033</drawable>
+    <drawable name="AQI_VERY_UNHEALTHY_FADED">#dd670099</drawable>
+    <drawable name="AQI_HAZARDOUS_FADED">#dd7e0123</drawable>
+    <drawable name="AQI_DEFAULT_FADED">#dd6d6d6d</drawable>
+
 </resources>

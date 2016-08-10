@@ -7,8 +7,8 @@
     android:background="@color/colorThemeHeavyGrey"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:paddingTop="8dp"
     android:paddingBottom="8dp"
+    android:paddingTop="8dp"
     sothree:umanoDragView="@+id/dragView"
     sothree:umanoOverlay="true"
     sothree:umanoPanelHeight="100dp"
@@ -18,9 +18,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="8dp"
         android:background="@drawable/shape_rounded_border_component"
         android:orientation="vertical"
-        android:layout_margin="8dp"
         android:padding="20dp">
 
         <fragment
@@ -175,12 +175,12 @@
     </LinearLayout>
 
 
+
     <LinearLayout
         android:id="@+id/slider_data_map_panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="50"
-        android:background="#eaeced"
         android:orientation="vertical">
         <!--FROM HERE-->
 
@@ -204,7 +204,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
 
                 <TextView
                     android:id="@+id/tv_data_map_title"
@@ -213,6 +214,7 @@
                     android:layout_gravity="left"
                     android:layout_weight="1"
                     android:text=""
+android:textColor="#99ffffff"
                     android:textSize="18sp" />
 
                 <TextView
@@ -226,12 +228,26 @@
                     android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|top"
+                android:layout_weight="1"
+                android:textStyle="bold"
+                android:text=""
+                android:textColor="#77000000"
+                android:layout_marginLeft="10sp"
+                android:textSize="18sp"
+                android:id="@+id/tv_data_map_sub_title"/>
         </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+
+            android:background="#eaeced"
             android:orientation="vertical">
 
             <LinearLayout
@@ -528,6 +544,7 @@
         <!--TO HERE-->
 
     </LinearLayout>
+
 
 
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>
