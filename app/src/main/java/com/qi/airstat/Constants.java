@@ -86,6 +86,7 @@ public class Constants {
     final static public String DATABASE_AIR_COLUMN_PM25 = "PM25";
     final static public String DATABASE_AIR_COLUMN_LAT = "LAT";
     final static public String DATABASE_AIR_COLUMN_LON = "LON";
+
     final static public String DATABASE_QUERY_CREATE_AIR_TABLE =
             "CREATE TABLE IF NOT EXISTS " + DATABASE_AIR_TABLE + " ("
                     + DATABASE_COMMON_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -100,7 +101,6 @@ public class Constants {
                     + DATABASE_AIR_COLUMN_PM25 + " REAL" +
                     ")";
 
-
     final static public String DATABASE_QUERY_CREATE_MAP_TABLE =
             "CREATE TABLE IF NOT EXISTS " + DATABASE_MAP_TABLE + " ("
                     + DATABASE_COMMON_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -109,13 +109,12 @@ public class Constants {
                     + DATABASE_AIR_COLUMN_LAT + " REAL, "
                     + DATABASE_AIR_COLUMN_LON + " REAL, "
                     + DATABASE_AIR_COLUMN_CO + " REAL, "
-                    + DATABASE_AIR_COLUMN_CO2 + " REAL, "
+                    + DATABASE_AIR_COLUMN_TEMPERATURE + " REAL, "
                     + DATABASE_AIR_COLUMN_SO2 + " REAL, "
                     + DATABASE_AIR_COLUMN_NO2 + " REAL, "
                     + DATABASE_AIR_COLUMN_O3 + " REAL, "
                     + DATABASE_AIR_COLUMN_PM25 + " REAL" +
                     ")";
-
 
     final static public String DATABASE_QUERY_CREATE_HEART_RATE_TABLE =
             "CREATE TABLE IF NOT EXISTS " + DATABASE_HEART_RATE_TABLE + " ("
@@ -126,6 +125,7 @@ public class Constants {
 
     final static public String DATABASE_QUERY_DROP_TABLE_AIR = "DROP TABLE IF EXISTS " + DATABASE_AIR_TABLE;
     final static public String DATABASE_QUERY_DROP_TABLE_HEART_RATE = "DROP TABLE IF EXISTS " + DATABASE_HEART_RATE_TABLE;
+    final static public String DATABASE_QUERY_DROP_TABLE_MAP = "DROP TABLE IF EXISTS " + DATABASE_MAP_TABLE;
 
     final static public int HTTP_CONNECT_TIMEOUT = 10000;
     final static public int HTTP_READ_TIMEOUT = 15000;

@@ -13,20 +13,24 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase database) {
         database.execSQL(Constants.DATABASE_QUERY_CREATE_AIR_TABLE);
         database.execSQL(Constants.DATABASE_QUERY_CREATE_HEART_RATE_TABLE);
+        database.execSQL(Constants.DATABASE_QUERY_CREATE_MAP_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
         database.execSQL(Constants.DATABASE_QUERY_DROP_TABLE_HEART_RATE);
         database.execSQL(Constants.DATABASE_QUERY_DROP_TABLE_AIR);
+        database.execSQL(Constants.DATABASE_QUERY_DROP_TABLE_MAP);
     }
 
     public void rebuild() {
         SQLiteDatabase database = getWritableDatabase();
         database.execSQL(Constants.DATABASE_QUERY_DROP_TABLE_HEART_RATE);
         database.execSQL(Constants.DATABASE_QUERY_DROP_TABLE_AIR);
+        database.execSQL(Constants.DATABASE_QUERY_DROP_TABLE_MAP);
         database.execSQL(Constants.DATABASE_QUERY_CREATE_AIR_TABLE);
         database.execSQL(Constants.DATABASE_QUERY_CREATE_HEART_RATE_TABLE);
+        database.execSQL(Constants.DATABASE_QUERY_CREATE_MAP_TABLE);
         database.close();
     }
 }
