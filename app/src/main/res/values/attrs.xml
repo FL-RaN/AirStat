@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <declare-styleable name="CustomViewContianer">
-        <attr name="main" format="reference|integer"/>
-        <attr name="btnLeft" format="reference|integer"/>
-        <attr name="btnRight" format="reference|integer"/>
-    </declare-styleable>
-</resources>

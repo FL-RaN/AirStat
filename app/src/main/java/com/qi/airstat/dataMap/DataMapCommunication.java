@@ -82,7 +82,6 @@ public class DataMapCommunication extends AsyncTask<Void, Void, Void> implements
             int i = 1;
             JSONObject eachData = rcvdData.getJSONObject("" + (i++));
 
-
             while (eachData != null) {
 
                 int connectionID = eachData.getInt(Constants.HTTP_DATA_MAP_ONGOING_SESSION_CID);

@@ -151,7 +151,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         dataMapPanelUi.imgPanelArrow = (ImageView) findViewById(R.id.iv_data_map_panel_arrow);
 
-        dataMapPanelUi.slidingUpPanelLayout.setAnchorPoint(0.14f);
+        dataMapPanelUi.slidingUpPanelLayout.setAnchorPoint(0.16f);
         dataMapPanelUi.slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
         dataMapPanelUi.slidingUpPanelLayout.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
             @Override
