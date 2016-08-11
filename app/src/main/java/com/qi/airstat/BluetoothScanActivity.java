@@ -46,8 +46,6 @@ public class BluetoothScanActivity extends Activity {
             }
 
             // Get the device MAC address, which is the last 17 chars in the View
-            Log.d("SCAN ACTIVITY", "" + view.getId());
-
             LinearLayout parent = (LinearLayout)view;
             TextView text = (TextView)(view.findViewById(R.id.tv_adapter_item_bluetooth_scan));
 
