@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import com.qi.airstat.login.LoginBaseActivity;
 
 public class MainActivity extends AppCompatActivity {
-    CustomView customView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
