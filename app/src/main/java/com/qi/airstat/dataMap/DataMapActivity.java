@@ -48,7 +48,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by JUMPSNACK on 8/3/2016.
@@ -71,7 +70,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 
     private BackgroundMarkerChanger backgroundMarkerChanger;
     private BackgroundClusterChanger backgroundClusterChanger;
-    public RefreshMap refreshMap;
+//    public RefreshMap refreshMap;
 
     private DataMapCommunication dataMapCommunication;
 
@@ -124,7 +123,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         new TedPermission(this).setPermissionListener(permissionListener)
                 .setRationaleMessage("We need your permission")
-                .setDeniedMessage("You make it reject")
+                .setDeniedMessage("You make it rejected")
                 .setPermissions(Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.ACCESS_COARSE_LOCATION,
                         Manifest.permission.INTERNET)
@@ -189,14 +188,14 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         setMapEvent();
 
-        initMarkers(markers);
+//        initMarkers(markers);
 
         /*
         Start Communication service
          */
         dataMapCommunication = new DataMapCommunication(null, this);
         dataMapCommunication.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-}
+    }
 
     /*
     Set map options
@@ -252,33 +251,6 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
     ************ Marker Setting *************
      */
 
-    private void initMarkers(ArrayList<DataMapMarker> markers) {
-
-        /*
-        Initialized user location with FAKE data
-         */
-//        map.animateCamera(CameraUpdateFactory.newLatLng(START_POINT));
-//
-
-//        LatLng test = new LatLng(32.736422, -117.148093);
-//        for (int i = 0; i < 10; i++) {
-//            markers.add(new DataMapMarker("testtest" + i, new LatLng(test.latitude + (i / 50d), test.longitude + (i / 200d)), (float) (Math.random() * 300)));
-//        }
-//        test = new LatLng(32.513823, -116.962939);
-//        for (int i = 0; i < 10; i++) {
-//            markers.add(new DataMapMarker("testtest" + i, new LatLng(test.latitude + (i / 50000d), test.longitude + (i / 200d)), (float) (Math.random() * 300)));
-//        }
-//        test = new LatLng(32.829234, -116.526494);
-//        for (int i = 0; i < 10; i++) {
-//            markers.add(new DataMapMarker("testtest" + i, new LatLng(test.latitude + (i / 30d), test.longitude + (i / 20d)), 0));
-//        }
-//        removeAndDrawMarkers();
-//
-//        appendMarker("La Jolla shores", 32.858625, -117.256091, 10);
-//        appendMarker("La Jolla Village Square", 32.865494, -117.228736, 200);
-//        appendMarker("WestField UTC", 32.870661, -117.206321, 140);
-    }
-
     /*
     Add single Marker
      */
@@ -289,58 +261,49 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 
     public void addMarker(int cid, long timeStamp, DataMapDataSet dataSet, LatLng location) {
         DataMapMarker marker = new DataMapMarker(cid, timeStamp, dataSet, location);
-//        marker.setDataSet(dataSet);
-
         markers.add(marker);
-//        mClusterManager.addItem(marker);
-
-//        mClusterManager.cluster();
     }// Call Second
 
 
-    public void refreshMapThread() {
-        refreshMap = new RefreshMap(mClusterManager);
-        refreshMap.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    public void callCluster() {
-        mClusterManager.cluster();
-    }
-
-    private class RefreshMap extends AsyncTask<Void, Void, Void> {
-        private boolean flow = true;
-        private ClusterManager<DataMapMarker> mClusterManager;
-
-        public void stop() {
-            flow = false;
-            this.cancel(true);
-        }
-
-        private RefreshMap(ClusterManager<DataMapMarker> mClusterManager) {
-            this.mClusterManager = mClusterManager;
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-            removeAndDrawMarkers();
-            mClusterManager.cluster();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            flow = true;
-            while (flow) {
-                publishProgress();
-                try {
-                    Thread.sleep(Constants.HTTP_DATA_MAP_GET_ONGOING_SESSION_TIME_QUALTUM);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            return null;
-        }
-    }
+//    public void refreshMapThread() {
+//        refreshMap = new RefreshMap(mClusterManager);
+//        refreshMap.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//    }
+//
+//    private class RefreshMap extends AsyncTask<Void, Void, Void> {
+//        private boolean flow = true;
+//        private ClusterManager<DataMapMarker> mClusterManager;
+//
+//        public void stop() {
+//            flow = false;
+//            this.cancel(true);
+//        }
+//
+//        private RefreshMap(ClusterManager<DataMapMarker> mClusterManager) {
+//            this.mClusterManager = mClusterManager;
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(Void... values) {
+//            super.onProgressUpdate(values);
+//            removeAndDrawMarkers();
+//            mClusterManager.cluster();
+//        }
+//
+//        @Override
+//        protected Void doInBackground(Void... voids) {
+//            flow = true;
+//            while (flow) {
+//                publishProgress();
+//                try {
+//                    Thread.sleep(Constants.HTTP_DATA_MAP_GET_ONGOING_SESSION_TIME_QUALTUM);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            return null;
+//        }
+//    }
 
 
     public void addMarker(DataMapMarker marker) {
@@ -391,16 +354,16 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
     /*
     Remove and Draw Markers
      */
-    public void removeAndDrawMarkers() {
-        mClusterManager.clearItems();
-//        (Collection<DataMapMarker>)((List<DataMapMarker>) markers);
-//        for (DataMapMarker marker : markers) {
-//            mClusterManager.addItem(marker);
-//        }
-            mClusterManager.addItems( (Collection<DataMapMarker>)((List<DataMapMarker>) markers));
-
-//        refreshMapThread();
-    }
+//    public void removeAndDrawMarkers() {
+//        mClusterManager.clearItems();
+////        (Collection<DataMapMarker>)((List<DataMapMarker>) markers);
+////        for (DataMapMarker marker : markers) {
+////            mClusterManager.addItem(marker);
+////        }
+//        mClusterManager.addItems((Collection<DataMapMarker>) ((List<DataMapMarker>) markers));
+//
+////        refreshMapThread();
+//    }
 
     @Override
     public void onLocationChanged(Location location) {

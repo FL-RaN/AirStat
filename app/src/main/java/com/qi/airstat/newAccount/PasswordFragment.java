@@ -93,10 +93,16 @@ public class PasswordFragment extends Fragment {
 
         switch (responseCode) {
             case Constants.HTTP_RESPONSE_RESULT_OK:
-                new ActivityClosingDialog("Congraturation!", "Your account is ready to go", NewAccountActivity.instance).show(getFragmentManager(), "");
+                new ActivityClosingDialog("Congraturation!", "Check your email\n\n"+newAccountUi.edtEmail.getText(), NewAccountActivity.instance).show(getFragmentManager(), "");
                 break;
-            case Constants.HTTP_RESPONSE_RESULT_FAIL:
+            case Constants.HTTP_RESPONSE_RESULT_CREATE_NEW_ACCOUNT_FAIL_DUP:
                 new ActivityClosingDialog("Failed!", "You are already registered :(", NewAccountActivity.instance).show(getFragmentManager(), "");
+                break;
+            case Constants.HTTP_RESPONSE_RESULT_CREATE_NEW_ACCOUNT_FAIL_INCORRECT_FORMAT_PASSWORD:
+                new ActivityClosingDialog("Failed!", "Incorrect password format", NewAccountActivity.instance).show(getFragmentManager(), "");
+                break;
+            case Constants.HTTP_RESPONSE_RESULT_CREATE_NEW_ACCOUNT_FAIL_MISMATCH_PASSWORD:
+                new ActivityClosingDialog("Failed!", "Password mismatched", NewAccountActivity.instance).show(getFragmentManager(), "");
                 break;
             default:
 

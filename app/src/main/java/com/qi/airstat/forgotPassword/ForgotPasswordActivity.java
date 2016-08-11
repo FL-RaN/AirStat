@@ -80,7 +80,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         switch (responseCode) {
             case Constants.HTTP_RESPONSE_RESULT_OK:
-                new ActivityClosingDialog("Password Reset Email Sent", "Follow the directions in the email to reset your password", this).show(getSupportFragmentManager(), "");
+                new ActivityClosingDialog("Password Reset Email Sent", "Follow the directions in the email to reset your password.", this).show(getSupportFragmentManager(), "");
+                break;
+            case Constants.HTTP_RESPONSE_RESULT_FORGOT_PASSWORD_FAIL_NOT_REGISTERED:
+                new ActivityClosingDialog("Failed!", "We weren't able to identify you given the information provided.", null).show(getSupportFragmentManager(), "");
                 break;
             default:
         }

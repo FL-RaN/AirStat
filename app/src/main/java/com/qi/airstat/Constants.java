@@ -167,7 +167,12 @@ public class Constants {
 
     final static public String HTTP_RESPONSE_RESULT = "status";
     final static public int HTTP_RESPONSE_RESULT_OK = 0;
-    final static public int HTTP_RESPONSE_RESULT_FAIL = 1;
+    final static public int HTTP_RESPONSE_RESULT_LOGIN_FAIL = 1;
+    final static public int HTTP_RESPONSE_RESULT_LOGIN_FAIL_ACTIVATION = 2;
+    final static public int HTTP_RESPONSE_RESULT_CREATE_NEW_ACCOUNT_FAIL_DUP = 1;
+    final static public int HTTP_RESPONSE_RESULT_CREATE_NEW_ACCOUNT_FAIL_INCORRECT_FORMAT_PASSWORD = 2;
+    final static public int HTTP_RESPONSE_RESULT_CREATE_NEW_ACCOUNT_FAIL_MISMATCH_PASSWORD = 3;
+    final static public int HTTP_RESPONSE_RESULT_FORGOT_PASSWORD_FAIL_NOT_REGISTERED = 1;
 
     static public int UID = -1;
 

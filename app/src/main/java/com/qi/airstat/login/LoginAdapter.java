@@ -60,8 +60,7 @@ public class LoginAdapter {
                 }
                 view.setEnabled(true); //Temporary setting
 
-                activity.startActivity(new Intent(activity.getApplicationContext(), SensorDataOverviewActivity.class));
-                activity.finish();
+
             }
         });
 
@@ -97,19 +96,23 @@ public class LoginAdapter {
             case Constants.HTTP_RESPONSE_RESULT_OK:
                 makeToast("Welcome!");
 
-                try {
-                    Constants.UID = jObj.getInt("uid");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    makeToast("Sorry, try again later...");
-                    return ;
-                }
-
+//                try {
+//                    Constants.UID = jObj.getInt("uid");
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                    makeToast("Sorry, try again later...");
+//                    return ;
+//                }
+                activity.startActivity(new Intent(activity.getApplicationContext(), SensorDataOverviewActivity.class));
                 activity.finish();
                 break;
-            case Constants.HTTP_RESPONSE_RESULT_FAIL:
+            case Constants.HTTP_RESPONSE_RESULT_LOGIN_FAIL:
                 new ActivityClosingDialog("Failed!", "Please check your email or password", null).show(LoginBaseActivity.fragmentManager, "");
                 break;
+            case Constants.HTTP_RESPONSE_RESULT_LOGIN_FAIL_ACTIVATION:
+                new ActivityClosingDialog("Failed!", "We need your activation." + "\nPlease check your email", null).show(LoginBaseActivity.fragmentManager, "");
+                break;
+
             default:
 
         }
