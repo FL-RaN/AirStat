@@ -55,7 +55,7 @@ public class BluetoothScanActivity extends Activity {
             if (info != null) {
                 CharSequence address = info.toString().substring(info.length() - Constants.BLUETOOTH_SCANNED_TEXT_MAC_OFFSET);
                 Intent intent = new Intent();
-                intent.putExtra(Constants.BLC_SCAN_RESULT_MAC, address);
+                intent.putExtra(Constants.BLUETOOTH_SCAN_RESULT_MAC, address);
 
                 setResult(Activity.RESULT_OK, intent);
                 finish();
@@ -114,6 +114,8 @@ public class BluetoothScanActivity extends Activity {
         // Set result as CANCELED by default.
         // If user paired device will it will be set as OK.
         setResult(Activity.RESULT_CANCELED);
+
+        scanButton = (Button)findViewById(R.id.btn_bluetooth_scan_scan);
 
         pairedDeviceListView = (ListView)findViewById(R.id.lv_bluetooth_scan_paired_devices);
         scannedDeviceListView = (ListView)findViewById(R.id.lv_bluetooth_scan_scanned_devices);

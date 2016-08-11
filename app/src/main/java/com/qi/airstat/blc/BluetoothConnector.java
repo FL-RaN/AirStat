@@ -16,7 +16,7 @@ import java.io.OutputStream;
 
 public class BluetoothConnector {
     private static final String TAG = "BluetoothConnector";
-    private static final boolean D = false;
+    private static final boolean D = true;
 
     // Constants that indicate the current connection state
     public static final int STATE_NONE = 0;       // we're doing nothing
@@ -62,9 +62,6 @@ public class BluetoothConnector {
         setState(STATE_CONNECTING);
     }
 
-    /**
-     * Завершение соединения
-     */
     public synchronized void stop() {
         if (D) Log.d(TAG, "stop");
 
@@ -235,7 +232,7 @@ public class BluetoothConnector {
 
         public void run() {
             if (D) Log.i(TAG, "ConnectedThread run");
-            byte[] buffer = new byte[512];
+            byte[] buffer = new byte[1024];
             int bytes;
             StringBuilder readMessage = new StringBuilder();
             while (true) {
