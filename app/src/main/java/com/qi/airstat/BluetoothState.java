@@ -27,7 +27,7 @@ public class BluetoothState extends BroadcastReceiver {
     static private String deviceName = null;
     static private String deviceAddress = null;
     static private int deviceState = Constants.STATE_NONE;*/
-    static private BluetoothConnector bluetoothConnector = null;
+    static public BluetoothConnector bluetoothConnector = null;
 
     private BluetoothState() { /* DO NOTHING */ }
 
@@ -51,7 +51,6 @@ public class BluetoothState extends BroadcastReceiver {
     static public boolean isUserSwitchedAirDataOn()         { return isUserSwitchedAirDataOn;       }
     static public boolean isAirSensorAvailable()            { return isAirSensorAvailable;          }
     static public boolean isHeartRateSensorAvailable()      { return isHeartRateSensorAvailable;    }
-    static public BluetoothConnector getBluetoothConnector() { return bluetoothConnector;            }
 
     static public void isUserSwitchedHeartRateDataOn(boolean isUserSwitchedHeartRateDataOn) { BluetoothState.isUserSwitchedHeartRateDataOn = isUserSwitchedHeartRateDataOn; }
     static public void isUserSwitchedAirDataOn(boolean isUserSwitchedAirDataOn)             { BluetoothState.isUserSwitchedAirDataOn = isUserSwitchedAirDataOn;             }
@@ -70,11 +69,20 @@ public class BluetoothState extends BroadcastReceiver {
         }
     }
 
-    static public void displayScanner(Context context) {
+    static public void displayClassicScanner(Context context) {
         if (bluetoothAdapter != null) {
             if (bluetoothAdapter.isEnabled()) {
                 Intent intent = new Intent(context, BluetoothScanActivity.class);
-                ((Activity)context).startActivityForResult(intent, Constants.BLUETOOTH_SCAN_REQEUST);
+                ((Activity)context).startActivityForResult(intent, Constants.BLUETOOTH_CLASSIC_SCAN_REQEUST);
+            }
+        }
+    }
+
+    static public void displayLightEnergyScanner(Context context) {
+        if (bluetoothAdapter != null) {
+            if (bluetoothAdapter.isEnabled()) {
+                Intent intent = new Intent(context, BluetoothScanActivity.class);
+                ((Activity)context).startActivityForResult(intent, Constants.BLUETOOTH_LE_SCAN_REQUEST);
             }
         }
     }

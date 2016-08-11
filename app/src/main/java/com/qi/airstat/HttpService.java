@@ -33,7 +33,7 @@ public class HttpService extends AsyncTask<String, String, String> {
 
     private Context context;
     private ArrayList<String> stirngParams;
-    private JSONArray jsonParams;
+    private JSONObject jsonParams;
     ProgressDialog pdLoading;
     HttpURLConnection conn;
     String strUrl;
@@ -42,7 +42,7 @@ public class HttpService extends AsyncTask<String, String, String> {
 
     String receivedData;
 
-    public String executeConn(Context context, String type, String strUrl, JSONArray params) {
+    public String executeConn(Context context, String type, String strUrl, JSONObject params) {
         this.context = context;
         this.stirngParams = null;
         this.jsonParams = params;
@@ -227,4 +227,3 @@ public class HttpService extends AsyncTask<String, String, String> {
             Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
     }
 }
-

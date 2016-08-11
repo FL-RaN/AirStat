@@ -21,7 +21,8 @@ public class Constants {
     final static public int DATABASE_VERSION = 1000;
 
     final static public int BLUETOOTH_PERMISSION_REQUEST = 100;
-    final static public int BLUETOOTH_SCAN_REQEUST = 101;
+    final static public int BLUETOOTH_CLASSIC_SCAN_REQEUST = 101;
+    final static public int BLUETOOTH_LE_SCAN_REQUEST = 102;
 
     final static public int LOCATION_PERMISSION_REQUEST = 200;
 
@@ -58,8 +59,14 @@ public class Constants {
     final static public String BLUETOOTH_MESSAGE_MESSAGE_TOAST = "BLUETOOTH_MESSAGE_MESSAGE_TOAST";
 
     final static public String BLUETOOTH_UNKNOWN_DEVICE = "UNKNOWN DEVICE";
-    final static public String BLC_SCAN_RESULT_MAC = "BLC_SCAN_RESULT_MAC";
-    final static public String BLC_SCAN_RESULT_DEV = "BLC_SCAN_RESULT_DEV";
+    final static public String BLUETOOTH_SCAN_RESULT_MAC = "BLUETOOTH_SCAN_RESULT_MAC";
+    final static public String BLUETOOTH_SCAN_RESULT_DEV = "BLUETOOTH_SCAN_RESULT_DEV";
+
+    final static public String LIST_NAME = "NAME";
+    final static public String LIST_UUID = "UUID";
+
+    final static public String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
+    final static public String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
 
     final static public String AIR_GRAPH_DESCRIPTION_PM25 = "PM2.5";
     final static public String AIR_GRAPH_DESCRIPTION_TEMPERATURE = "TEMPERATURE";
