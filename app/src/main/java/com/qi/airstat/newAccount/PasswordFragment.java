@@ -18,7 +18,6 @@ import com.qi.airstat.Constants;
 import com.qi.airstat.R;
 import com.qi.airstat.iHttpConnection;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.regex.Matcher;
@@ -79,30 +78,27 @@ public class PasswordFragment extends Fragment {
     }
 
     private void resultHandler(String receivedData) {
-        makeToast(receivedData);
         int responseCode = -1;
         try {
             JSONObject jObj = new JSONObject(receivedData);
             responseCode = jObj.getInt(Constants.HTTP_RESPONSE_RESULT);
-        } catch (JSONException e) {
-            e.printStackTrace();
-//            makeToast("Sorry, try again later...");
         } catch (Exception e) {
             e.printStackTrace();
+            makeToast("Sorry, try again later...");
         }
 
         switch (responseCode) {
             case Constants.HTTP_RESPONSE_RESULT_OK:
-                new ActivityClosingDialog("Congraturation!", "Check your email\n\n"+newAccountUi.edtEmail.getText(), NewAccountActivity.instance).show(getFragmentManager(), "");
+                new ActivityClosingDialog("Congraturation!", "Check your email\n\n" + newAccountUi.edtEmail.getText(), NewAccountActivity.instance).show(getFragmentManager(), "");
                 break;
             case Constants.HTTP_RESPONSE_RESULT_CREATE_NEW_ACCOUNT_FAIL_DUP:
                 new ActivityClosingDialog("Failed!", "You are already registered :(", NewAccountActivity.instance).show(getFragmentManager(), "");
                 break;
             case Constants.HTTP_RESPONSE_RESULT_CREATE_NEW_ACCOUNT_FAIL_INCORRECT_FORMAT_PASSWORD:
-                new ActivityClosingDialog("Failed!", "Incorrect password format", NewAccountActivity.instance).show(getFragmentManager(), "");
+                new ActivityClosingDialog("Failed!", "Incorrect password format", null).show(getFragmentManager(), "");
                 break;
             case Constants.HTTP_RESPONSE_RESULT_CREATE_NEW_ACCOUNT_FAIL_MISMATCH_PASSWORD:
-                new ActivityClosingDialog("Failed!", "Password mismatched", NewAccountActivity.instance).show(getFragmentManager(), "");
+                new ActivityClosingDialog("Failed!", "Password mismatched", null).show(getFragmentManager(), "");
                 break;
             default:
 
@@ -134,7 +130,7 @@ public class PasswordFragment extends Fragment {
             }
         }
 
-        private boolean pwdFormatChecker(String password){
+        private boolean pwdFormatChecker(String password) {
             Matcher matcher = Constants.VALID_PASSWOLD_REGEX_ALPHA_NUM.matcher(password);
             return matcher.matches();
         }

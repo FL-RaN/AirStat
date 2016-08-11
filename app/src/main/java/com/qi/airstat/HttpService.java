@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -22,6 +21,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -191,7 +191,7 @@ public class HttpService extends AsyncTask<String, String, String> {
                     result.append(line);
                 }
 
-                String strResult = result.toString();
+                String strResult = jsonSifter(result.toString());
 
                 Log.w("RCV", strResult);
                 return strResult;
@@ -202,12 +202,25 @@ public class HttpService extends AsyncTask<String, String, String> {
         } catch (IOException e) {
             e.printStackTrace();
             return "IOException";
+        } catch (NullPointerException e) {
+            return "NullPointerException";
         } catch (Exception e) {
             e.printStackTrace();
             return "Exception";
         } finally {
             conn.disconnect();
         }
+    }
+
+    private String jsonSifter(String strResult) {
+        StringTokenizer st = null;
+        try {
+            st = new StringTokenizer(strResult, "<");
+        } catch (NullPointerException e) {
+            throw e;
+        }
+        String siftedResult = st.nextToken();
+        return siftedResult;
     }
 
     @Override
