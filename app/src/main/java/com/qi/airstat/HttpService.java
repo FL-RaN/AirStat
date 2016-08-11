@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -31,7 +32,8 @@ import java.util.concurrent.TimeoutException;
 public class HttpService extends AsyncTask<String, String, String> {
 
     private Context context;
-    private ArrayList<String> params;
+    private ArrayList<String> stirngParams;
+    private JSONArray jsonParams;
     ProgressDialog pdLoading;
     HttpURLConnection conn;
     String strUrl;
@@ -40,23 +42,30 @@ public class HttpService extends AsyncTask<String, String, String> {
 
     String receivedData;
 
-    public String executeConn(String strUrl) {
-        return executeConn(null, null, strUrl, null);
-    }
+    public String executeConn(Context context, String type, String strUrl, JSONArray params) {
+        this.context = context;
+        this.stirngParams = null;
+        this.jsonParams = params;
+        this.type = type;
+        this.strUrl = strUrl;
 
-    public String executeConn(String type, String strUrl, ArrayList<String> params) {
-        return executeConn(null, type, strUrl, params);
+        return introService();
     }
 
     public String executeConn(Context context, String type, String strUrl, ArrayList<String> params) {
         this.context = context;
-        this.params = params;
+        this.stirngParams = params;
+        this.jsonParams = null;
         this.type = type;
+        this.strUrl = strUrl;
 
+        return introService();
+    }
+
+    public String introService() {
         if (context != null)
             this.pdLoading = new ProgressDialog(context);
 
-        this.strUrl = strUrl;
         try {
             Log.w("HTTPSERVICE", "FIRST");
             receivedData = this.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, strUrl).get(600, TimeUnit.MILLISECONDS);
@@ -131,21 +140,27 @@ public class HttpService extends AsyncTask<String, String, String> {
                 /*
                 JSON - Append parameters to JSON
                  */
-            if (params != null) {
+            String query = "";
+            if (stirngParams != null) {
                 JSONObject jsonQuery = new JSONObject();
-                for (int i = 0; i < params.size(); i++) {
-                    jsonQuery.put(params.get(i), params.get(++i));
+                for (int i = 0; i < stirngParams.size(); i++) {
+                    jsonQuery.put(stirngParams.get(i), stirngParams.get(++i));
                 }
-                String query = jsonQuery.toString();
+                query = jsonQuery.toString();
+
+            } else if (jsonParams != null) {
+                query = jsonParams.toString();
+            }
+
+            if (type.equals("POST")) {
                 OutputStream outputStream = conn.getOutputStream();
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream, "UTF-8"));
                 writer.write(query);
                 writer.flush();
                 writer.close();
                 outputStream.close();
-                Log.w("SND", query);
             }
-
+            Log.w("SND", query);
                 /*
                 Open connection for sending data
                  */
