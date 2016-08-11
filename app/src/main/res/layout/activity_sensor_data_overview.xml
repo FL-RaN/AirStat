@@ -201,6 +201,13 @@
 
             </FrameLayout>
         </LinearLayout>
+
+        <com.qi.airstat.CustomView
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cv_sensor_data_overview_footer">
+        </com.qi.airstat.CustomView>
     </LinearLayout>
 
     <RelativeLayout

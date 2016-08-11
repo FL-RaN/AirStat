@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.qi.airstat.ActivityClosingDialog;
 import com.qi.airstat.Constants;
 import com.qi.airstat.R;
+import com.qi.airstat.SensorDataOverviewActivity;
 import com.qi.airstat.forgotPassword.ForgotPasswordActivity;
 import com.qi.airstat.iHttpConnection;
 import com.qi.airstat.newAccount.NewAccountActivity;
@@ -58,6 +59,9 @@ public class LoginAdapter {
                     resultHandler(receivedData);
                 }
                 view.setEnabled(true); //Temporary setting
+
+                activity.startActivity(new Intent(activity.getApplicationContext(), SensorDataOverviewActivity.class));
+                activity.finish();
             }
         });
 

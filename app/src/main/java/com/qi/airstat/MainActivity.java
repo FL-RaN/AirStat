@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.qi.airstat.dataMap.DataMapActivity;
+import com.qi.airstat.login.LoginBaseActivity;
 
 public class MainActivity extends AppCompatActivity {
     CustomView customView;
@@ -13,14 +14,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        customView = new CustomView(this);
 
-
-        startActivity(new Intent(this, DataMapActivity.class));
-//        startActivity(new Intent(this, LoginBaseActivity.class));
-
-        //startService(new Intent(this, FakeDataTransmitService.class));
-        //startActivity(new Intent(this, SensorDataOverviewActivity.class));
-//        finish();
+        startActivity(new Intent(this, LoginBaseActivity.class));
+        finish();
     }
 }
