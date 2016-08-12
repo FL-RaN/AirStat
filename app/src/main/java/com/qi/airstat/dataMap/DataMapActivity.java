@@ -115,7 +115,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
                 exception.printStackTrace();
             }
 
-            messageSender = null;
+//            messageSender = null;
             isDataMapServiceBound = false;
         }
     };
@@ -123,30 +123,6 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        dataMapCommunication.stopThread();
-//        dataMapCommunication.httpService.pdLoading.dismiss();
-//        dataMapCommunication.httpService.conn.disconnect();
-        if (backgroundMarkerChanger != null) backgroundMarkerChanger.stop();
-        if (backgroundClusterChanger != null) backgroundClusterChanger.stop();
-        unbindService(serviceConnection);
-    }
-
-    @Override
-    protected void onStop() {
-        makeToast("onStop!!");
-//        if (isDataMapServiceBound) {
-//            try {
-//                // Send message to service for register this activity as new client.
-//                Message message = Message.obtain(null, Constants.CLIENT_UNREGISTER);
-//                message.replyTo = messageReceiver;
-//                messageSender.send(message);
-//            } catch (RemoteException exception) {
-//                exception.printStackTrace();
-//            }
-//            messageSender = null;
-//            isDataMapServiceBound = false;
-//        }
-
 
         if (isDataMapServiceBound) {
             try {
@@ -158,8 +134,6 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
                 exception.printStackTrace();
             }
             messageSender = null;
-            isDataMapServiceBound = false;
-//            unbindService(serviceConnection);
             isDataMapServiceBound = false;
         }
 
@@ -186,7 +160,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         if (backgroundMarkerChanger != null)
             Log.d("Marker status", backgroundMarkerChanger.getStatus().toString());
 
-        super.onStop();
+        unbindService(serviceConnection);
     }
 
     class IncommingHandler extends Handler {
@@ -202,53 +176,8 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
     }
 
     @Override
-    protected void onPause() {
-        makeToast("onPause!!");
-        super.onPause();
-//
-//        if (isDataMapServiceBound) {
-//            try {
-//                // Send message to service for register this activity as new client.
-//                Message message = Message.obtain(null, Constants.CLIENT_UNREGISTER);
-//                message.replyTo = messageReceiver;
-//                messageSender.send(message);
-//            } catch (RemoteException exception) {
-//                exception.printStackTrace();
-//            }
-//            messageSender = null;
-//            isDataMapServiceBound = false;
-////            unbindService(serviceConnection);
-//            isDataMapServiceBound = false;
-//        }
-//
-//        try {
-//            if (locationManager != null)
-//                locationManager.removeUpdates(this);
-//        } catch (SecurityException e) {
-//            e.printStackTrace();
-//        }
-//        if (backgroundMarkerChanger != null) {
-//            Log.d("Async Init", "Marker");
-//            backgroundMarkerChanger.stop();
-//            backgroundMarkerChanger.cancel(true);
-//        }
-//        if (backgroundClusterChanger != null) {
-//            Log.d("Async Init", "Cluster");
-//            backgroundClusterChanger.stop();
-//            backgroundClusterChanger.cancel(true);
-//        }
-//        dataMapPanelUi.slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-//
-//        if (backgroundClusterChanger != null)
-//            Log.d("Cluster status", backgroundClusterChanger.getStatus().toString());
-//        if (backgroundMarkerChanger != null)
-//            Log.d("Marker status", backgroundMarkerChanger.getStatus().toString());
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
-        makeToast("onResume!!");
         if (!isDataMapServiceBound) {
             isDataMapServiceBound = true;
             bindService(

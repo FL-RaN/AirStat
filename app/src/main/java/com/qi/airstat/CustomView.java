@@ -21,7 +21,7 @@ public class CustomView extends LinearLayout implements View.OnClickListener {
     Button btnDashboard;
     Button btnMap;
 
-    static boolean isPushedDashboar = true;
+    static boolean isPushedDashboard = true;
 
     final String SELECTED_COLOR = "#F23434";
     final String DEFAULT_COLOR = "#88ffffff";
@@ -45,7 +45,7 @@ public class CustomView extends LinearLayout implements View.OnClickListener {
 
         btnDashboard = (Button) findViewById(R.id.btn_custom_view_left);
         btnMap = (Button) findViewById(R.id.btn_custom_view_right);
-        if (isPushedDashboar)
+        if (isPushedDashboard)
             btnImgChanger(SELECTED_COLOR, DEFAULT_COLOR);
         else
             btnImgChanger(DEFAULT_COLOR, SELECTED_COLOR);
@@ -59,14 +59,16 @@ public class CustomView extends LinearLayout implements View.OnClickListener {
         Button btnClicked = (Button) view;
 
         if (btnClicked.equals(btnDashboard)) {
-            isPushedDashboar = true;
+            isPushedDashboard = true;
             MainActivity.instance.startActivityForResult(new Intent(getContext(), SensorDataOverviewActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP), 200);
             MainActivity.instance.finishActivity(300);
+
             btnImgChanger(SELECTED_COLOR, DEFAULT_COLOR);
         } else if (btnClicked.equals(btnMap)) {
-            isPushedDashboar = false;
+            isPushedDashboard = false;
             MainActivity.instance.startActivityForResult(new Intent(getContext(), DataMapActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP), 300);
             MainActivity.instance.finishActivity(200);
+
             btnImgChanger(DEFAULT_COLOR, SELECTED_COLOR);
         }
     }
@@ -78,10 +80,19 @@ public class CustomView extends LinearLayout implements View.OnClickListener {
         btnDashboard.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
         btnDashboard.setTextColor(Color.parseColor(target));
 
+
         img = ResourcesCompat.getDrawable(getResources(), R.drawable.icon_bottom_map, null);
 
         img.setColorFilter(Color.parseColor(revers), PorterDuff.Mode.MULTIPLY);
         btnMap.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
         btnMap.setTextColor(Color.parseColor(revers));
+
+        if(isPushedDashboard){
+            btnDashboard.setEnabled(false);
+            btnMap.setEnabled(true);
+        } else {
+            btnDashboard.setEnabled(true);
+            btnMap.setEnabled(false);
+        }
     }
 }
