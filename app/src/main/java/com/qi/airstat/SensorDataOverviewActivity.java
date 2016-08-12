@@ -29,7 +29,6 @@ import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.qi.airstat.blc.BluetoothConnector;
 import com.qi.airstat.blc.DeviceData;
 
 import org.json.JSONArray;
@@ -251,17 +250,19 @@ public class SensorDataOverviewActivity extends FragmentActivity {
         intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
         registerReceiver(bluetoothBroadcastReceiver, intentFilter);
 
-        bindService(
-                new Intent(this, BluetoothClassicService.class),
-                BLCServiceConnection,
-                Context.BIND_AUTO_CREATE
-        );
+        if (BluetoothAdapter.getDefaultAdapter() != null) {
+            bindService(
+                    new Intent(this, BluetoothClassicService.class),
+                    BLCServiceConnection,
+                    Context.BIND_AUTO_CREATE
+            );
 
-        bindService(
-                new Intent(this, BluetoothLeService.class),
-                BLEServiceConnection,
-                Context.BIND_AUTO_CREATE
-        );
+            bindService(
+                    new Intent(this, BluetoothLeService.class),
+                    BLEServiceConnection,
+                    Context.BIND_AUTO_CREATE
+            );
+        }
 
         bindService(
                 new Intent(this, FakeDataTransmitService.class),

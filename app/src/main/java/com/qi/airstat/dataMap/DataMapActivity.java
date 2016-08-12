@@ -145,6 +145,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
             isDataMapServiceBound = false;
         }
         super.onStop();
+//        this.finish();
     }
 
     class IncommingHandler extends Handler {
@@ -701,7 +702,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
             DataMapMarker marker = (DataMapMarker) clusterItem;
             backgroundMarkerChanger = new BackgroundMarkerChanger(marker);
 //            backgroundMarkerChanger.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            backgroundMarkerChanger.execute();
+            backgroundMarkerChanger.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             dataMapPanelUi.slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             map.animateCamera(CameraUpdateFactory.newLatLng(clusterItem.getPosition()));
             return true;
@@ -781,6 +782,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
             if (marker.getConnectionID() != -1)
                 regionAddress = getRegionAddress(marker.getLocation().latitude, marker.getLocation().longitude);
             while (flow) {
+                Log.d("MARKER DRAW", "HERE!!!!!");
                 publishProgress(marker);
                 try {
 //                    Thread.sleep(200);
