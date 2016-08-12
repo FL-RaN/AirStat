@@ -128,6 +128,36 @@ public class SensorDataOverviewActivity extends FragmentActivity {
                 case Constants.BLUETOOTH_MESSAGE_MESSAGE_WRITE:
                     break;
                 case Constants.BLUETOOTH_MESSAGE_STATE_READ:
+                    JSONObject reformedObject = new JSONObject();
+                    JSONArray reformedArray = new JSONArray();
+
+                    try {
+                        JSONObject item = new JSONObject();
+                        item.put("timeStamp", intent.getStringExtra("timeStamp"));
+                        item.put("connectionID", intent.getIntExtra("connectionID", 0));
+                        item.put("SO2", intent.getDoubleExtra("SO2", 0));
+                        item.put("NO2", intent.getDoubleExtra("NO2", 0));
+                        item.put("O3", intent.getDoubleExtra("O3", 0));
+                        item.put("CO", intent.getDoubleExtra("CO", 0));
+                        item.put("PM", intent.getDoubleExtra("PM25", 0));
+                        item.put("temperature", intent.getIntExtra("temperature", 0));
+                        item.put("latitude", intent.getDoubleExtra("latitude", 0));
+                        item.put("longitude", intent.getDoubleExtra("longitude", 0));
+
+                        reformedArray.put(item);
+                        reformedObject.put("AIR", reformedArray);
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    HttpService httpService = new HttpService();
+                    String responseCode = httpService.executeConn(
+                            SensorDataOverviewActivity.this,
+                            "POST", "http://teamc-iot.calit2.net/IOT/public/rcv_json_data",
+                            reformedObject
+                    );
+
                     updateAirData();
                     break;
                 case Constants.BLUETOOTH_MESSAGE_STATE_CHANGE:
@@ -162,21 +192,16 @@ public class SensorDataOverviewActivity extends FragmentActivity {
                     polarDisabledLayout.setVisibility(View.GONE);
                     break;
                 case BluetoothLeService.ACTION_DATA_AVAILABLE:
-                    int signal = Integer.parseInt(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
-
-                    updateHeartRateData();
-
-                    /*String date = new SimpleDateFormat("yyMMddHHmmss").format(new java.util.Date());
                     JSONObject dataset = new JSONObject();
                     JSONArray jsonArray = new JSONArray();
 
                     try {
                         JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("timeStamp", date);
-                        jsonObject.put("connectionID", 1);
-                        jsonObject.put("heartrate", signal);
-                        jsonObject.put("latitude", 111.11f);
-                        jsonObject.put("longitude", 222.22f);
+                        jsonObject.put("timeStamp", intent.getStringExtra("timeStamp"));
+                        jsonObject.put("connectionID", intent.getIntExtra("connectionID", 0));
+                        jsonObject.put("heartrate", intent.getIntExtra("heartrate", 0));
+                        jsonObject.put("latitude", intent.getDoubleExtra("latitude", 0));
+                        jsonObject.put("longitude", intent.getDoubleExtra("longitude", 0));
 
                         jsonArray.put(jsonObject);
                         dataset.put("HR", jsonArray);
@@ -185,13 +210,14 @@ public class SensorDataOverviewActivity extends FragmentActivity {
                         e.printStackTrace();
                     }
 
-                    HttpService httpService = new HttpService();
-                    String responseCode = httpService.executeConn(
+                    HttpService httpService2 = new HttpService();
+                    String responseCode2 = httpService2.executeConn(
                             SensorDataOverviewActivity.this,
                             "POST", "http://teamc-iot.calit2.net/IOT/public/rcv_json_data",
                             dataset
-                    );*/
+                    );
 
+                    updateHeartRateData();
                     break;
                 default:
                     break;

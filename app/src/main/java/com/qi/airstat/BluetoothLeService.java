@@ -30,10 +30,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -55,6 +60,8 @@ public class BluetoothLeService extends Service {
     private BluetoothGatt mBluetoothGatt;
     private int mConnectionState = STATE_DISCONNECTED;
 
+    private LocationManager locationManager = null;
+
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
     private static final int STATE_CONNECTED = 2;
@@ -72,6 +79,43 @@ public class BluetoothLeService extends Service {
 
     public final static UUID UUID_HEART_RATE_MEASUREMENT =
             UUID.fromString(SampleGattAttributes.HEART_RATE_MEASUREMENT);
+
+    private double latitude = 0;
+    private double longitude = 0;
+
+    @Override
+    public void onCreate() {
+        try {
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 1, locationListener);
+        }
+        catch (SecurityException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    private final LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(final Location location) {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+        }
+
+        @Override
+        public void onStatusChanged(String s, int i, Bundle bundle) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String s) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String s) {
+
+        }
+    };
 
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
@@ -169,13 +213,28 @@ public class BluetoothLeService extends Service {
         SQLiteDatabase database = databaseManager.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-
         String date = new SimpleDateFormat("yyMMddHHmmss").format(new java.util.Date());
+
         values.put(Constants.DATABASE_COMMON_COLUMN_TIME_STAMP, date);
         values.put(Constants.DATABASE_HEART_RATE_COLUMN_HEART_RATE, signal);
         database.insert(Constants.DATABASE_HEART_RATE_TABLE, null, values);
 
         database.close();
+
+        try {
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+        }
+        catch (SecurityException exception) {
+            exception.printStackTrace();
+        }
+
+        intent.putExtra("timeStamp", date);
+        intent.putExtra("connectionID", 3);
+        intent.putExtra("heartrate", signal);
+        intent.putExtra("latitude", latitude);
+        intent.putExtra("longitude", longitude);
 
         sendBroadcast(intent);
     }
