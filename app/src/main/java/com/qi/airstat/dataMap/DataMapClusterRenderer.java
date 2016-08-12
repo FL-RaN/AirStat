@@ -26,6 +26,7 @@ import com.google.maps.android.ui.IconGenerator;
 import com.qi.airstat.Constants;
 import com.qi.airstat.R;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -37,13 +38,15 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
     ImageView imgMarker;
     TextView tvMarker;
     Context context;
+    ArrayList<DataMapMarker> markers;
 
-    public DataMapClusterRenderer(Context context, GoogleMap map, ClusterManager<DataMapMarker> clusterManager) {
+    public DataMapClusterRenderer(Context context, GoogleMap map, ClusterManager<DataMapMarker> clusterManager, ArrayList<DataMapMarker> markers) {
         super(context, map, clusterManager);
         this.context = context;
         view = LayoutInflater.from(context).inflate(R.layout.marker_custom, null);
         imgMarker = (ImageView) view.findViewById(R.id.img_marker);
         tvMarker = (TextView) view.findViewById(R.id.tv_marker);
+        this.markers = markers;
     }
 
     @Override
@@ -122,7 +125,16 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
 
         marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
 
-        marker.setPosition(DataMapActivity.findMarker(clusterItem.getConnectionID()).getLocation());
+        marker.setPosition(findMarker(clusterItem.getConnectionID()).getLocation());
+    }
+
+    public DataMapMarker findMarker(int cid) {
+        for (DataMapMarker marker : markers) {
+            if (marker.getConnectionID() == cid) {
+                return marker;
+            }
+        }
+        return null;
     }
 
     @Override

@@ -3,7 +3,10 @@ package com.qi.airstat.dataMap;
 import android.Manifest;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
@@ -11,6 +14,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -60,7 +68,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
     private MapFragment mapFragment;
 
     public static ArrayList<DataMapMarker> markers;
-    public static ClusterManager<DataMapMarker> mClusterManager;
+    public ClusterManager<DataMapMarker> mClusterManager;
 
     private DefaultClusterRenderer mRenderer;
 
@@ -70,15 +78,154 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 
     private BackgroundMarkerChanger backgroundMarkerChanger;
     private BackgroundClusterChanger backgroundClusterChanger;
-//    public RefreshMap refreshMap;
-
-    private DataMapCommunication dataMapCommunication;
 
     private DataMapPanelUi dataMapPanelUi;
 
     public final LatLng START_POINT = new LatLng(32.881265, -117.234139);
     private boolean firstCall = true;
 
+    private Messenger messageReceiver = new Messenger(new IncommingHandler());
+    private Messenger messageSender = null;
+    private boolean isDataMapServiceBound = false;
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            messageSender = new Messenger(iBinder);
+
+            try {
+                // Send message to service for register this activity as new client.
+                Message message = Message.obtain(null, Constants.CLIENT_REGISTER);
+                message.replyTo = messageReceiver;
+                messageSender.send(message);
+            } catch (RemoteException exception) {
+                exception.printStackTrace();
+            }
+
+            isDataMapServiceBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            try {
+                // Send message to service for register this activity as new client.
+                Message message = Message.obtain(null, Constants.CLIENT_UNREGISTER);
+                message.replyTo = messageReceiver;
+                messageSender.send(message);
+            } catch (RemoteException exception) {
+                exception.printStackTrace();
+            }
+
+            messageSender = null;
+            isDataMapServiceBound = false;
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        dataMapCommunication.stopThread();
+//        dataMapCommunication.httpService.pdLoading.dismiss();
+//        dataMapCommunication.httpService.conn.disconnect();
+        if (backgroundMarkerChanger != null) backgroundMarkerChanger.stop();
+        if (backgroundClusterChanger != null) backgroundClusterChanger.stop();
+    }
+
+    @Override
+    protected void onStop() {
+        if (isDataMapServiceBound) {
+            try {
+                // Send message to service for register this activity as new client.
+                Message message = Message.obtain(null, Constants.CLIENT_UNREGISTER);
+                message.replyTo = messageReceiver;
+                messageSender.send(message);
+            } catch (RemoteException exception) {
+                exception.printStackTrace();
+            }
+            messageSender = null;
+            isDataMapServiceBound = false;
+        }
+        super.onStop();
+    }
+
+    class IncommingHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case Constants.SERVICE_DATA_MAP_DRAW_MAP:
+                    String rcvdData = (String) msg.obj;
+                    resultHandler(rcvdData);
+                    break;
+            }
+        }
+    }
+
+    public void resultHandler(String result) {
+        Log.d("result", result + "");
+        JSONObject rcvdData = null;
+
+        try {
+            rcvdData = new JSONObject(result);
+            parseOngoingSessionData(rcvdData);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void parseOngoingSessionData(JSONObject rcvdData) {
+        try {
+            int i = 1;
+            JSONObject eachData = rcvdData.getJSONObject("" + (i++));
+
+            while (eachData != null) {
+
+                int connectionID = eachData.getInt(Constants.HTTP_DATA_MAP_ONGOING_SESSION_CID);
+                long timeStamp = eachData.getLong(Constants.HTTP_DATA_MAP_ONGOING_SESSION_TIME_STAMP);
+                JSONObject airData = eachData.getJSONObject(Constants.HTTP_DATA_MAP_ONGOING_SESSION_AIR);
+
+                double temperature = airData.getDouble(Constants.HTTP_DATA_MAP_ONGOING_SESSION_TEMP);
+                double co = airData.getDouble(Constants.HTTP_DATA_MAP_ONGOING_SESSION_CO);
+                double so2 = airData.getDouble(Constants.HTTP_DATA_MAP_ONGOING_SESSION_SO2);
+                double no2 = airData.getDouble(Constants.HTTP_DATA_MAP_ONGOING_SESSION_NO2);
+                double o3 = airData.getDouble(Constants.HTTP_DATA_MAP_ONGOING_SESSION_O3);
+                double pm = airData.getDouble(Constants.HTTP_DATA_MAP_ONGOING_SESSION_PM);
+                double lat = airData.getDouble(Constants.HTTP_DATA_MAP_ONGOING_SESSION_LAT);
+                double lng = airData.getDouble(Constants.HTTP_DATA_MAP_ONGOING_SESSION_LNG);
+
+                refreshMarker(connectionID, timeStamp, new DataMapDataSet(temperature, co, so2, no2, o3, pm), lat, lng);
+                try {
+                    eachData = rcvdData.getJSONObject("" + (i++));
+                } catch (JSONException e) {
+                    eachData = null;
+                }
+            }
+            DataMapCurrentUser.getInstance().setCurrentUserData((float) Math.random() * 400 + 1, (float) Math.random() * 20, (float) Math.random() * 600, (float) Math.random() * 300 + 1700, (float) Math.random() * 100 + 500, (float) Math.random() * 100 + 400);
+//            DataMapCurrentUser.getInstance().setCurrentUserData(0,50.4f,1004,2049,604,500);
+            refreshMarker(DataMapCurrentUser.create());
+            for (int j = 1; j < 10; j++) {
+                refreshMarker(10 * j,
+                        162737272727l,
+                        new DataMapDataSet((float) Math.random() * 400, (float) Math.random() * 50, (float) Math.random() * 60, (float) Math.random() * 200, (float) Math.random() * 60, (float) Math.random() * 50),
+                        START_POINT.latitude + (j / 50d), START_POINT.longitude + (j / 200d));
+            }
+
+            refreshMap();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void refreshMap() {
+        mClusterManager.clearItems();
+
+        for (DataMapMarker marker : markers) {
+            mClusterManager.addItem(marker);
+        }
+
+        mClusterManager.cluster();
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,6 +250,12 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         dataMapPanelUi = new DataMapPanelUi();
 
         setWidgets(dataMapPanelUi);
+
+        bindService(
+                new Intent(this, DataMapService.class),
+                serviceConnection,
+                Context.BIND_AUTO_CREATE
+        );
     }
 
     /*
@@ -112,7 +265,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         PermissionListener permissionListener = new PermissionListener() {
             @Override
             public void onPermissionGranted() {
-
+                /*DO NOTHING*/
             }
 
             @Override
@@ -188,13 +341,6 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         setMapEvent();
 
-//        initMarkers(markers);
-
-        /*
-        Start Communication service
-         */
-        dataMapCommunication = new DataMapCommunication(null, this);
-        dataMapCommunication.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /*
@@ -232,7 +378,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
             }
         });
 
-        mRenderer = new DataMapClusterRenderer(this, map, mClusterManager);
+        mRenderer = new DataMapClusterRenderer(this, map, mClusterManager, markers);
         mClusterManager.setRenderer(mRenderer);
         mClusterManager.setOnClusterItemClickListener(markerTouchDetector);
         mClusterManager.setOnClusterClickListener(clusterTouchDetector);
@@ -724,14 +870,6 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 //        backgroundMarkerChanger.stop();
 //        backgroundClusterChanger.stop();
 
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        dataMapCommunication.stopThread();
-        backgroundMarkerChanger.stop();
-        backgroundClusterChanger.stop();
     }
 
     public String[] getRegionAddress(double lat, double lng) {

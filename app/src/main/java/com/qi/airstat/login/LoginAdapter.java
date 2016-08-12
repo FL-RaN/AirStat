@@ -59,8 +59,6 @@ public class LoginAdapter {
                     resultHandler(receivedData);
                 }
                 view.setEnabled(true); //Temporary setting
-
-
             }
         });
 
@@ -96,13 +94,13 @@ public class LoginAdapter {
             case Constants.HTTP_RESPONSE_RESULT_OK:
                 makeToast("Welcome!");
 
-//                try {
-//                    Constants.UID = jObj.getInt("uid");
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                    makeToast("Sorry, try again later...");
-//                    return ;
-//                }
+                try {
+                    Constants.UID = jObj.getInt(Constants.HTTP_DATA_LOGIN_UID);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    makeToast("Sorry, try again later...");
+                    return ;
+                }
                 activity.startActivity(new Intent(activity.getApplicationContext(), SensorDataOverviewActivity.class));
                 activity.finish();
                 break;

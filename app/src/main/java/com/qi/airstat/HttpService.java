@@ -34,8 +34,8 @@ public class HttpService extends AsyncTask<String, String, String> {
     private Context context;
     private ArrayList<String> stirngParams;
     private JSONObject jsonParams;
-    ProgressDialog pdLoading;
-    HttpURLConnection conn;
+    public ProgressDialog pdLoading;
+    public HttpURLConnection conn;
     String strUrl;
     URL url;
     String type;
@@ -63,8 +63,9 @@ public class HttpService extends AsyncTask<String, String, String> {
     }
 
     public String introService() {
-        if (context != null)
+        if (context != null){
             this.pdLoading = new ProgressDialog(context);
+        }
 
         try {
             Log.w("HTTPSERVICE", "FIRST");
@@ -89,6 +90,7 @@ public class HttpService extends AsyncTask<String, String, String> {
             pdLoading.setMessage("\tLoading...");
             pdLoading.setCancelable(false);
             pdLoading.show();
+
         }
         Log.w("HTTPSERVICE", "SECOND");
     }

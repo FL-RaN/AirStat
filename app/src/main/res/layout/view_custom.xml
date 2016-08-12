@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="@drawable/transparent_background"
-        android:drawableTop="@drawable/icon_bottom_recents2"
+        android:drawableTop="@drawable/icon_bottom_dashboard"
         android:text="Dashboard"
         android:textAllCaps="false"
         android:textSize="10sp" />

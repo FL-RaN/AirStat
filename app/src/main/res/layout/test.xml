@@ -41,7 +41,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
                     android:layout_weight="1"
-                    android:text="adf"
+                    android:text=""
+                    android:textColor="#99ffffff"
                     android:textSize="18sp" />
 
                 <TextView
@@ -50,22 +51,23 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="bottom|right"
-                    android:text="GOOD"
+                    android:text=""
                     android:textColor="#ffffff"
                     android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tv_data_map_sub_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|top"
-                android:layout_weight="1"
-                android:textStyle="bold"
-                android:text="1123"
                 android:layout_marginLeft="10sp"
+                android:layout_weight="1"
+                android:text=""
+                android:textColor="#77000000"
                 android:textSize="18sp"
-                android:id="@+id/tv_data_map_sub_title"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
 
@@ -132,8 +134,8 @@
                     android:gravity="top|left"
                     android:text="AQI"
                     android:textColor="#8e9aa0"
-                    android:textStyle="bold"
-                    android:textSize="20dp" />
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -154,8 +156,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="15dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
                     android:layout_marginTop="3dp"
                     android:layout_weight="2"
                     android:background="@drawable/icon_thermometer"
@@ -370,5 +372,9 @@
         <!--TO HERE-->
 
     </LinearLayout>
+
+    <com.qi.airstat.CustomView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></com.qi.airstat.CustomView>
 
 </LinearLayout>

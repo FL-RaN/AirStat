@@ -141,11 +141,8 @@ public class Constants {
     Don't know exactly...;;
      */
     final static public String HTTP_STR_URL_LOGIN = "http://teamc-iot.calit2.net/IOT/public/Login";
-    //    final static public String HTTP_STR_URL_LOGIN = "http://teama-iot.calit2.net/slim/recieveData.php/rcvJSON";
     final static public String HTTP_STR_URL_CREATE_NEW_ACCOUNT = "http://teamc-iot.calit2.net/IOT/public/reg";
     final static public String HTTP_STR_URL_FORGOT_PASSWORD = "http://teamc-iot.calit2.net/IOT/public/ResetPwd";
-
-    final static public String HTTP_STR_URL_TEST = "http://teamc-iot.calit2.net/IOT/public/rcv_json_data";
 
     final static public String HTTP_MSG_ID = "msgid";
 
@@ -167,6 +164,7 @@ public class Constants {
 
     final static public String HTTP_RESPONSE_RESULT = "status";
     final static public int HTTP_RESPONSE_RESULT_OK = 0;
+    final static public String HTTP_DATA_LOGIN_UID = "userID";
     final static public int HTTP_RESPONSE_RESULT_LOGIN_FAIL = 1;
     final static public int HTTP_RESPONSE_RESULT_LOGIN_FAIL_ACTIVATION = 2;
     final static public int HTTP_RESPONSE_RESULT_CREATE_NEW_ACCOUNT_FAIL_DUP = 1;
@@ -187,6 +185,7 @@ public class Constants {
     final static public String AQI_LEVEL_VERY_UNHEALTHY = "#dd670099";
     final static public String AQI_LEVEL_HAZARDOUS = "#dd7e0123";
 
+    final static public int SERVICE_DATA_MAP_DRAW_MAP = 1;
     final static public int HTTP_DATA_MAP_GET_ONGOING_SESSION_TIME_QUALTUM = 1000;
 
     final static public String HTTP_STR_URL_ONGOING_SESSION = "http://teamc-iot.calit2.net/IOT/public/realtime_json";
