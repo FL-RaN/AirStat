@@ -10,15 +10,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -36,6 +40,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -129,6 +137,13 @@ public class SensorDataOverviewActivity extends FragmentActivity {
                     if (state == Constants.STATE_CONNECTED) {
                         udooDisabledLayout.setVisibility(View.GONE);
                         String startMessage = "start," + (long)(System.currentTimeMillis() / 1000L);
+
+                        /*
+                        JSONObject jsonObject = new JSONObject();
+                        HttpService httpService = new HttpService();
+                        httpService.executeConn(SensorDataOverviewActivity.this, "POST", "", new JSONObject());
+                        */
+
                         BluetoothState.bluetoothConnector.write(startMessage.getBytes());
                     }
                     else if (state == Constants.STATE_NONE) {
@@ -233,6 +248,17 @@ public class SensorDataOverviewActivity extends FragmentActivity {
         initialize();
         checkPermissions();
 
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[] {
+                            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    }, 5555
+            );
+        }
+
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BLUETOOTH_MESSAGE_MESSAGE_DEVICE_NAME);
         intentFilter.addAction(Constants.BLUETOOTH_MESSAGE_MESSAGE_TOAST);
@@ -288,6 +314,10 @@ public class SensorDataOverviewActivity extends FragmentActivity {
         super.onPause();
         if (BluetoothState.isBLEConnected()) {
             BLEService.disconnect();
+        }
+
+        if(BluetoothState.isBLCConnected()) {
+            BLCService.disconnect();
         }
     }
 
@@ -657,5 +687,36 @@ public class SensorDataOverviewActivity extends FragmentActivity {
 
     public void onClickConnectHeartRateDevice(View view) {
         BluetoothState.displayLightEnergyScanner(this);
+    }
+
+    public void onCilckDisconnect(View view) {
+        if (BluetoothState.isBLCConnected() && BLCService != null) {
+            BluetoothState.bluetoothConnector.write(new String("disconnect").getBytes());
+            //BluetoothState.bluetoothConnector.stop();
+        }
+
+        /*if (BluetoothState.isBLEConnected()) {
+            BLEService.disconnect();
+        }*/
+        //BLEService.disconnect();
+
+        /*File folder = new File(Environment.getExternalStorageDirectory()
+                + "/Folder");
+
+        boolean var = false;
+        if (!folder.exists())
+            var = folder.mkdir();
+
+        System.out.println("" + var);
+
+        final String filename = folder.toString() + "/" + "Test.csv";
+
+        try {
+            FileWriter fw = new FileWriter(filename);
+            fw.append("");
+        }
+        catch (IOException exception) {
+            exception.printStackTrace();
+        }*/
     }
 }

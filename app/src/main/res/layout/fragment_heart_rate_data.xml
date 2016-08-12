@@ -18,9 +18,7 @@
         android:id="@+id/rel_heart_rate_data_bpm"
         android:background="@drawable/shape_rounded_border_component"
         android:padding="4dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/rel_heart_rate_data_graph"
-        android:layout_marginBottom="8dp">
+        android:layout_alignParentStart="true">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -62,4 +60,5 @@
             android:layout_height="match_parent"
             android:id="@+id/lic_heart_rate_data_graph"/>
     </RelativeLayout>
+
 </RelativeLayout>
