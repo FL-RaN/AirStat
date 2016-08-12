@@ -15,18 +15,11 @@ import com.qi.airstat.blc.DeviceData;
 public class BluetoothState extends BroadcastReceiver {
     static final private BluetoothState instance = new BluetoothState();
 
-    static private boolean isUserSwitchedHeartRateDataOn = false;
-    static private boolean isUserSwitchedAirDataOn = false;
-    static private boolean isHeartRateSensorAvailable = false;
-    static private boolean isAirSensorAvailable = false;
+    static private boolean isBLCConnected = false;
+    static private boolean isBLEConnected = false;
 
     static private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-    /*static private BluetoothDevice connectedDevice = null;
-    static private Handler handler = null;
-    static private String deviceName = null;
-    static private String deviceAddress = null;
-    static private int deviceState = Constants.STATE_NONE;*/
     static public BluetoothConnector bluetoothConnector = null;
 
     private BluetoothState() { /* DO NOTHING */ }
@@ -46,16 +39,12 @@ public class BluetoothState extends BroadcastReceiver {
         return true;
     }
 
-    static public boolean isBluetoothAvailable()            { return bluetoothAdapter.isEnabled();  }
-    static public boolean isUserSwitchedHeartRateDataOn()   { return isUserSwitchedHeartRateDataOn; }
-    static public boolean isUserSwitchedAirDataOn()         { return isUserSwitchedAirDataOn;       }
-    static public boolean isAirSensorAvailable()            { return isAirSensorAvailable;          }
-    static public boolean isHeartRateSensorAvailable()      { return isHeartRateSensorAvailable;    }
+    static public boolean isBluetoothAvailable()    { return bluetoothAdapter.isEnabled();  }
+    static public boolean isBLCConnected()          { return isBLCConnected; }
+    static public boolean isBLEConnected()          { return isBLEConnected; }
 
-    static public void isUserSwitchedHeartRateDataOn(boolean isUserSwitchedHeartRateDataOn) { BluetoothState.isUserSwitchedHeartRateDataOn = isUserSwitchedHeartRateDataOn; }
-    static public void isUserSwitchedAirDataOn(boolean isUserSwitchedAirDataOn)             { BluetoothState.isUserSwitchedAirDataOn = isUserSwitchedAirDataOn;             }
-    static public void isAirSensorAvailable(boolean isAirSensorAvailable)                   { BluetoothState.isAirSensorAvailable = isAirSensorAvailable;                   }
-    static public void isHeartRateSensorAvailable(boolean isHeartRateSensorAvailable)       { BluetoothState.isHeartRateSensorAvailable = isHeartRateSensorAvailable;       }
+    static public void isBLCConnected(boolean isBLCConnected)   { BluetoothState.isBLCConnected = isBLCConnected; }
+    static public void isBLEConnected(boolean isBLEConnected)   { BluetoothState.isBLEConnected = isBLEConnected;         }
 
     static public void requestBluetoothPermission(Context context) {
         if (bluetoothAdapter != null) {
@@ -63,9 +52,6 @@ public class BluetoothState extends BroadcastReceiver {
                 Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                 ((Activity)context).startActivityForResult(intent, Constants.BLUETOOTH_PERMISSION_REQUEST);
             }
-        }
-        else {
-            // Handle if bluetooth is not supported
         }
     }
 

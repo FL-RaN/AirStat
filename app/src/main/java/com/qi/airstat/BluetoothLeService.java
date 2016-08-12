@@ -26,12 +26,19 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -123,6 +130,8 @@ public class BluetoothLeService extends Service {
                                  final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
 
+        int signal = 0;
+
         // This is special handling for the Heart Rate Measurement profile.  Data parsing is
         // carried out as per profile specifications:
         // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
@@ -132,14 +141,18 @@ public class BluetoothLeService extends Service {
             if ((flag & 0x01) != 0) {
                 format = BluetoothGattCharacteristic.FORMAT_UINT16;
                 Log.d(TAG, "Heart rate format UINT16.");
-            } else {
+            }
+            else {
                 format = BluetoothGattCharacteristic.FORMAT_UINT8;
                 Log.d(TAG, "Heart rate format UINT8.");
             }
+
             final int heartRate = characteristic.getIntValue(format, 1);
+            signal = heartRate;
             Log.d(TAG, String.format("Received heart rate: %d", heartRate));
             intent.putExtra(EXTRA_DATA, String.valueOf(heartRate));
-        } else {
+        }
+        else {
             // For all other profiles, writes the data formatted in HEX.
             final byte[] data = characteristic.getValue();
             if (data != null && data.length > 0) {
@@ -147,8 +160,23 @@ public class BluetoothLeService extends Service {
                 for(byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
                 intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
+
+                signal = Integer.parseInt(new String(data));
             }
         }
+
+        DatabaseManager databaseManager = new DatabaseManager(BluetoothLeService.this);
+        SQLiteDatabase database = databaseManager.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        String date = new SimpleDateFormat("yyMMddHHmmss").format(new java.util.Date());
+        values.put(Constants.DATABASE_COMMON_COLUMN_TIME_STAMP, date);
+        values.put(Constants.DATABASE_HEART_RATE_COLUMN_HEART_RATE, signal);
+        database.insert(Constants.DATABASE_HEART_RATE_TABLE, null, values);
+
+        database.close();
+
         sendBroadcast(intent);
     }
 
@@ -169,6 +197,8 @@ public class BluetoothLeService extends Service {
         // such that resources are cleaned up properly.  In this particular example, close() is
         // invoked when the UI is disconnected from the Service.
         close();
+        BluetoothState.isBLEConnected(false);
+
         return super.onUnbind(intent);
     }
 
@@ -212,6 +242,7 @@ public class BluetoothLeService extends Service {
     public boolean connect(final String address) {
         if (mBluetoothAdapter == null || address == null) {
             Log.w(TAG, "BluetoothAdapter not initialized or unspecified address.");
+            BluetoothState.isBLEConnected(false);
             return false;
         }
 
@@ -223,6 +254,7 @@ public class BluetoothLeService extends Service {
                 mConnectionState = STATE_CONNECTING;
                 return true;
             } else {
+                BluetoothState.isBLEConnected(false);
                 return false;
             }
         }
@@ -230,6 +262,7 @@ public class BluetoothLeService extends Service {
         final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         if (device == null) {
             Log.w(TAG, "Device not found.  Unable to connect.");
+            BluetoothState.isBLEConnected(false);
             return false;
         }
         // We want to directly connect to the device, so we are setting the autoConnect
@@ -252,6 +285,8 @@ public class BluetoothLeService extends Service {
             Log.w(TAG, "BluetoothAdapter not initialized");
             return;
         }
+
+        BluetoothState.isBLEConnected(false);
         mBluetoothGatt.disconnect();
     }
 
@@ -265,6 +300,8 @@ public class BluetoothLeService extends Service {
         }
         mBluetoothGatt.close();
         mBluetoothGatt = null;
+
+        BluetoothState.isBLEConnected(false);
     }
 
     /**

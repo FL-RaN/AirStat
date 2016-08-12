@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/frl_sensor_data_overview_root"
+    android:id="@+id/rel_sensor_data_overview_root"
     android:padding="8dp"
     android:background="@color/colorThemeDarkGery"
     tools:context=".SensorDataOverviewActivity">
@@ -13,364 +13,374 @@
         For more details, see those fragment layouts and classes.
     -->
 
-    <LinearLayout
-        android:orientation="vertical"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/lil_sensor_data_overview">
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="5"
-            android:layout_marginBottom="8dp"
-            android:id="@+id/lil_sensor_data_overview_heart_rate">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/frl_sensor_data_overview_heart_rate">
-
-                <fragment
-                    android:name="com.qi.airstat.HeartRateDataFragment"
-                    android:id="@+id/fm_sensor_data_overview_heart_rate"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:tag="fm_sensor_data_overview_heart_rate" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/rel_sensor_data_overview_heart_rate_disabled"
-                    android:background="@drawable/shape_rounded_border_disabled"
-                    android:visibility="visible">
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:id="@+id/lil_sensor_data_overview_heart_rate_disabled_label"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                        android:layout_above="@+id/lil_sensor_data_overview_heart_rate_disabled_tool">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/common_device_not_connected"
-                            android:id="@+id/tv_sensor_data_overview_heart_rate_disabled_label"
-                            android:textColor="@color/colorHeartRed"
-                            android:textSize="16sp"
-                            android:gravity="center_vertical|center_horizontal"
-                            android:padding="16dp"
-                            android:background="@drawable/shape_rounded_border_disabled_label" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/lil_sensor_data_overview_heart_rate_disabled_tool"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentStart="true">
-
-                        <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical|center_horizontal"
-                            android:id="@+id/lil_sensor_data_overview_heart_rate_disabled_tool_button"
-                            android:background="@drawable/shape_rounded_bluetooth_switch"
-                            android:padding="8dp"
-                            android:onClick="onClickConnectHeartRateDevice">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/iv_sensor_data_overview_heart_rate_disabled_tool_button"
-                                android:background="@drawable/shape_hsphere"
-                                android:layout_marginRight="8dp"
-                                android:padding="8dp"
-                                android:src="@drawable/iv_sensor_data_overview_bluetooth_disabled_tool_button" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/common_connect_device"
-                                android:id="@+id/tv_sensor_data_overview_heart_rate_disabled_tool_button"
-                                android:textColor="@color/colorThemeWhite"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </RelativeLayout>
-
-            </FrameLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:baselineAligned="false"
-            android:id="@+id/lil_sensor_data_overview_air_data">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/frl_sensor_data_overview_air_data">
-
-                <fragment
-                    android:name="com.qi.airstat.AirDataFragment"
-                    android:id="@+id/fm_sensor_data_overview_air_data"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:tag="fm_sensor_data_overview_air_data" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/rel_sensor_data_overview_air_data_disabled"
-                    android:background="@drawable/shape_rounded_border_disabled"
-                    android:visibility="visible">
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:id="@+id/lil_sensor_data_overview_air_data_disabled_label"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_above="@+id/lil_sensor_data_overview_air_data_disabled_tool">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/common_device_not_connected"
-                            android:id="@+id/tv_sensor_data_overview_air_data_disabled_label"
-                            android:textColor="@color/colorHeartRed"
-                            android:textSize="16sp"
-                            android:gravity="center_vertical|center_horizontal"
-                            android:padding="16dp"
-                            android:background="@drawable/shape_rounded_border_disabled_label" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/lil_sensor_data_overview_air_data_disabled_tool"
-                        android:gravity="center_vertical|center_horizontal"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentStart="true">
-
-                        <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical|center_horizontal"
-                            android:id="@+id/lil_sensor_data_overview_air_data_disabled_tool_button"
-                            android:background="@drawable/shape_rounded_bluetooth_switch"
-                            android:padding="8dp"
-                            android:onClick="onClickConnectAirDevice">
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/iv_sensor_data_overview_air_data_disabled_tool_button"
-                                android:background="@drawable/shape_hsphere"
-                                android:layout_marginRight="8dp"
-                                android:padding="8dp"
-                                android:src="@drawable/iv_sensor_data_overview_bluetooth_disabled_tool_button" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/common_connect_device"
-                                android:id="@+id/tv_sensor_data_overview_air_data_disabled_tool_button"
-                                android:textColor="@color/colorThemeWhite"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-                    </LinearLayout>
-                </RelativeLayout>
-
-            </FrameLayout>
-        </LinearLayout>
-
-        <com.qi.airstat.CustomView
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/cv_sensor_data_overview_footer">
-        </com.qi.airstat.CustomView>
-    </LinearLayout>
-
-    <RelativeLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/rel_sensor_data_overview_location_disabled"
-        android:visibility="gone"
-        android:background="@drawable/shape_rounded_border_disabled">
-
+        android:layout_height="429dp"
+        android:layout_above="@+id/cv_sensor_data_overview_footer"
+        android:layout_alignParentTop="true">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_above="@+id/lil_sensor_data_overview_location_disabled_tool"
-            android:gravity="center_vertical|center_horizontal"
-            android:id="@+id/lil_sensor_data_overview_location_disabled_label">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/tv_sensor_data_overview_location_disabled_label"
-                android:id="@+id/tv_sensor_data_overview_location_disabled_label"
-                android:textColor="@color/colorHeartRed"
-                android:textSize="16sp"
-                android:gravity="center_vertical|center_horizontal"
-                android:padding="16dp"
-                android:background="@drawable/shape_rounded_border_disabled_label" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/lil_sensor_data_overview_location_disabled_tool"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true">
+            android:layout_height="match_parent"
+            android:id="@+id/lil_sensor_data_overview">
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical|center_horizontal"
-                android:id="@+id/lil_sensor_data_overview_location_disabled_tool_button"
-                android:background="@drawable/shape_rounded_location_switch"
-                android:padding="8dp"
-                android:onClick="onClickRequestLocationPermission">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:layout_marginBottom="8dp"
+                android:id="@+id/lil_sensor_data_overview_heart_rate">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/iv_sensor_data_overview_location_disabled_tool_button"
-                    android:background="@drawable/shape_hsphere"
-                    android:layout_marginRight="8dp"
-                    android:padding="8dp"
-                    android:src="@drawable/iv_sensor_data_overview_location_disabled_tool_button" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/frl_sensor_data_overview_heart_rate">
+
+                    <fragment
+                        android:name="com.qi.airstat.HeartRateDataFragment"
+                        android:id="@+id/fm_sensor_data_overview_heart_rate"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:tag="fm_sensor_data_overview_heart_rate" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/rel_sensor_data_overview_heart_rate_disabled"
+                        android:background="@drawable/shape_rounded_border_disabled"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:id="@+id/lil_sensor_data_overview_heart_rate_disabled_label"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_above="@+id/lil_sensor_data_overview_heart_rate_disabled_tool">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/common_device_not_connected"
+                                android:id="@+id/tv_sensor_data_overview_heart_rate_disabled_label"
+                                android:textColor="@color/colorHeartRed"
+                                android:textSize="16sp"
+                                android:gravity="center_vertical|center_horizontal"
+                                android:padding="16dp"
+                                android:background="@drawable/shape_rounded_border_disabled_label" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/lil_sensor_data_overview_heart_rate_disabled_tool"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true">
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical|center_horizontal"
+                                android:id="@+id/lil_sensor_data_overview_heart_rate_disabled_tool_button"
+                                android:background="@drawable/shape_rounded_bluetooth_switch"
+                                android:padding="8dp"
+                                android:onClick="onClickConnectHeartRateDevice">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/iv_sensor_data_overview_heart_rate_disabled_tool_button"
+                                    android:background="@drawable/shape_hsphere"
+                                    android:layout_marginRight="8dp"
+                                    android:padding="8dp"
+                                    android:src="@drawable/iv_sensor_data_overview_bluetooth_disabled_tool_button" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/common_connect_device"
+                                    android:id="@+id/tv_sensor_data_overview_heart_rate_disabled_tool_button"
+                                    android:textColor="@color/colorThemeWhite"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:baselineAligned="false"
+                android:id="@+id/lil_sensor_data_overview_air_data">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/frl_sensor_data_overview_air_data">
+
+                    <fragment
+                        android:name="com.qi.airstat.AirDataFragment"
+                        android:id="@+id/fm_sensor_data_overview_air_data"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:tag="fm_sensor_data_overview_air_data" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/rel_sensor_data_overview_air_data_disabled"
+                        android:background="@drawable/shape_rounded_border_disabled"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:id="@+id/lil_sensor_data_overview_air_data_disabled_label"
+                            android:layout_alignParentTop="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_above="@+id/lil_sensor_data_overview_air_data_disabled_tool">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/common_device_not_connected"
+                                android:id="@+id/tv_sensor_data_overview_air_data_disabled_label"
+                                android:textColor="@color/colorHeartRed"
+                                android:textSize="16sp"
+                                android:gravity="center_vertical|center_horizontal"
+                                android:padding="16dp"
+                                android:background="@drawable/shape_rounded_border_disabled_label" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/lil_sensor_data_overview_air_data_disabled_tool"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true">
+
+                            <LinearLayout
+                                android:orientation="horizontal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical|center_horizontal"
+                                android:id="@+id/lil_sensor_data_overview_air_data_disabled_tool_button"
+                                android:background="@drawable/shape_rounded_bluetooth_switch"
+                                android:padding="8dp"
+                                android:onClick="onClickConnectAirDevice">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:id="@+id/iv_sensor_data_overview_air_data_disabled_tool_button"
+                                    android:background="@drawable/shape_hsphere"
+                                    android:layout_marginRight="8dp"
+                                    android:padding="8dp"
+                                    android:src="@drawable/iv_sensor_data_overview_bluetooth_disabled_tool_button" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/common_connect_device"
+                                    android:id="@+id/tv_sensor_data_overview_air_data_disabled_tool_button"
+                                    android:textColor="@color/colorThemeWhite"
+                                    android:textSize="16sp" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                </FrameLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/rel_sensor_data_overview_location_disabled"
+            android:visibility="gone"
+            android:background="@drawable/shape_rounded_border_disabled">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:layout_above="@+id/lil_sensor_data_overview_location_disabled_tool"
+                android:gravity="center_vertical|center_horizontal"
+                android:id="@+id/lil_sensor_data_overview_location_disabled_label">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/tv_sensor_data_overview_location_disabled_tool_button"
-                    android:id="@+id/tv_sensor_data_overview_location_disabled_tool_button"
-                    android:textColor="@color/colorThemeWhite"
-                    android:textSize="16sp" />
-
+                    android:text="@string/tv_sensor_data_overview_location_disabled_label"
+                    android:id="@+id/tv_sensor_data_overview_location_disabled_label"
+                    android:textColor="@color/colorHeartRed"
+                    android:textSize="16sp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:padding="16dp"
+                    android:background="@drawable/shape_rounded_border_disabled_label" />
             </LinearLayout>
-        </LinearLayout>
 
-    </RelativeLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/lil_sensor_data_overview_location_disabled_tool"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true">
 
-    <RelativeLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/rel_sensor_data_overview_bluetooth_disabled"
-        android:visibility="gone"
-        android:background="@drawable/shape_rounded_border_disabled" >
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:id="@+id/lil_sensor_data_overview_location_disabled_tool_button"
+                    android:background="@drawable/shape_rounded_location_switch"
+                    android:padding="8dp"
+                    android:onClick="onClickRequestLocationPermission">
 
-        <LinearLayout
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/iv_sensor_data_overview_location_disabled_tool_button"
+                        android:background="@drawable/shape_hsphere"
+                        android:layout_marginRight="8dp"
+                        android:padding="8dp"
+                        android:src="@drawable/iv_sensor_data_overview_location_disabled_tool_button" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tv_sensor_data_overview_location_disabled_tool_button"
+                        android:id="@+id/tv_sensor_data_overview_location_disabled_tool_button"
+                        android:textColor="@color/colorThemeWhite"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical|center_horizontal"
-            android:id="@+id/lil_sensor_data_overview_bluetooth_disabled_label"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_above="@+id/lil_sensor_data_overview_bluetooth_disabled_tool">
+            android:layout_height="match_parent"
+            android:id="@+id/rel_sensor_data_overview_bluetooth_disabled"
+            android:visibility="gone"
+            android:background="@drawable/shape_rounded_border_disabled" >
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal"
+                android:id="@+id/lil_sensor_data_overview_bluetooth_disabled_label"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:layout_above="@+id/lil_sensor_data_overview_bluetooth_disabled_tool">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_sensor_data_overview_bluetooth_disabled_label"
+                    android:id="@+id/tv_sensor_data_overview_bluetooth_disabled_label"
+                    android:textColor="@color/colorHeartRed"
+                    android:textSize="16sp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:padding="16dp"
+                    android:background="@drawable/shape_rounded_border_disabled_label"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/lil_sensor_data_overview_bluetooth_disabled_tool"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:id="@+id/lil_sensor_data_overview_bluetooth_disabled_tool_button"
+                    android:background="@drawable/shape_rounded_bluetooth_switch"
+                    android:padding="8dp"
+                    android:onClick="onClickRequestBluetoothPermission" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/iv_sensor_data_overview_bluetooth_disabled_tool_button"
+                        android:background="@drawable/shape_hsphere"
+                        android:layout_marginRight="8dp"
+                        android:padding="8dp"
+                        android:src="@drawable/iv_sensor_data_overview_bluetooth_disabled_tool_button" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tv_sensor_data_overview_bluetooth_disabled_tool_button"
+                        android:id="@+id/tv_sensor_data_overview_bluetooth_disabled_tool_button"
+                        android:textColor="@color/colorThemeWhite"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/rel_sensor_data_overview_bluetooth_not_supported"
+            android:background="@drawable/shape_rounded_border_disabled"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/tv_sensor_data_overview_bluetooth_disabled_label"
-                android:id="@+id/tv_sensor_data_overview_bluetooth_disabled_label"
+                android:text="@string/tv_sensor_data_overview_bluetooth_not_supported"
+                android:id="@+id/tv_sensor_data_overview_bluetooth_not_supported"
                 android:textColor="@color/colorHeartRed"
                 android:textSize="16sp"
                 android:gravity="center_vertical|center_horizontal"
                 android:padding="16dp"
                 android:background="@drawable/shape_rounded_border_disabled_label"
-                android:visibility="visible" />
-        </LinearLayout>
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/lil_sensor_data_overview_bluetooth_disabled_tool"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true">
+    </FrameLayout>
 
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical|center_horizontal"
-                android:id="@+id/lil_sensor_data_overview_bluetooth_disabled_tool_button"
-                android:background="@drawable/shape_rounded_bluetooth_switch"
-                android:padding="8dp"
-                android:onClick="onClickRequestBluetoothPermission" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/iv_sensor_data_overview_bluetooth_disabled_tool_button"
-                    android:background="@drawable/shape_hsphere"
-                    android:layout_marginRight="8dp"
-                    android:padding="8dp"
-                    android:src="@drawable/iv_sensor_data_overview_bluetooth_disabled_tool_button" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tv_sensor_data_overview_bluetooth_disabled_tool_button"
-                    android:id="@+id/tv_sensor_data_overview_bluetooth_disabled_tool_button"
-                    android:textColor="@color/colorThemeWhite"
-                    android:textSize="16sp" />
-            </LinearLayout>
-        </LinearLayout>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:orientation="vertical"
+    <com.qi.airstat.CustomView
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/rel_sensor_data_overview_bluetooth_not_supported"
-        android:background="@drawable/shape_rounded_border_disabled"
-        android:visibility="gone">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tv_sensor_data_overview_bluetooth_not_supported"
-            android:id="@+id/tv_sensor_data_overview_bluetooth_not_supported"
-            android:textColor="@color/colorHeartRed"
-            android:textSize="16sp"
-            android:gravity="center_vertical|center_horizontal"
-            android:padding="16dp"
-            android:background="@drawable/shape_rounded_border_disabled_label"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
-    </RelativeLayout>
-
-</FrameLayout>
+        android:layout_height="wrap_content"
+        android:id="@+id/cv_sensor_data_overview_footer"
+        android:layout_gravity="right|top"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true">
+    </com.qi.airstat.CustomView>
+</RelativeLayout>

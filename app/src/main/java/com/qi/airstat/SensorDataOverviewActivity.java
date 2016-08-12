@@ -10,15 +10,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -36,6 +40,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,7 +103,7 @@ public class SensorDataOverviewActivity extends FragmentActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case Constants.QUEUED_AIR_DATA:
-                    updateAirDataGraph();
+                    updateAirData();
                     break;
                 case Constants.QUEUED_HEART_RATE_DATA:
                     updateHeartRateData();
@@ -120,6 +128,7 @@ public class SensorDataOverviewActivity extends FragmentActivity {
                 case Constants.BLUETOOTH_MESSAGE_MESSAGE_WRITE:
                     break;
                 case Constants.BLUETOOTH_MESSAGE_STATE_READ:
+                    updateAirData();
                     break;
                 case Constants.BLUETOOTH_MESSAGE_STATE_CHANGE:
                     Log.d("SensorDataActivity", "Handler caught 'BLUETOOTH_MESSAGE_STATE_CHANGE'.");
@@ -128,29 +137,36 @@ public class SensorDataOverviewActivity extends FragmentActivity {
                     if (state == Constants.STATE_CONNECTED) {
                         udooDisabledLayout.setVisibility(View.GONE);
                         String startMessage = "start," + (long)(System.currentTimeMillis() / 1000L);
+
+                        /*
+                        JSONObject jsonObject = new JSONObject();
+                        HttpService httpService = new HttpService();
+                        httpService.executeConn(SensorDataOverviewActivity.this, "POST", "", new JSONObject());
+                        */
+
                         BluetoothState.bluetoothConnector.write(startMessage.getBytes());
+                    }
+                    else if (state == Constants.STATE_NONE) {
+                        udooDisabledLayout.setVisibility(View.GONE);
                     }
                     break;
                 // Broadcast messages for Bluetooth Light Energy
                 case BluetoothLeService.ACTION_GATT_CONNECTED:
-                    isBLEConnected = true;
                     break;
                 case BluetoothLeService.ACTION_GATT_DISCONNECTED:
                     polarDisabledLayout.setVisibility(View.VISIBLE);
                     BLEService.disconnect();
-                    isBLEConnected = false;
                     break;
                 case BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED:
                     displayGattServices(BLEService.getSupportedGattServices());
                     polarDisabledLayout.setVisibility(View.GONE);
                     break;
                 case BluetoothLeService.ACTION_DATA_AVAILABLE:
-                    //displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
-                    //val.setText(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
                     int signal = Integer.parseInt(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
-                    Log.d("POLAR DATA", "" + signal);
 
-                    String date = new SimpleDateFormat("yyMMddHHmmss").format(new java.util.Date());
+                    updateHeartRateData();
+
+                    /*String date = new SimpleDateFormat("yyMMddHHmmss").format(new java.util.Date());
                     JSONObject dataset = new JSONObject();
                     JSONArray jsonArray = new JSONArray();
 
@@ -169,9 +185,7 @@ public class SensorDataOverviewActivity extends FragmentActivity {
                         e.printStackTrace();
                     }
 
-                    Log.d("JSON DATA", dataset.toString());
-
-                    /*HttpService httpService = new HttpService();
+                    HttpService httpService = new HttpService();
                     String responseCode = httpService.executeConn(
                             SensorDataOverviewActivity.this,
                             "POST", "http://teamc-iot.calit2.net/IOT/public/rcv_json_data",
@@ -203,7 +217,6 @@ public class SensorDataOverviewActivity extends FragmentActivity {
 
     private BluetoothLeService BLEService = null;
     private boolean isBLEServiceBound = false;
-    private boolean isBLEConnected = false;
     private BluetoothGattCharacteristic mNotifyCharacteristic;
     private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
             new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
@@ -235,6 +248,17 @@ public class SensorDataOverviewActivity extends FragmentActivity {
         initialize();
         checkPermissions();
 
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[] {
+                            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    }, 5555
+            );
+        }
+
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Constants.BLUETOOTH_MESSAGE_MESSAGE_DEVICE_NAME);
         intentFilter.addAction(Constants.BLUETOOTH_MESSAGE_MESSAGE_TOAST);
@@ -263,11 +287,11 @@ public class SensorDataOverviewActivity extends FragmentActivity {
                 Context.BIND_AUTO_CREATE
         );
 
-        bindService(
+        /*bindService(
                 new Intent(this, FakeDataTransmitService.class),
                 serviceConnection,
                 Context.BIND_AUTO_CREATE
-        );
+        );*/
     }
 
     @Override
@@ -288,13 +312,13 @@ public class SensorDataOverviewActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (isBLEConnected) {
+        if (BluetoothState.isBLEConnected()) {
             BLEService.disconnect();
         }
 
-        /*if (BluetoothState.getBluetoothConnector().getState() == Constants.STATE_CONNECTED) {
-            //BLCService.de
-        }*/
+        if(BluetoothState.isBLCConnected()) {
+            BLCService.disconnect();
+        }
     }
 
     @Override
@@ -307,11 +331,19 @@ public class SensorDataOverviewActivity extends FragmentActivity {
         }
 
         if (isBLCServiceBound) {
+            if (BluetoothState.isBLCConnected() && BLCService != null) {
+                BLCService.disconnect();
+            }
+
             unbindService(BLCServiceConnection);
             isBLCServiceBound = false;
         }
 
         if (isBLEServiceBound) {
+            if (BluetoothState.isBLEConnected()) {
+                BLEService.disconnect();
+            }
+
             unbindService(BLEServiceConnection);
             isBLEServiceBound = false;
         }
@@ -375,8 +407,6 @@ public class SensorDataOverviewActivity extends FragmentActivity {
         polarDisabledLayout = (RelativeLayout)findViewById(R.id.rel_sensor_data_overview_heart_rate_disabled);
         udooDisabledLayout = (RelativeLayout)findViewById(R.id.rel_sensor_data_overview_air_data_disabled);
 
-        udooDisabledLayout.setVisibility(View.VISIBLE);
-
         airViewPager = (ViewPager)findViewById(R.id.vp_air_data_graph);
         AirDataViewPagerAdaptor adaptor = (AirDataViewPagerAdaptor)airViewPager.getAdapter();
 
@@ -421,6 +451,20 @@ public class SensorDataOverviewActivity extends FragmentActivity {
             else {
                 bluetoothDisabledLayout.setVisibility(View.GONE);
             }
+        }
+
+        if (BluetoothState.isBLCConnected()) {
+            udooDisabledLayout.setVisibility(View.GONE);
+        }
+        else {
+            udooDisabledLayout.setVisibility(View.VISIBLE);
+        }
+
+        if (BluetoothState.isBLEConnected()) {
+            polarDisabledLayout.setVisibility(View.GONE);
+        }
+        else {
+            polarDisabledLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -535,7 +579,7 @@ public class SensorDataOverviewActivity extends FragmentActivity {
         }
     }
 
-    private void updateAirDataGraph() {
+    private void updateAirData() {
         LineData[] lineData = new LineData[Constants.AIR_DATA_VIEW_PAGER_MAX_PAGES];
         float[] data = new float[Constants.AIR_DATA_VIEW_PAGER_MAX_PAGES];
 
@@ -643,5 +687,36 @@ public class SensorDataOverviewActivity extends FragmentActivity {
 
     public void onClickConnectHeartRateDevice(View view) {
         BluetoothState.displayLightEnergyScanner(this);
+    }
+
+    public void onCilckDisconnect(View view) {
+        if (BluetoothState.isBLCConnected() && BLCService != null) {
+            BluetoothState.bluetoothConnector.write(new String("disconnect").getBytes());
+            //BluetoothState.bluetoothConnector.stop();
+        }
+
+        /*if (BluetoothState.isBLEConnected()) {
+            BLEService.disconnect();
+        }*/
+        //BLEService.disconnect();
+
+        /*File folder = new File(Environment.getExternalStorageDirectory()
+                + "/Folder");
+
+        boolean var = false;
+        if (!folder.exists())
+            var = folder.mkdir();
+
+        System.out.println("" + var);
+
+        final String filename = folder.toString() + "/" + "Test.csv";
+
+        try {
+            FileWriter fw = new FileWriter(filename);
+            fw.append("");
+        }
+        catch (IOException exception) {
+            exception.printStackTrace();
+        }*/
     }
 }

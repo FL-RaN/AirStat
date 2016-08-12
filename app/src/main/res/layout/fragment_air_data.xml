@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/lil_air_data_brief"
-        android:layout_marginBottom="8dp">
+        android:layout_alignParentEnd="true">
 
 
         <LinearLayout
