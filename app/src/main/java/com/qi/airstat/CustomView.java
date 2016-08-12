@@ -60,12 +60,12 @@ public class CustomView extends LinearLayout implements View.OnClickListener {
 
         if (btnClicked.equals(btnDashboard)) {
             isPushedDashboar = true;
-            MainActivity.instance.startActivityForResult(new Intent(getContext(), SensorDataOverviewActivity.class), 200);
+            MainActivity.instance.startActivityForResult(new Intent(getContext(), SensorDataOverviewActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP), 200);
             MainActivity.instance.finishActivity(300);
             btnImgChanger(SELECTED_COLOR, DEFAULT_COLOR);
         } else if (btnClicked.equals(btnMap)) {
             isPushedDashboar = false;
-            MainActivity.instance.startActivityForResult(new Intent(getContext(), DataMapActivity.class), 300);
+            MainActivity.instance.startActivityForResult(new Intent(getContext(), DataMapActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP), 300);
             MainActivity.instance.finishActivity(200);
             btnImgChanger(DEFAULT_COLOR, SELECTED_COLOR);
         }

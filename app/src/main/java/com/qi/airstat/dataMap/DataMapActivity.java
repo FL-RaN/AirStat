@@ -128,6 +128,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 //        dataMapCommunication.httpService.conn.disconnect();
         if (backgroundMarkerChanger != null) backgroundMarkerChanger.stop();
         if (backgroundClusterChanger != null) backgroundClusterChanger.stop();
+        unbindService(serviceConnection);
     }
 
     @Override
@@ -701,7 +702,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
             DataMapMarker marker = (DataMapMarker) clusterItem;
             backgroundMarkerChanger = new BackgroundMarkerChanger(marker);
 //            backgroundMarkerChanger.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            backgroundMarkerChanger.execute();
+            backgroundMarkerChanger.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             dataMapPanelUi.slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             map.animateCamera(CameraUpdateFactory.newLatLng(clusterItem.getPosition()));
             return true;
