@@ -56,6 +56,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Created by JUMPSNACK on 8/3/2016.
@@ -204,11 +205,15 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
     }
 
     public void parseOngoingSessionData(JSONObject rcvdData) {
-        try {
-            int i = 1;
-            JSONObject eachData = rcvdData.getJSONObject("" + (i++));
 
-            while (eachData != null) {
+
+        try {
+//            int i = 1;
+//            JSONObject eachData = rcvdData.getJSONObject("" + (i++));
+            Iterator<String> it = rcvdData.keys();
+
+            while (it.hasNext()) {
+                JSONObject eachData = rcvdData.getJSONObject(it.next());
 
                 int connectionID = eachData.getInt(Constants.HTTP_DATA_MAP_ONGOING_SESSION_CID);
                 long timeStamp = eachData.getLong(Constants.HTTP_DATA_MAP_ONGOING_SESSION_TIME_STAMP);
@@ -224,11 +229,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
                 double lng = airData.getDouble(Constants.HTTP_DATA_MAP_ONGOING_SESSION_LNG);
 
                 refreshMarker(connectionID, timeStamp, new DataMapDataSet(temperature, co, so2, no2, o3, pm), lat, lng);
-                try {
-                    eachData = rcvdData.getJSONObject("" + (i++));
-                } catch (JSONException e) {
-                    eachData = null;
-                }
+
             }
             DataMapCurrentUser.getInstance().setCurrentUserData((float) Math.random() * 400 + 1, (float) Math.random() * 20, (float) Math.random() * 600, (float) Math.random() * 300 + 1700, (float) Math.random() * 100 + 500, (float) Math.random() * 100 + 400);
 //            DataMapCurrentUser.getInstance().setCurrentUserData(0,50.4f,1004,2049,604,500);

@@ -14,7 +14,7 @@ public static MainActivity instance;
         setContentView(R.layout.activity_main);
         instance = this;
 //        startActivity(new Intent(this, DataMapActivity.class));
-        startActivity(new Intent(this, LoginBaseActivity.class ));
+        startActivity(new Intent(this, LoginBaseActivity.class ).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY));
 //        startActivityForResult(new Intent(this, SensorDataOverviewActivity.class), 200);
         finish();
     }

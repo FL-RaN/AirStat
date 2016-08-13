@@ -37,8 +37,8 @@ public class BluetoothClassicService extends Service {
     private final IBinder localBinder = new LocalBinder();
     private final BluetoothHandler bluetoothHandler = new BluetoothHandler();
     private LocationManager locationManager = null;
-    private float longitude = 0f;
-    private float latitude = 0f;
+    private double longitude = 0;
+    private double latitude = 0;
     private boolean isReceivingCSV = false;
     private StringBuilder CSV = new StringBuilder();
     private int csvCount = 0;
@@ -92,15 +92,46 @@ public class BluetoothClassicService extends Service {
                             values.put(Constants.DATABASE_AIR_COLUMN_LON, longitude);
 
                             database.insert(Constants.DATABASE_AIR_TABLE, null, values);
+                            database.close();
 
                             Intent intent = new Intent(Constants.BLUETOOTH_MESSAGE_STATE_READ);
+
+                            try {
+                                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 1, locationListener);
+                            }
+                            catch (SecurityException exception) {
+                                exception.printStackTrace();
+                            }
+
+                            try {
+                                Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                                latitude = location.getLatitude();
+                                longitude = location.getLongitude();
+                            }
+                            catch (SecurityException exception) {
+                                exception.printStackTrace();
+                            }
+
+                            intent.putExtra("timeStamp", date);
+                            intent.putExtra("connectionID", 3);
+                            intent.putExtra("SO2", jsonObject.getDouble("SO2"));
+                            intent.putExtra("NO2", jsonObject.getDouble("NO2"));
+                            intent.putExtra("O3", jsonObject.getDouble("O3"));
+                            intent.putExtra("CO", jsonObject.getDouble("CO"));
+                            intent.putExtra("PM25", jsonObject.getDouble("PM25"));
+                            intent.putExtra("temperature", jsonObject.getInt("TEMP"));
+                            intent.putExtra("latitude", latitude);
+                            intent.putExtra("longitude", longitude);
+
                             sendBroadcast(intent);
                         }
                         catch (JSONException exception) {
                             exception.printStackTrace();
                         }
 
-                        database.close();
+                        if (database.isOpen()) {
+                            database.close();
+                        }
                     }
                     else if(((String)msg.obj).contains("end_")) {
                         File file = new File(Environment.getExternalStorageDirectory() + "/dataset" + (csvCount++) + ".txt");
@@ -168,14 +199,7 @@ public class BluetoothClassicService extends Service {
 
     @Override
     public void onCreate() {
-        try {
-            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 1, locationListener);
-        }
-        catch (SecurityException exception) {
-            exception.printStackTrace();
-        }
-
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         registerReceiver(backgroundBroadcastReceiver, getIntentFilter());
     }
 
