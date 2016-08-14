@@ -26,6 +26,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -58,6 +59,8 @@ public class SensorDataOverviewActivity extends FragmentActivity {
     private RelativeLayout polarDisabledLayout = null;
     private RelativeLayout udooDisabledLayout = null;
     private TextView hrValue = null;
+    private ImageView BLECanceller = null;
+    private ImageView BLCCanceller = null;
     // Amount of labels are same as pages inside view pager.
     private TextView[] airLabels = new TextView[Constants.AIR_DATA_VIEW_PAGER_MAX_PAGES];
     private LineChart[] airGraphs = new LineChart[Constants.AIR_DATA_VIEW_PAGER_MAX_PAGES];
@@ -128,63 +131,30 @@ public class SensorDataOverviewActivity extends FragmentActivity {
                 case Constants.BLUETOOTH_MESSAGE_MESSAGE_WRITE:
                     break;
                 case Constants.BLUETOOTH_MESSAGE_STATE_READ:
-                    JSONObject reformedObject = new JSONObject();
-                    JSONArray reformedArray = new JSONArray();
-
-                    try {
-                        JSONObject item = new JSONObject();
-                        item.put("timeStamp", intent.getStringExtra("timeStamp"));
-                        item.put("connectionID", intent.getIntExtra("connectionID", 0));
-                        item.put("SO2", intent.getDoubleExtra("SO2", 0));
-                        item.put("NO2", intent.getDoubleExtra("NO2", 0));
-                        item.put("O3", intent.getDoubleExtra("O3", 0));
-                        item.put("CO", intent.getDoubleExtra("CO", 0));
-                        item.put("PM", intent.getDoubleExtra("PM25", 0));
-                        item.put("temperature", intent.getIntExtra("temperature", 0));
-                        item.put("latitude", intent.getDoubleExtra("latitude", 0));
-                        item.put("longitude", intent.getDoubleExtra("longitude", 0));
-
-                        reformedArray.put(item);
-                        reformedObject.put("AIR", reformedArray);
-                    }
-                    catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    HttpService httpService = new HttpService();
-                    String responseCode = httpService.executeConn(
-                            SensorDataOverviewActivity.this,
-                            "POST", "http://teamc-iot.calit2.net/IOT/public/rcv_json_data",
-                            reformedObject
-                    );
-
                     updateAirData();
                     break;
                 case Constants.BLUETOOTH_MESSAGE_STATE_CHANGE:
-                    Log.d("SensorDataActivity", "Handler caught 'BLUETOOTH_MESSAGE_STATE_CHANGE'.");
                     int state = intent.getIntExtra(Constants.BLUETOOTH_MESSAGE_STATE_CHANGE, Constants.STATE_NONE);
 
                     if (state == Constants.STATE_CONNECTED) {
                         udooDisabledLayout.setVisibility(View.GONE);
                         String startMessage = "start," + (long)(System.currentTimeMillis() / 1000L);
 
-                        /*
-                        JSONObject jsonObject = new JSONObject();
-                        HttpService httpService = new HttpService();
-                        httpService.executeConn(SensorDataOverviewActivity.this, "POST", "", new JSONObject());
-                        */
-
                         BluetoothState.bluetoothConnector.write(startMessage.getBytes());
+                        BLCCanceller.setImageResource(R.drawable.bluetooth_button_on);
                     }
                     else if (state == Constants.STATE_NONE) {
-                        udooDisabledLayout.setVisibility(View.GONE);
+                        udooDisabledLayout.setVisibility(View.VISIBLE);
+                        BLCCanceller.setImageResource(R.drawable.bluetooth_button_off);
                     }
                     break;
                 // Broadcast messages for Bluetooth Light Energy
                 case BluetoothLeService.ACTION_GATT_CONNECTED:
+                    BLECanceller.setImageResource(R.drawable.bluetooth_button_on);
                     break;
                 case BluetoothLeService.ACTION_GATT_DISCONNECTED:
                     polarDisabledLayout.setVisibility(View.VISIBLE);
+                    BLECanceller.setImageResource(R.drawable.bluetooth_button_off);
                     BLEService.disconnect();
                     break;
                 case BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED:
@@ -192,31 +162,6 @@ public class SensorDataOverviewActivity extends FragmentActivity {
                     polarDisabledLayout.setVisibility(View.GONE);
                     break;
                 case BluetoothLeService.ACTION_DATA_AVAILABLE:
-                    JSONObject dataset = new JSONObject();
-                    JSONArray jsonArray = new JSONArray();
-
-                    try {
-                        JSONObject jsonObject = new JSONObject();
-                        jsonObject.put("timeStamp", intent.getStringExtra("timeStamp"));
-                        jsonObject.put("connectionID", intent.getIntExtra("connectionID", 0));
-                        jsonObject.put("heartrate", intent.getIntExtra("heartrate", 0));
-                        jsonObject.put("latitude", intent.getDoubleExtra("latitude", 0));
-                        jsonObject.put("longitude", intent.getDoubleExtra("longitude", 0));
-
-                        jsonArray.put(jsonObject);
-                        dataset.put("HR", jsonArray);
-                    }
-                    catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    HttpService httpService2 = new HttpService();
-                    String responseCode2 = httpService2.executeConn(
-                            SensorDataOverviewActivity.this,
-                            "POST", "http://teamc-iot.calit2.net/IOT/public/rcv_json_data",
-                            dataset
-                    );
-
                     updateHeartRateData();
                     break;
                 default:
@@ -338,13 +283,6 @@ public class SensorDataOverviewActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (BluetoothState.isBLEConnected()) {
-            BLEService.disconnect();
-        }
-
-        if(BluetoothState.isBLCConnected()) {
-            BLCService.disconnect();
-        }
     }
 
     @Override
@@ -357,19 +295,11 @@ public class SensorDataOverviewActivity extends FragmentActivity {
         }
 
         if (isBLCServiceBound) {
-            if (BluetoothState.isBLCConnected() && BLCService != null) {
-                BLCService.disconnect();
-            }
-
             unbindService(BLCServiceConnection);
             isBLCServiceBound = false;
         }
 
         if (isBLEServiceBound) {
-            if (BluetoothState.isBLEConnected()) {
-                BLEService.disconnect();
-            }
-
             unbindService(BLEServiceConnection);
             isBLEServiceBound = false;
         }
@@ -432,6 +362,9 @@ public class SensorDataOverviewActivity extends FragmentActivity {
         bluetoothUnsupportedLayout = (RelativeLayout)findViewById(R.id.rel_sensor_data_overview_bluetooth_not_supported);
         polarDisabledLayout = (RelativeLayout)findViewById(R.id.rel_sensor_data_overview_heart_rate_disabled);
         udooDisabledLayout = (RelativeLayout)findViewById(R.id.rel_sensor_data_overview_air_data_disabled);
+
+        BLCCanceller = (ImageView)findViewById(R.id.iv_sensor_data_overview_air_data_switch);
+        BLECanceller = (ImageView)findViewById(R.id.iv_sensor_data_overview_heart_rate_switch);
 
         airViewPager = (ViewPager)findViewById(R.id.vp_air_data_graph);
         AirDataViewPagerAdaptor adaptor = (AirDataViewPagerAdaptor)airViewPager.getAdapter();
@@ -744,5 +677,17 @@ public class SensorDataOverviewActivity extends FragmentActivity {
         catch (IOException exception) {
             exception.printStackTrace();
         }*/
+    }
+
+    public void onClickDisconnectBLE(View view) {
+        if (BluetoothState.isBLEConnected()) {
+            BLEService.disconnect();
+        }
+    }
+
+    public void onClickDisconnectBLC(View view) {
+        if (BluetoothState.isBLCConnected()) {
+            BLCService.disconnect();
+        }
     }
 }

@@ -27,9 +27,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -54,9 +63,50 @@ public class BluetoothClassicService extends Service {
                     else if (msg.arg1 == Constants.STATE_CONNECTED) {
                         Intent intent = new Intent(Constants.BLUETOOTH_MESSAGE_STATE_CHANGE);
                         intent.putExtra(Constants.BLUETOOTH_MESSAGE_STATE_CHANGE, msg.arg1);
-                        sendBroadcast(intent);
+
+                        /*try {
+                            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                        }
+                        catch (SecurityException exception) {
+                            exception.printStackTrace();
+                        }
+
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("userID", Constants.UID);
+                            jsonObject.put("conCreationTime", new SimpleDateFormat("yyMMddHHmmss").format(new java.util.Date()));
+                            jsonObject.put("flagValidCon", 1);
+                            jsonObject.put("devMAC", "x'" + Constants.MAC_UDOO.replaceAll(":", "") + "'");
+                            jsonObject.put("devType", Constants.DEVICE_TYPE_UDOO);
+                            jsonObject.put("devPortability", 0x01);
+                            jsonObject.put("latitude", "x'" + latitude);
+                            jsonObject.put("longitude", "x'" + longitude);
+                        }
+                        catch (JSONException exception) {
+                            exception.printStackTrace();
+                        }
+
+                        HttpService httpService = new HttpService();
+                        String res = httpService.executeConn(
+                                null, "POST",
+                                "http://teamc-iot.calit2.net/IOT/public/Connection",
+                                jsonObject
+                        );
+
+                        try {
+                            JSONObject resJson;
+                            resJson = new JSONObject(res);
+                            Log.d("BLCService", "Connection sent, response was " + res);
+                            Constants.CID_BLC = Integer.parseInt(resJson.getString("connectionID"));
+                        }
+                        catch (JSONException exception) {
+                            exception.printStackTrace();
+                        }*/
 
                         BluetoothState.isBLCConnected(true);
+                        sendBroadcast(intent);
                     }
                     else if (msg.arg1 == Constants.STATE_NONE) {
                         Intent intent = new Intent(Constants.BLUETOOTH_MESSAGE_STATE_CHANGE);
@@ -65,6 +115,43 @@ public class BluetoothClassicService extends Service {
 
                         BluetoothState.bluetoothConnector = null;
                         BluetoothState.isBLCConnected(false);
+
+                        /*try {
+                            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+                        }
+                        catch (SecurityException exception) {
+                            exception.printStackTrace();
+                        }
+
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("userID", Constants.UID);
+                            jsonObject.put("conCreationTime", new SimpleDateFormat("yyMMddHHmmss").format(new java.util.Date()));
+                            jsonObject.put("flagValidCon", 0);
+                            jsonObject.put("connectionID", Constants.CID_BLC);
+                            jsonObject.put("devMAC", "x'" + Constants.MAC_UDOO.replaceAll(":", "") + "'");
+                            jsonObject.put("devType", Constants.DEVICE_TYPE_UDOO);
+                            jsonObject.put("devPortability", 0x01);
+                            jsonObject.put("latitude", "x'" + latitude);
+                            jsonObject.put("longitude", "x'" + longitude);
+                        }
+                        catch (JSONException exception) {
+                            exception.printStackTrace();
+                        }
+
+                        HttpService httpService = new HttpService();
+                        String response = httpService.executeConn(
+                                null, "POST",
+                                "http://teamc-iot.calit2.net/IOT/public/Disconnection",
+                                jsonObject
+                        );
+
+                        Constants.MAC_UDOO = null;
+                        Constants.CID_BLC = Constants.CID_NONE;
+
+                        Log.d("BLCService DISC RES", response);*/
                     }
                     break;
                 case Constants.MESSAGE_READ:
@@ -96,14 +183,7 @@ public class BluetoothClassicService extends Service {
 
                             Intent intent = new Intent(Constants.BLUETOOTH_MESSAGE_STATE_READ);
 
-                            try {
-                                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 1, locationListener);
-                            }
-                            catch (SecurityException exception) {
-                                exception.printStackTrace();
-                            }
-
-                            try {
+                            /*try {
                                 Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                                 latitude = location.getLatitude();
                                 longitude = location.getLongitude();
@@ -112,16 +192,35 @@ public class BluetoothClassicService extends Service {
                                 exception.printStackTrace();
                             }
 
-                            intent.putExtra("timeStamp", date);
-                            intent.putExtra("connectionID", 3);
-                            intent.putExtra("SO2", jsonObject.getDouble("SO2"));
-                            intent.putExtra("NO2", jsonObject.getDouble("NO2"));
-                            intent.putExtra("O3", jsonObject.getDouble("O3"));
-                            intent.putExtra("CO", jsonObject.getDouble("CO"));
-                            intent.putExtra("PM25", jsonObject.getDouble("PM25"));
-                            intent.putExtra("temperature", jsonObject.getInt("TEMP"));
-                            intent.putExtra("latitude", latitude);
-                            intent.putExtra("longitude", longitude);
+                            JSONObject reformedObject = new JSONObject();
+                            JSONArray reformedArray = new JSONArray();
+
+                            try {
+                                JSONObject item = new JSONObject();
+                                item.put("timeStamp", date);
+                                item.put("connectionID", Constants.CID_BLC);
+                                item.put("SO2", jsonObject.getDouble("SO2"));
+                                item.put("NO2", jsonObject.getDouble("NO2"));
+                                item.put("O3", jsonObject.getDouble("O3"));
+                                item.put("CO", jsonObject.getDouble("CO"));
+                                item.put("PM", jsonObject.getDouble("PM25"));
+                                item.put("temperature", jsonObject.getInt("TEMP"));
+                                item.put("latitude", latitude);
+                                item.put("longitude", longitude);
+
+                                reformedArray.put(item);
+                                reformedObject.put("AIR", reformedArray);
+                            }
+                            catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            HttpService httpService = new HttpService();
+                            String responseCode = httpService.executeConn(
+                                    null,
+                                    "POST", "http://teamc-iot.calit2.net/IOT/public/rcv_json_data",
+                                    reformedObject
+                            );*/
 
                             sendBroadcast(intent);
                         }
@@ -134,11 +233,11 @@ public class BluetoothClassicService extends Service {
                         }
                     }
                     else if(((String)msg.obj).contains("end_")) {
-                        File file = new File(Environment.getExternalStorageDirectory() + "/dataset" + (csvCount++) + ".txt");
+                        File file = new File(Environment.getExternalStorageDirectory() + "/dataset" + (csvCount++) + ".csv");
 
                         try {
                             FileWriter fw = new FileWriter(file, true);
-                            fw.write(CSV.toString().replaceAll("\\r\\n", "").replaceAll("\\n\\r", "").replace("\r\n", "").replace("\n\r", ""));
+                            fw.write(CSV.toString());
                             fw.flush();
                             fw.close();
                         }
@@ -146,14 +245,84 @@ public class BluetoothClassicService extends Service {
                             exception.printStackTrace();
                         }
 
+                        InputStream is = null;
+                        FileInputStream fileInputStream = null;
+
+                        try {
+                            fileInputStream = new FileInputStream(new File(Environment.getExternalStorageDirectory() + "/dataset" + (csvCount - 1) + ".csv"));
+                        }
+                        catch (IOException exception) {
+                            exception.printStackTrace();
+                        }
+
+                        try {
+                            URL url = new URL("http://155.94.189.29/saveupload.php");
+                            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                            conn.setRequestProperty("Content-Type", "text/plain; charset=utf-8");
+                            conn.setDoInput(true);
+                            conn.setDoOutput(true);
+                            conn.setRequestMethod("POST");
+
+                            OutputStream outputStream = new DataOutputStream(conn.getOutputStream());
+                            int bytesAvailable, bufferSize, bytesRead, maxBufferSize = 1 * 1024 * 1024;
+                            byte[] buffer;
+
+                            bytesAvailable = fileInputStream.available();
+                            bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                            buffer = new byte[bufferSize];
+
+                            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                            while (bytesRead > 0) {
+                                outputStream.write(buffer, 0, bufferSize);
+                                bytesAvailable = fileInputStream.available();
+                                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                            }
+                            // Starts the query
+                            /*conn.connect();
+                            int response = conn.getResponseCode();
+                            Log.d("CSV RESPONSE", "The response is: " + response);
+                            is = conn.getInputStream();*/
+
+                            int res = conn.getResponseCode();
+                            String reply = conn.getResponseMessage();
+
+                            is.close();
+                            fileInputStream.close();
+                            outputStream.flush();
+                            outputStream.close();
+                        }
+                        catch (MalformedURLException exception) {
+                            Log.d("CSV RESPONSE", "MalformedURLException");
+                            exception.printStackTrace();
+                        }
+                        catch (IOException exception) {
+                            Log.d("CSV RESPONSE", "IOException");
+                            exception.printStackTrace();
+                        }
+                        finally {
+                            try {
+                                if (is != null) {
+                                    is.close();
+                                }
+                            }
+                            catch (IOException exception) {
+                                exception.printStackTrace();
+                            }
+                        }
+
                         Log.d("BLCService", CSV.toString());
-                        CSV = new StringBuilder();
+                        CSV = null;
                     }
                     else if (((String)msg.obj).contains("start_")) {
-                        CSV.append(msg.obj.toString());
+                        CSV = new StringBuilder();
+                        Log.d("BLCService", "Caught CSV start");
                     }
                     else {
-                        CSV.append(msg.obj.toString());
+                        String buf = msg.obj.toString();
+                        CSV.append(buf.substring(0, buf.length() - 1));
+                        Log.d("BLCService", "Caught CSV String: " + buf);
                     }
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
@@ -199,7 +368,13 @@ public class BluetoothClassicService extends Service {
 
     @Override
     public void onCreate() {
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        try {
+            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1, 1, locationListener);
+        }
+        catch (SecurityException exception) {
+            exception.printStackTrace();
+        }
         registerReceiver(backgroundBroadcastReceiver, getIntentFilter());
     }
 
@@ -231,6 +406,57 @@ public class BluetoothClassicService extends Service {
     public void connect(DeviceData deviceData) {
         final int state = BluetoothState.bluetoothConnector == null ? Constants.STATE_NONE : BluetoothState.bluetoothConnector.getState();
 
+        /*try {
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+        }
+        catch (SecurityException exception) {
+            exception.printStackTrace();
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userID", Constants.UID);
+            jsonObject.put("conCreationTime", new SimpleDateFormat("yyMMddHHmmss").format(new java.util.Date()));
+            jsonObject.put("flagValidCon", 1);
+            jsonObject.put("devMAC", "x'" + deviceData.getAddress().replaceAll(":", "") + "'");
+            jsonObject.put("devType", Constants.DEVICE_TYPE_UDOO);
+            jsonObject.put("devPortability", 0x01);
+            jsonObject.put("latitude", latitude);
+            jsonObject.put("longitude", longitude);
+        }
+        catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+
+        HttpService httpService = new HttpService();
+        String res = httpService.executeConn(
+                null, "POST",
+                "http://teamc-iot.calit2.net/IOT/public/deviceReg",
+                jsonObject
+        );
+
+        try {
+            JSONObject resJson;
+            resJson = new JSONObject(res);
+            Log.d("BLCService", "DevReg sent, response was " + res);
+
+            if (resJson.getInt("status") == 0) {
+                if (BluetoothState.bluetoothConnector == null) {
+                    BluetoothState.bluetoothConnector = new BluetoothConnector(deviceData, bluetoothHandler);
+                    BluetoothState.bluetoothConnector.connect();
+                }
+            }
+            else {
+                Constants.MAC_UDOO = null;
+                BluetoothState.isBLCConnected(false);
+            }
+        }
+        catch (JSONException exception) {
+            exception.printStackTrace();
+        }*/
+
         if (BluetoothState.bluetoothConnector == null) {
             BluetoothState.bluetoothConnector = new BluetoothConnector(deviceData, bluetoothHandler);
             BluetoothState.bluetoothConnector.connect();
@@ -241,8 +467,5 @@ public class BluetoothClassicService extends Service {
         if (BluetoothState.bluetoothConnector != null) {
             BluetoothState.bluetoothConnector.stop();
         }
-
-        BluetoothState.bluetoothConnector.write(new String("disconnect").getBytes());
-        BluetoothState.bluetoothConnector = null;
     }
 }

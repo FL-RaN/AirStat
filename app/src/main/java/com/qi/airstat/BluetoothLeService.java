@@ -127,14 +127,96 @@ public class BluetoothLeService extends Service {
                 intentAction = ACTION_GATT_CONNECTED;
                 mConnectionState = STATE_CONNECTED;
                 broadcastUpdate(intentAction);
+                BluetoothState.isBLEConnected(true);
                 Log.i(TAG, "Connected to GATT server.");
                 // Attempts to discover services after successful connection.
                 Log.i(TAG, "Attempting to start service discovery:" +
                         mBluetoothGatt.discoverServices());
 
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                try {
+                    Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+                }
+                catch (SecurityException exception) {
+                    exception.printStackTrace();
+                }
+
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("userID", Constants.UID);
+                    jsonObject.put("conCreationTime", new SimpleDateFormat("yyMMddHHmmss").format(new java.util.Date()));
+                    jsonObject.put("flagValidCon", 1);
+                    jsonObject.put("devMAC", "x'" + Constants.MAC_POLAR.replaceAll(":", "") + "'");
+                    jsonObject.put("devType", Constants.DEVICE_TYPE_POLAR);
+                    jsonObject.put("devPortability", 0x01);
+                    jsonObject.put("latitude", "x'" + latitude);
+                    jsonObject.put("longitude", "x'" + longitude);
+                }
+                catch (JSONException exception) {
+                    exception.printStackTrace();
+                }
+
+                HttpService httpService = new HttpService();
+                String res = httpService.executeConn(
+                        null, "POST",
+                        "http://teamc-iot.calit2.net/IOT/public/Connection",
+                        jsonObject
+                );
+
+                try {
+                    JSONObject resJson;
+                    resJson = new JSONObject(res);
+                    Log.d("BLCService", "Connection sent, response was " + res);
+                    Constants.CID_BLE = Integer.parseInt(resJson.getString("connectionID"));
+                }
+                catch (JSONException exception) {
+                    exception.printStackTrace();
+                }
+            }
+            else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 intentAction = ACTION_GATT_DISCONNECTED;
                 mConnectionState = STATE_DISCONNECTED;
+                BluetoothState.isBLEConnected(false);
+
+                try {
+                    Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+                }
+                catch (SecurityException exception) {
+                    exception.printStackTrace();
+                }
+
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("userID", Constants.UID);
+                    jsonObject.put("conCreationTime", new SimpleDateFormat("yyMMddHHmmss").format(new java.util.Date()));
+                    jsonObject.put("flagValidCon", 0);
+                    jsonObject.put("userID", Constants.UID);
+                    jsonObject.put("connectionID", Constants.CID_BLE);
+                    jsonObject.put("devMAC", "x'" + Constants.MAC_POLAR.replaceAll(":", "") + "'");
+                    jsonObject.put("devType", Constants.DEVICE_TYPE_POLAR);
+                    jsonObject.put("devPortability", 0x01);
+                    jsonObject.put("latitude", "x'" + latitude);
+                    jsonObject.put("longitude", "x'" + longitude);
+                }
+                catch (JSONException exception) {
+                    exception.printStackTrace();
+                }
+
+                HttpService httpService = new HttpService();
+                String response = httpService.executeConn(
+                        null, "POST",
+                        "http://teamc-iot.calit2.net/IOT/public/Disconnection",
+                        jsonObject
+                );
+
+                Constants.MAC_POLAR = null;
+                Constants.CID_BLE = Constants.CID_NONE;
+
+                Log.d("BLEService DISC RES", response);
+
                 Log.i(TAG, "Disconnected from GATT server.");
                 broadcastUpdate(intentAction);
             }
@@ -230,11 +312,30 @@ public class BluetoothLeService extends Service {
             exception.printStackTrace();
         }
 
-        intent.putExtra("timeStamp", date);
-        intent.putExtra("connectionID", 3);
-        intent.putExtra("heartrate", signal);
-        intent.putExtra("latitude", latitude);
-        intent.putExtra("longitude", longitude);
+        JSONObject reformedObject = new JSONObject();
+        JSONArray reformedArray = new JSONArray();
+
+        try {
+            JSONObject item = new JSONObject();
+            item.put("timeStamp", date);
+            item.put("connectionID", Constants.CID_BLE);
+            item.put("heartrate", signal);
+            item.put("latitude", latitude);
+            item.put("longitude", longitude);
+
+            reformedArray.put(item);
+            reformedObject.put("HR", reformedArray);
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        HttpService httpService = new HttpService();
+        String responseCode = httpService.executeConn(
+                null,
+                "POST", "http://teamc-iot.calit2.net/IOT/public/rcv_json_data",
+                reformedObject
+        );
 
         sendBroadcast(intent);
     }
@@ -330,7 +431,58 @@ public class BluetoothLeService extends Service {
         Log.d(TAG, "Trying to create a new connection.");
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
-        return true;
+        Constants.MAC_POLAR = mBluetoothDeviceAddress;
+
+        try {
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+        }
+        catch (SecurityException exception) {
+            exception.printStackTrace();
+        }
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("userID", Constants.UID);
+            jsonObject.put("conCreationTime", new SimpleDateFormat("yyMMddHHmmss").format(new java.util.Date()));
+            jsonObject.put("flagValidCon", 1);
+            jsonObject.put("devMAC", "x'" + Constants.MAC_POLAR.replaceAll(":", "") + "'");
+            jsonObject.put("devType", Constants.DEVICE_TYPE_POLAR);
+            jsonObject.put("devPortability", 0x01);
+            jsonObject.put("latitude", "x'" + latitude);
+            jsonObject.put("longitude", "x'" + longitude);
+        }
+        catch (JSONException exception) {
+            exception.printStackTrace();
+        }
+
+        HttpService httpService = new HttpService();
+        String res = httpService.executeConn(
+                null, "POST",
+                "http://teamc-iot.calit2.net/IOT/public/deviceReg",
+                jsonObject
+        );
+
+        try {
+            JSONObject resJson;
+            resJson = new JSONObject(res);
+            Log.d("BLEService", "DevReg sent, response was " + res);
+
+            if (resJson.getInt("status") == 0) {
+                return true;
+            }
+            else {
+                mConnectionState = STATE_CONNECTING;
+                Constants.MAC_POLAR = null;
+                BluetoothState.isBLEConnected(false);
+                return false;
+            }
+        }
+        catch (JSONException exception) {
+            exception.printStackTrace();
+            return false;
+        }
     }
 
     /**

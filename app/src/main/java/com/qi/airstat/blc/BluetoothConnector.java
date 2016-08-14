@@ -57,6 +57,7 @@ public class BluetoothConnector {
             mConnectedThread = null;
         }
 
+        Constants.MAC_UDOO = connectedDevice.getAddress();
         mConnectThread = new ConnectThread(connectedDevice);
         mConnectThread.start();
         setState(STATE_CONNECTING);
@@ -163,7 +164,11 @@ public class BluetoothConnector {
 
         public void run() {
             if (D) Log.d(TAG, "ConnectThread run");
-            btAdapter.cancelDiscovery();
+
+            if (btAdapter.isDiscovering()) {
+                btAdapter.cancelDiscovery();
+            }
+
             if (mmSocket == null) {
                 if (D) Log.d(TAG, "unable to connect to device, socket isn't created");
                 connectionFailed();

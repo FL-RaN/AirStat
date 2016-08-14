@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/rel_sensor_data_overview_root"
-    android:padding="8dp"
     android:background="@color/colorThemeDarkGery"
     tools:context=".SensorDataOverviewActivity">
 
@@ -17,7 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="429dp"
         android:layout_above="@+id/cv_sensor_data_overview_footer"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:padding="8dp">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -112,6 +112,22 @@
                         </LinearLayout>
                     </RelativeLayout>
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/rel_sensor_data_overview_heart_rate_switch">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/iv_sensor_data_overview_heart_rate_switch"
+                            android:src="@drawable/bluetooth_button_off"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_margin="8dp"
+                            android:onClick="onClickDisconnectBLE" />
+                    </RelativeLayout>
+
                 </FrameLayout>
 
             </LinearLayout>
@@ -202,6 +218,22 @@
                                     android:textSize="16sp" />
                             </LinearLayout>
                         </LinearLayout>
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/rel_sensor_data_overview_air_data_switch" >
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/iv_sensor_data_overview_air_data_switch"
+                            android:src="@drawable/bluetooth_button_off"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_margin="8dp"
+                            android:onClick="onClickDisconnectBLC" />
                     </RelativeLayout>
 
                 </FrameLayout>

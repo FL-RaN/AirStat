@@ -7,6 +7,16 @@ import java.util.regex.Pattern;
 public class Constants {
     private static Constants instance = new Constants();
 
+    static public String MAC_UDOO = null;
+    static public String MAC_POLAR = null;
+
+    final static public byte DEVICE_TYPE_POLAR = 0x00;
+    final static public byte DEVICE_TYPE_UDOO = 0x01;
+
+    final static public int CID_NONE = 0;
+    static public int CID_BLE = CID_NONE;
+    static public int CID_BLC = CID_NONE;
+
     final static public int AIR_DATA_VIEW_PAGER_MAX_PAGES = 6;
     final static public int FAKE_DATA_SERVICE_UPDATE_INTERVAL = 1000; // Unit: millisecond
 
