@@ -636,37 +636,6 @@ public class SensorDataOverviewActivity extends FragmentActivity {
         BluetoothState.displayLightEnergyScanner(this);
     }
 
-    public void onCilckDisconnect(View view) {
-        if (BluetoothState.isBLCConnected() && BLCService != null) {
-            BluetoothState.bluetoothConnector.write(new String("disconnect").getBytes());
-            //BluetoothState.bluetoothConnector.stop();
-        }
-
-        /*if (BluetoothState.isBLEConnected()) {
-            BLEService.disconnect();
-        }*/
-        //BLEService.disconnect();
-
-        /*File folder = new File(Environment.getExternalStorageDirectory()
-                + "/Folder");
-
-        boolean var = false;
-        if (!folder.exists())
-            var = folder.mkdir();
-
-        System.out.println("" + var);
-
-        final String filename = folder.toString() + "/" + "Test.csv";
-
-        try {
-            FileWriter fw = new FileWriter(filename);
-            fw.append("");
-        }
-        catch (IOException exception) {
-            exception.printStackTrace();
-        }*/
-    }
-
     public void onClickDisconnectBLE(View view) {
         if (BluetoothState.isBLEConnected()) {
             BLEService.disconnect();
@@ -675,7 +644,7 @@ public class SensorDataOverviewActivity extends FragmentActivity {
 
     public void onClickDisconnectBLC(View view) {
         if (BluetoothState.isBLCConnected()) {
-            BLCService.disconnect();
+            BluetoothState.bluetoothConnector.write(new String("disconnect").getBytes());
         }
     }
 }
