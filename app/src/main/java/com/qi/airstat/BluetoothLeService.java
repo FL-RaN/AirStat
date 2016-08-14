@@ -473,7 +473,7 @@ public class BluetoothLeService extends Service {
                 return true;
             }
             else {
-                mConnectionState = STATE_CONNECTING;
+                mConnectionState = STATE_DISCONNECTED;
                 Constants.MAC_POLAR = null;
                 BluetoothState.isBLEConnected(false);
                 return false;
