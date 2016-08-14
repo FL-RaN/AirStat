@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.qi.airstat.ActivityClosingDialog;
+import com.qi.airstat.ActivityManager;
 import com.qi.airstat.Constants;
 import com.qi.airstat.R;
 import com.qi.airstat.SensorDataOverviewActivity;
@@ -109,6 +110,7 @@ public class LoginAdapter {
 
                 try {
                     Constants.UID = jObj.getInt(Constants.HTTP_DATA_LOGIN_UID); // Set UID from received data
+                    ActivityManager.instance.setUID(Constants.UID);
                 } catch (JSONException e) {
                     e.printStackTrace();
                     makeToast("Sorry, try again later...");

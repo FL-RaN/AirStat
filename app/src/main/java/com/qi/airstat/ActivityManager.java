@@ -18,6 +18,7 @@ public class ActivityManager {
 
     private static final String PREF_NAME = "AirStatActivityPref";
     private static final String IS_LOGIN = "IsLoggedIn";
+    private static final String IS_VEFIED_UID = "UID";
 
     private Context context;
     private SharedPreferences pref;
@@ -38,6 +39,21 @@ public class ActivityManager {
     public void createLoginState() {
         editor.putBoolean(IS_LOGIN, true);
         editor.commit();
+    }
+
+    /*
+    Set UID to local file
+     */
+    public void setUID(int uid){
+        editor.putInt(IS_VEFIED_UID, uid);
+        editor.commit();
+    }
+
+    /*
+    Get UID from local file
+     */
+    public int getUID(){
+        return pref.getInt(IS_VEFIED_UID, -1);
     }
 
     /*

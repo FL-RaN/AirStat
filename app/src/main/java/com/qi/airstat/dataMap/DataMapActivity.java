@@ -21,7 +21,6 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -221,7 +220,6 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
     }
 
     public void resultHandler(String result) {
-        Log.d("result", result + "");
         JSONObject rcvdData = null;
 
         try {
