@@ -28,6 +28,9 @@ public class DataMapCurrentUser {
     private static double minLng;
     private static double maxLng;
 
+    private static float currentZoom;
+    private static float currentMaxZoom;
+
     private DataMapCurrentUser() {
         this.connectionID = Constants.CID_BLC;
         dataSet = new DataMapDataSet();
@@ -51,8 +54,40 @@ public class DataMapCurrentUser {
         return host;
     }
 
-    public void setCurrentUserData(float temparature, float co, float so2, float no2, float o3, float pm) {
-        this.dataSet.dataReset(temparature, co, so2, no2, o3, pm);
+    public static void setCurrentUserData(float temparature, float co, float so2, float no2, float o3, float pm) {
+        dataSet.dataReset(temparature, co, so2, no2, o3, pm);
+    }
+
+    public static int getConnectionID() {
+        return connectionID;
+    }
+
+    public static void setConnectionID(int connectionID) {
+        DataMapCurrentUser.connectionID = connectionID;
+    }
+
+    public static long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public static void setTimeStamp(long timeStamp) {
+        DataMapCurrentUser.timeStamp = timeStamp;
+    }
+
+    public static float getCurrentZoom() {
+        return currentZoom;
+    }
+
+    public static void setCurrentZoom(float currentZoom) {
+        DataMapCurrentUser.currentZoom = currentZoom;
+    }
+
+    public static float getCurrentMaxZoom() {
+        return currentMaxZoom;
+    }
+
+    public static void setCurrentMaxZoom(float currentMaxZoom) {
+        DataMapCurrentUser.currentMaxZoom = currentMaxZoom;
     }
 
     public static DataMapCurrentUser getInstance() {

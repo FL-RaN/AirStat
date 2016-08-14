@@ -39,18 +39,22 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
     private TextView tvMarker;
     private Context context;
     private ArrayList<DataMapMarker> markers;
+    private GoogleMap map;
 
-    private final int AT_LEAST_NUMBER_OF_MARKER_FOR_CLUSTER = 5;
+    private final int AT_LEAST_NUMBER_OF_MARKER_FOR_CLUSTER = 3;
 
 
     @Override
     protected boolean shouldRenderAsCluster(Cluster<DataMapMarker> cluster) {
-        return cluster.getSize() >= AT_LEAST_NUMBER_OF_MARKER_FOR_CLUSTER;
+        float currentZoom = DataMapCurrentUser.getCurrentZoom();
+        float currrentMaxZoom = DataMapCurrentUser.getCurrentMaxZoom();
+        return currentZoom < currrentMaxZoom-4 && cluster.getSize() >= AT_LEAST_NUMBER_OF_MARKER_FOR_CLUSTER;
     }
 
     public DataMapClusterRenderer(Context context, GoogleMap map, ClusterManager<DataMapMarker> clusterManager, ArrayList<DataMapMarker> markers) {
         super(context, map, clusterManager);
         this.context = context;
+        this.map = map;
         view = LayoutInflater.from(context).inflate(R.layout.marker_custom, null);
         imgMarker = (ImageView) view.findViewById(R.id.img_marker);
         tvMarker = (TextView) view.findViewById(R.id.tv_marker);
@@ -125,12 +129,12 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
             imgMarker.setBackgroundResource(R.drawable.marker_default);
         }
 
-        int scale;
+        int scale; String label;
         if (clusterItem.getConnectionID() == Constants.CID_BLC) {
-            tvMarker.setText("ME");
+            label = "ME";
             scale = 2;
         } else {
-            tvMarker.setText("");
+            label = "";
             scale = 3;
         }
         Bitmap icon = createDrawableFromView(DataMapActivity.context, view);
@@ -139,6 +143,8 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
         marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
 
         marker.setPosition(findMarker(clusterItem.getConnectionID()).getLocation());
+        tvMarker.setText(label);
+
     }
 
     public DataMapMarker findMarker(int cid) {

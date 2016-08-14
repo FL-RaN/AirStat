@@ -234,8 +234,16 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
                 double lat = airData.getDouble(Constants.HTTP_DATA_MAP_ONGOING_SESSION_LAT);
                 double lng = airData.getDouble(Constants.HTTP_DATA_MAP_ONGOING_SESSION_LNG);
 
-                refreshMarker(connectionID, timeStamp, new DataMapDataSet(temperature, co, so2, no2, o3, pm), lat, lng);
+                if (connectionID == Constants.CID_BLC) {
+                    DataMapCurrentUser.setCurrentUserData((float) temperature, (float) co, (float) so2, (float) no2, (float) o3, (float) pm);
+                    DataMapCurrentUser.setConnectionID(connectionID);
+                    DataMapCurrentUser.setTimeStamp(timeStamp);
+                    Log.d("SETTED LOCATION", DataMapCurrentUser.getInstance().getLat() + "   " + DataMapCurrentUser.getInstance().getLng());
+                    refreshMarker(DataMapCurrentUser.create());
+                } else {
+                    refreshMarker(connectionID, timeStamp, new DataMapDataSet(temperature, co, so2, no2, o3, pm), lat, lng);
 
+                }
             }
 //            DataMapCurrentUser.getInstance().setCurrentUserData((float) Math.random() * 400 + 1, (float) Math.random() * 20, (float) Math.random() * 600, (float) Math.random() * 300 + 1700, (float) Math.random() * 100 + 500, (float) Math.random() * 100 + 400);
 //            DataMapCurrentUser.getInstance().setCurrentUserData(0,50.4f,1004,2049,604,500);
@@ -503,15 +511,19 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
             if (marker.getConnectionID() == cid) {
                 marker.setDataSet(dataSet);
                 marker.setTimeStamp(timeStamp);
-                if (cid == Constants.CID_BLC || DataMapCurrentUser.isHost()) {
-                    marker.setLocation(new LatLng(DataMapCurrentUser.getInstance().getLat(), DataMapCurrentUser.getInstance().getLng()));
-                } else {
-                    marker.setLocation(new LatLng(lat, lng));
-                }
+//                if (cid == Constants.CID_BLC) {
+//                    marker.setLocation(new LatLng(DataMapCurrentUser.getInstance().getLat(), DataMapCurrentUser.getInstance().getLng()));
+//                } else {
+                marker.setLocation(new LatLng(lat, lng));
+//                }
                 return true;
             }
         }
+//        if (cid == Constants.CID_BLC) {
+//            addMarker(cid, timeStamp, dataSet, new LatLng(DataMapCurrentUser.getInstance().getLat(), DataMapCurrentUser.getInstance().getLng()));
+//        } else {
         addMarker(cid, timeStamp, dataSet, new LatLng(lat, lng));
+//        }
         return false;
     }
 
@@ -551,10 +563,11 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         DataMapCurrentUser.getInstance().setLat(lat);
         DataMapCurrentUser.getInstance().setLng(lng);
+        DataMapCurrentUser.getInstance().setCurrentZoom(map.getCameraPosition().zoom);
+        DataMapCurrentUser.getInstance().setCurrentMaxZoom(map.getMaxZoomLevel());
 
         Log.w("RealTime", "" + lat + "/" + lng);
-
-
+//
         if (firstCall) {
             addMarker(DataMapCurrentUser.create());
             panelValueChanger(findMarker(Constants.CID_BLC));
@@ -745,7 +758,6 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
             dataMapPanelUi.tvAqiGrade.setText("");
             DataMapMarker marker = (DataMapMarker) clusterItem;
             backgroundMarkerChanger = new BackgroundMarkerChanger(marker);
-//            backgroundMarkerChanger.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             backgroundMarkerChanger.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             dataMapPanelUi.slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             map.animateCamera(CameraUpdateFactory.newLatLng(clusterItem.getPosition()));
