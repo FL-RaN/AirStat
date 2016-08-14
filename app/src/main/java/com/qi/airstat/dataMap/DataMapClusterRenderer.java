@@ -34,11 +34,18 @@ import java.util.Collection;
  */
 public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker> {
 
-    View view;
-    ImageView imgMarker;
-    TextView tvMarker;
-    Context context;
-    ArrayList<DataMapMarker> markers;
+    private View view;
+    private ImageView imgMarker;
+    private TextView tvMarker;
+    private Context context;
+    private ArrayList<DataMapMarker> markers;
+    private final int AT_LEAST_NUMBER_OF_MARKER_FOR_CLUSTER = 3;
+
+
+    @Override
+    protected boolean shouldRenderAsCluster(Cluster<DataMapMarker> cluster) {
+        return cluster.getSize() >= AT_LEAST_NUMBER_OF_MARKER_FOR_CLUSTER;
+    }
 
     public DataMapClusterRenderer(Context context, GoogleMap map, ClusterManager<DataMapMarker> clusterManager, ArrayList<DataMapMarker> markers) {
         super(context, map, clusterManager);
@@ -51,7 +58,7 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
 
     @Override
     protected void onBeforeClusterRendered(Cluster<DataMapMarker> cluster, MarkerOptions markerOptions) {
-
+        super.onBeforeClusterRendered(cluster, markerOptions);
 
         Collection<DataMapMarker> clusteredMarkers = cluster.getItems();
         IconGenerator clusterIconGenerator = new IconGenerator(context);
@@ -86,7 +93,7 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
         clusterIconGenerator.setBackground(clusterIcon);
 
         Bitmap icon = clusterIconGenerator.makeIcon();
-        icon = Bitmap.createScaledBitmap(icon, icon.getWidth() *2/ 3, icon.getHeight() *2/ 3, false);
+        icon = Bitmap.createScaledBitmap(icon, icon.getWidth() * 2 / 3, icon.getHeight() * 2 / 3, false);
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
     }
 

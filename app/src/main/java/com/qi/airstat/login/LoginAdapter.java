@@ -101,7 +101,7 @@ public class LoginAdapter {
                     makeToast("Sorry, try again later...");
                     return ;
                 }
-                activity.startActivity(new Intent(activity.getApplicationContext(), SensorDataOverviewActivity.class));
+                activity.startActivity(new Intent(activity.getApplicationContext(), SensorDataOverviewActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 activity.finish();
                 break;
             case Constants.HTTP_RESPONSE_RESULT_LOGIN_FAIL:

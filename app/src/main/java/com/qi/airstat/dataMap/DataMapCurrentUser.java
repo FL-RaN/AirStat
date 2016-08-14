@@ -14,7 +14,7 @@ Single tone class for notifying my location to server
 public class DataMapCurrentUser {
     private static DataMapCurrentUser instance = new DataMapCurrentUser();
 
-private static int id;
+    private static int id;
     private static long timeStamp;
     private static DataMapDataSet dataSet;
 
@@ -38,9 +38,9 @@ private static int id;
         this.minLng = 0;
         this.maxLng = 0;
     }
-    
-    public static DataMapMarker create(){
-        Log.w("Stored data", ""+lat+"..."+lng);
+
+    public static DataMapMarker create() {
+        Log.w("Stored data", "" + lat + "..." + lng);
         DataMapMarker currnetUser = new DataMapMarker(id, timeStamp, new LatLng(lat, lng));
         currnetUser.setDataSet(dataSet);
         return currnetUser;

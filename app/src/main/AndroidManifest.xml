@@ -44,6 +44,7 @@
 
         <activity
             android:name=".SensorDataOverviewActivity"
+            android:theme="@style/noAnimTheme"
             android:screenOrientation="portrait">
         </activity>
 
@@ -73,6 +74,7 @@
         <activity android:name=".newAccount.NewAccountActivity" />
 
         <activity android:name=".dataMap.DataMapActivity"
+            android:theme="@style/noAnimTheme"
             android:screenOrientation="portrait"
             android:configChanges="keyboardHidden|orientation|screenSize"/>
 

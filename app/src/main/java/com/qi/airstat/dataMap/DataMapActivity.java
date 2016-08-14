@@ -40,6 +40,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.qi.airstat.ActivityManager;
 import com.qi.airstat.Constants;
 import com.qi.airstat.R;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -56,6 +57,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Created by JUMPSNACK on 8/3/2016.
@@ -78,11 +80,12 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 
     private BackgroundMarkerChanger backgroundMarkerChanger;
     private BackgroundClusterChanger backgroundClusterChanger;
-
+    LocationManager locationManager;
     private DataMapPanelUi dataMapPanelUi;
 
     public final LatLng START_POINT = new LatLng(32.881265, -117.234139);
     private boolean firstCall = true;
+    private int backPressCount = 0;
 
     private Messenger messageReceiver = new Messenger(new IncommingHandler());
     private Messenger messageSender = null;
@@ -115,24 +118,28 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
                 exception.printStackTrace();
             }
 
-            messageSender = null;
             isDataMapServiceBound = false;
         }
     };
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-//        dataMapCommunication.stopThread();
-//        dataMapCommunication.httpService.pdLoading.dismiss();
-//        dataMapCommunication.httpService.conn.disconnect();
-        if (backgroundMarkerChanger != null) backgroundMarkerChanger.stop();
-        if (backgroundClusterChanger != null) backgroundClusterChanger.stop();
-        unbindService(serviceConnection);
+    public void onBackPressed() {
+        backPressCount++;
+
+        if(backPressCount <2){
+            makeToast("Please press again to exit.");
+        }else{
+            ActivityManager.instance.logoutUser(); //essential for logout
+            System.gc();
+            System.runFinalization();
+            System.exit(0);
+        }
     }
 
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
+        super.onDestroy();
+
         if (isDataMapServiceBound) {
             try {
                 // Send message to service for register this activity as new client.
@@ -145,7 +152,24 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
             messageSender = null;
             isDataMapServiceBound = false;
         }
-        super.onStop();
+
+        try {
+            if (locationManager != null)
+                locationManager.removeUpdates(this);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+        if (backgroundMarkerChanger != null) {
+            backgroundMarkerChanger.stop();
+            backgroundMarkerChanger.cancel(true);
+        }
+        if (backgroundClusterChanger != null) {
+            backgroundClusterChanger.stop();
+            backgroundClusterChanger.cancel(true);
+        }
+        dataMapPanelUi.slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+
+        unbindService(serviceConnection);
     }
 
     class IncommingHandler extends Handler {
@@ -160,6 +184,19 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!isDataMapServiceBound) {
+            isDataMapServiceBound = true;
+            bindService(
+                    new Intent(this, DataMapService.class),
+                    serviceConnection,
+                    Context.BIND_AUTO_CREATE
+            );
+        }
+    }
+
     public void resultHandler(String result) {
         Log.d("result", result + "");
         JSONObject rcvdData = null;
@@ -170,17 +207,18 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         } catch (JSONException e) {
             e.printStackTrace();
             return;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void parseOngoingSessionData(JSONObject rcvdData) {
-        try {
-            int i = 1;
-            JSONObject eachData = rcvdData.getJSONObject("" + (i++));
 
-            while (eachData != null) {
+        try {
+            Iterator<String> it = rcvdData.keys();
+
+            while (it.hasNext()) {
+                JSONObject eachData = rcvdData.getJSONObject(it.next());
 
                 int connectionID = eachData.getInt(Constants.HTTP_DATA_MAP_ONGOING_SESSION_CID);
                 long timeStamp = eachData.getLong(Constants.HTTP_DATA_MAP_ONGOING_SESSION_TIME_STAMP);
@@ -196,21 +234,17 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
                 double lng = airData.getDouble(Constants.HTTP_DATA_MAP_ONGOING_SESSION_LNG);
 
                 refreshMarker(connectionID, timeStamp, new DataMapDataSet(temperature, co, so2, no2, o3, pm), lat, lng);
-                try {
-                    eachData = rcvdData.getJSONObject("" + (i++));
-                } catch (JSONException e) {
-                    eachData = null;
-                }
+
             }
-            DataMapCurrentUser.getInstance().setCurrentUserData((float) Math.random() * 400 + 1, (float) Math.random() * 20, (float) Math.random() * 600, (float) Math.random() * 300 + 1700, (float) Math.random() * 100 + 500, (float) Math.random() * 100 + 400);
+//            DataMapCurrentUser.getInstance().setCurrentUserData((float) Math.random() * 400 + 1, (float) Math.random() * 20, (float) Math.random() * 600, (float) Math.random() * 300 + 1700, (float) Math.random() * 100 + 500, (float) Math.random() * 100 + 400);
 //            DataMapCurrentUser.getInstance().setCurrentUserData(0,50.4f,1004,2049,604,500);
             refreshMarker(DataMapCurrentUser.create());
-            for (int j = 1; j < 10; j++) {
-                refreshMarker(10 * j,
-                        162737272727l,
-                        new DataMapDataSet((float) Math.random() * 400, (float) Math.random() * 50, (float) Math.random() * 60, (float) Math.random() * 200, (float) Math.random() * 60, (float) Math.random() * 50),
-                        START_POINT.latitude + (j / 50d), START_POINT.longitude + (j / 200d));
-            }
+//            for (int j = 1; j < 10; j++) {
+//                refreshMarker(10 * j,
+//                        162737272727l,
+//                        new DataMapDataSet((float) Math.random() * 400, (float) Math.random() * 50, (float) Math.random() * 60, (float) Math.random() * 200, (float) Math.random() * 60, (float) Math.random() * 50),
+//                        START_POINT.latitude + (j / 50d), START_POINT.longitude + (j / 200d));
+//            }
 
             refreshMap();
         } catch (JSONException e) {
@@ -233,7 +267,6 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activty_data_map);
         context = this;
-
         /*
         Request permission to user
          */
@@ -252,11 +285,6 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         setWidgets(dataMapPanelUi);
 
-        bindService(
-                new Intent(this, DataMapService.class),
-                serviceConnection,
-                Context.BIND_AUTO_CREATE
-        );
     }
 
     /*
@@ -279,7 +307,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
                 .setRationaleMessage("We need your permission")
                 .setDeniedMessage("You make it rejected")
                 .setPermissions(Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
                         Manifest.permission.INTERNET)
                 .check();
     }
@@ -332,14 +360,13 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         mClusterManager = new ClusterManager<>(this, map);
         initMarkerCollection();
-        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         try {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
         } catch (SecurityException e) {
             e.printStackTrace();
         }
-
         setMapEvent();
 
     }
@@ -383,6 +410,8 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         mClusterManager.setRenderer(mRenderer);
         mClusterManager.setOnClusterItemClickListener(markerTouchDetector);
         mClusterManager.setOnClusterClickListener(clusterTouchDetector);
+//        mClusterManager.onCameraChange(map.getCameraPosition());
+
     }
 
     public static DataMapMarker findMarker(int cid) {
@@ -457,8 +486,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         markers.add(marker);
         mClusterManager.addItem(marker);
 
-//        mClusterManager.cluster();
-    }// Call Second
+    }
 
     private void appendMarker(int cid, long timeStamp, DataMapDataSet dataSet, double lat, double lng) {
         markers.add(new DataMapMarker(cid, timeStamp, dataSet, new LatLng(lat, lng)));
@@ -480,7 +508,6 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         }
         addMarker(cid, timeStamp, dataSet, new LatLng(lat, lng));
         return false;
-//        removeAndDrawMarkers();
     }
 
     public boolean refreshMarker(DataMapMarker newMarker) {
@@ -733,6 +760,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 
             dataMapPanelUi.slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
             map.animateCamera(CameraUpdateFactory.newLatLng(cluster.getPosition()));
+
             return true;
         }
     }
@@ -862,15 +890,6 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
             super.onCancelled();
             stop();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-//        dataMapCommunication.stopThread();
-//        backgroundMarkerChanger.stop();
-//        backgroundClusterChanger.stop();
-
     }
 
     public String[] getRegionAddress(double lat, double lng) {
