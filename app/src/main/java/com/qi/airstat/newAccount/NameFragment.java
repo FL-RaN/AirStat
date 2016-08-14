@@ -54,6 +54,9 @@ public class NameFragment extends Fragment {
         });
     }
 
+    /*
+    Catch button state follow as first name and last name input
+     */
     private class ButtonStateChanger implements TextWatcher {
 
         @Override

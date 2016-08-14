@@ -15,7 +15,7 @@ import com.qi.airstat.R;
 public class NewAccountActivity extends FragmentActivity {
     public static NewAccountActivity instance;
 
-    ViewPager createAccountPager;
+    private ViewPager createAccountPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,15 +37,16 @@ public class NewAccountActivity extends FragmentActivity {
     @Override
     public void onBackPressed() {
         if (createAccountPager.getCurrentItem() == 0) {
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
             super.onBackPressed();
         } else {
-            // Otherwise, select the previous step.
+            // select the previous step.
             createAccountPager.setCurrentItem(createAccountPager.getCurrentItem() - 1);
         }
     }
 
+    /*
+    Change page manually
+     */
     public void setCurrentPagerItem(int item) {
         createAccountPager.setCurrentItem(item);
     }

@@ -7,11 +7,9 @@ import com.google.maps.android.clustering.ClusterItem;
  * Created by JUMPSNACK on 8/3/2016.
  */
 public class DataMapMarker implements ClusterItem {
-
     private LatLng location;
     private int connectionID;
     private long timeStamp;
-
     private DataMapDataSet dataSet = new DataMapDataSet();
 
     public DataMapMarker(int connectionID, long timeStamp, LatLng location) {

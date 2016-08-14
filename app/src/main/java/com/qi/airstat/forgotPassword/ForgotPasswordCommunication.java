@@ -1,7 +1,6 @@
 package com.qi.airstat.forgotPassword;
 
 import android.content.Context;
-import android.support.v4.app.DialogFragment;
 
 import com.qi.airstat.Constants;
 import com.qi.airstat.HttpService;
@@ -14,11 +13,9 @@ import java.util.ArrayList;
  */
 public class ForgotPasswordCommunication implements iHttpConnection {
 
-    private static DialogFragment dialogFragment;
     private HttpService httpService;
 
     private Context context;
-//    private ForgotPasswordUi forgotPasswordUi;
 
     private String email;
 
@@ -26,18 +23,22 @@ public class ForgotPasswordCommunication implements iHttpConnection {
 
     public ForgotPasswordCommunication(Context context, ForgotPasswordUi forgotPasswordUi) {
         this.context = context;
-//        this.forgotPasswordUi = forgotPasswordUi;
         this.email = forgotPasswordUi.edtEmail.getText().toString().trim();
 
+        /*
+        Compose a message
+         */
         params = new ArrayList<>();
         params.add(Constants.HTTP_DATA_FORGOT_PASSWORD_EMAIL);
         params.add(email);
     }
 
+    /*
+    Communicates with server
+     */
     @Override
     public String executeHttpConn() {
         httpService = new HttpService();
         return httpService.executeConn(context,"POST", Constants.HTTP_STR_URL_FORGOT_PASSWORD, params);
-//        return httpService.executeConn(context, Constants.HTTP_STR_URL_TEST, params, dialogFragment, ForgotPasswordActivity.fragmentManager);
     }
 }

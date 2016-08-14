@@ -2,7 +2,6 @@ package com.qi.airstat.login;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -47,6 +46,9 @@ public class LoginAdapter {
     }
 
     private void setEvent(final LoginUi loginUi) {
+        /*
+         Login button event handler
+         */
         loginUi.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -55,13 +57,14 @@ public class LoginAdapter {
                     loginCommunication = new LoginCommunication(view.getContext(), loginUi);
                     String receivedData = loginCommunication.executeHttpConn();
 
-                    Log.w("TEST", receivedData);
                     resultHandler(receivedData);
                 }
-                view.setEnabled(true); //Temporary setting
             }
         });
 
+        /*
+        Create account button event handler
+         */
         loginUi.btnCreateAccnt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,6 +72,9 @@ public class LoginAdapter {
             }
         });
 
+        /*
+        Forgot password button event handler
+         */
         loginUi.btnForgotPwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,12 +83,16 @@ public class LoginAdapter {
         });
     }
 
+    /*
+    Analyze received data
+     */
     private void resultHandler(String receivedData) {
         int responseCode = -1;
         JSONObject jObj = null;
+
         try {
             jObj = new JSONObject(receivedData);
-            responseCode = jObj.getInt(Constants.HTTP_RESPONSE_RESULT);
+            responseCode = jObj.getInt(Constants.HTTP_RESPONSE_RESULT); // Get response code
         } catch (JSONException e) {
             e.printStackTrace();
             makeToast("Sorry, try again later...");
@@ -90,24 +100,31 @@ public class LoginAdapter {
             e.printStackTrace();
         }
 
+        /*
+        Process next step follow as response status code
+         */
         switch (responseCode) {
-            case Constants.HTTP_RESPONSE_RESULT_OK:
+            case Constants.HTTP_RESPONSE_RESULT_OK: // status = 0
                 makeToast("Welcome!");
 
                 try {
-                    Constants.UID = jObj.getInt(Constants.HTTP_DATA_LOGIN_UID);
+                    Constants.UID = jObj.getInt(Constants.HTTP_DATA_LOGIN_UID); // Set UID from received data
                 } catch (JSONException e) {
                     e.printStackTrace();
                     makeToast("Sorry, try again later...");
                     return ;
                 }
+
+                // SensorDataOverviewActivity start
                 activity.startActivity(new Intent(activity.getApplicationContext(), SensorDataOverviewActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                 activity.finish();
                 break;
-            case Constants.HTTP_RESPONSE_RESULT_LOGIN_FAIL:
+
+            case Constants.HTTP_RESPONSE_RESULT_LOGIN_FAIL: // status = 1
                 new ActivityClosingDialog("Failed!", "Please check your email or password", null).show(LoginBaseActivity.fragmentManager, "");
                 break;
-            case Constants.HTTP_RESPONSE_RESULT_LOGIN_FAIL_ACTIVATION:
+
+            case Constants.HTTP_RESPONSE_RESULT_LOGIN_FAIL_ACTIVATION:  // status = 2
                 new ActivityClosingDialog("Failed!", "We need your activation." + "\nPlease check your email", null).show(LoginBaseActivity.fragmentManager, "");
                 break;
 
@@ -116,6 +133,9 @@ public class LoginAdapter {
         }
     }
 
+    /*
+    Check inserted user information
+     */
     private boolean checkFormat(LoginUi loginUi) {
         String email = loginUi.edtEmail.getText().toString().trim();
         String password = loginUi.edtPassword.getText().toString().trim();

@@ -40,6 +40,9 @@ public class LoginCommunication implements iHttpConnection {
         email = loginUi.edtEmail.getText().toString().trim();
         password = loginUi.edtPassword.getText().toString().trim();
 
+        /*
+        Compose a HTTP message
+         */
         params = new ArrayList<>();
         params.add(Constants.HTTP_DATA_LOGIN_EMAIL);
         params.add(email);
@@ -48,6 +51,9 @@ public class LoginCommunication implements iHttpConnection {
 
     }
 
+    /*
+    Send to server and receive response
+     */
     public String executeHttpConn(){
         httpService = new HttpService();
         return receivedData = httpService.executeConn(context,"POST", Constants.HTTP_STR_URL_LOGIN, params);

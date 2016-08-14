@@ -15,6 +15,9 @@ public class NewAccountPagerAdapter extends FragmentStatePagerAdapter {
     private NewAccountUi newAccountUi = NewAccountUi.getInstance();
     private ArrayList<Fragment> creatingAccountFragments;
 
+    /*
+    Set each page to ViewPager
+     */
     public NewAccountPagerAdapter(FragmentManager fm) {
         super(fm);
 
@@ -25,7 +28,9 @@ public class NewAccountPagerAdapter extends FragmentStatePagerAdapter {
         creatingAccountFragments.add(PasswordFragment.create());
     }
 
-
+    /*
+    Get page follow as index
+     */
     @Override
     public Fragment getItem(int position) {
        return creatingAccountFragments.get(position);
@@ -36,6 +41,4 @@ public class NewAccountPagerAdapter extends FragmentStatePagerAdapter {
     public int getCount() {
         return creatingAccountFragments.size();
     }
-
-
 }

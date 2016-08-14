@@ -21,9 +21,8 @@ public class NewAccountUi {
 
     static String disabledButtonColor = "#C1C1C1";
     static String enabledButtonColor = "#009688";
-//    static String enabledButtonColor = "#157FFE";
 
-    private NewAccountUi() {
+    private NewAccountUi() { /* Prevent for calling as new a instance */
     }
 
     public static NewAccountUi getInstance() {

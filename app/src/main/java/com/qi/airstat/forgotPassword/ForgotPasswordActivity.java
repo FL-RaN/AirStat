@@ -25,13 +25,12 @@ import org.json.JSONObject;
  * Created by JUMPSNACK on 8/1/2016.
  */
 public class ForgotPasswordActivity extends AppCompatActivity {
-
     private iHttpConnection forgotPasswordCommunication;
     private ForgotPasswordUi forgotPasswordUi;
 
-    private String email;
-
     private Context context = this;
+
+    private String email;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,9 +54,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         forgotPasswordUi.btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*
-                Communication Part HERE
-                 */
+                // Communicates with server
                 forgotPasswordCommunication = new ForgotPasswordCommunication(context, forgotPasswordUi);
                 String receivedData = forgotPasswordCommunication.executeHttpConn();
 
@@ -68,6 +65,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     private void resultHandler(String receivedData) {
         int responseCode = -1;
+
         try {
             JSONObject jObj = new JSONObject(receivedData);
             responseCode = jObj.getInt(Constants.HTTP_RESPONSE_RESULT);
@@ -78,19 +76,24 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        /*
+        Process next step follow as response status code
+         */
         switch (responseCode) {
-            case Constants.HTTP_RESPONSE_RESULT_OK:
+            case Constants.HTTP_RESPONSE_RESULT_OK: // status = 0
                 new ActivityClosingDialog("Password Reset Email Sent", "Follow the directions in the email to reset your password.", this).show(getSupportFragmentManager(), "");
                 break;
-            case Constants.HTTP_RESPONSE_RESULT_FORGOT_PASSWORD_FAIL_NOT_REGISTERED:
+
+            case Constants.HTTP_RESPONSE_RESULT_FORGOT_PASSWORD_FAIL_NOT_REGISTERED:    // status = 1
                 new ActivityClosingDialog("Failed!", "We weren't able to identify you given the information provided.", null).show(getSupportFragmentManager(), "");
                 break;
-            default:
         }
     }
 
+    /*
+    Catch button state follow as email input
+     */
     private class ButtonStateChanger implements TextWatcher {
-
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         }
@@ -98,8 +101,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             email = forgotPasswordUi.edtEmail.getText().toString().trim();
+
             int emailInputSize = forgotPasswordUi.edtEmail.getText().toString().trim().length();
-            if (emailInputSize <= 0 || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+
+            if (emailInputSize <= 0 || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {  // Format and length check
                 forgotPasswordUi.btnNext.setTextColor(Color.parseColor(forgotPasswordUi.disabledButtonColor));
                 forgotPasswordUi.btnNext.setEnabled(false);
             } else {

@@ -33,32 +33,36 @@ import java.util.Collection;
  * Created by JUMPSNACK on 8/5/2016.
  */
 public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker> {
+    private final int AT_LEAST_NUMBER_OF_MARKER_FOR_CLUSTER = 3;
 
+    private Context context;
     private View view;
     private ImageView imgMarker;
     private TextView tvMarker;
-    private Context context;
-    private ArrayList<DataMapMarker> markers;
+
     private GoogleMap map;
 
-    private final int AT_LEAST_NUMBER_OF_MARKER_FOR_CLUSTER = 3;
+    private ArrayList<DataMapMarker> markers;
 
-
+    /*
+    Set Clustering option follow as zoom level and the numver of marker
+     */
     @Override
     protected boolean shouldRenderAsCluster(Cluster<DataMapMarker> cluster) {
         float currentZoom = DataMapCurrentUser.getCurrentZoom();
         float currrentMaxZoom = DataMapCurrentUser.getCurrentMaxZoom();
-        return currentZoom < currrentMaxZoom-4 && cluster.getSize() >= AT_LEAST_NUMBER_OF_MARKER_FOR_CLUSTER;
+
+        return currentZoom < currrentMaxZoom - 4 && cluster.getSize() >= AT_LEAST_NUMBER_OF_MARKER_FOR_CLUSTER;
     }
 
     public DataMapClusterRenderer(Context context, GoogleMap map, ClusterManager<DataMapMarker> clusterManager, ArrayList<DataMapMarker> markers) {
         super(context, map, clusterManager);
         this.context = context;
         this.map = map;
-        view = LayoutInflater.from(context).inflate(R.layout.marker_custom, null);
-        imgMarker = (ImageView) view.findViewById(R.id.img_marker);
-        tvMarker = (TextView) view.findViewById(R.id.tv_marker);
         this.markers = markers;
+        this.view = LayoutInflater.from(context).inflate(R.layout.marker_custom, null);
+        this.imgMarker = (ImageView) view.findViewById(R.id.img_marker);
+        this.tvMarker = (TextView) view.findViewById(R.id.tv_marker);
     }
 
     @Override
@@ -129,7 +133,8 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
             imgMarker.setBackgroundResource(R.drawable.marker_default);
         }
 
-        int scale; String label;
+        int scale;
+        String label;
         if (clusterItem.getConnectionID() == Constants.CID_BLC) {
             label = "ME";
             scale = 2;
@@ -144,9 +149,11 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
 
         marker.setPosition(findMarker(clusterItem.getConnectionID()).getLocation());
         tvMarker.setText(label);
-
     }
 
+    /*
+    Find out marker from collection
+     */
     public DataMapMarker findMarker(int cid) {
         for (DataMapMarker marker : markers) {
             if (marker.getConnectionID() == cid) {
@@ -154,42 +161,6 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
             }
         }
         return null;
-    }
-
-    @Override
-    protected void onBeforeClusterItemRendered(DataMapMarker item, MarkerOptions markerOptions) {
-        super.onBeforeClusterItemRendered(item, markerOptions);
-
-//        double aqiValue = item.getAqiValue();
-//
-//        if (0 <= aqiValue && aqiValue <= 50) {
-//            imgMarker.setBackgroundResource(R.drawable.marker_good);
-//        } else if (50 < aqiValue && aqiValue <= 100) {
-//            imgMarker.setBackgroundResource(R.drawable.marker_moderate);
-//        } else if (100 < aqiValue && aqiValue <= 150) {
-//            imgMarker.setBackgroundResource(R.drawable.marker_sensitive);
-//        } else if (150 < aqiValue && aqiValue <= 200) {
-//            imgMarker.setBackgroundResource(R.drawable.marker_unhealthy);
-//        } else if (200 < aqiValue && aqiValue <= 300) {
-//            imgMarker.setBackgroundResource(R.drawable.marker_very_unhealthy);
-//        } else if (300 < aqiValue && aqiValue <= 500) {
-//            imgMarker.setBackgroundResource(R.drawable.marker_hazardous);
-//        } else {
-//            imgMarker.setBackgroundResource(R.drawable.marker_default);
-//        }
-//
-//        int scale;
-//        if (item.getConnectionID() == -1) {
-//            tvMarker.setText("ME");
-//            scale = 2;
-//        } else {
-//            tvMarker.setText("");
-//            scale = 3;
-//        }
-//        Bitmap icon = createDrawableFromView(DataMapActivity.context, view);
-//        icon = Bitmap.createScaledBitmap(icon, icon.getWidth() * 2 / scale, icon.getHeight() * 2 / scale, false);
-//
-//        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
     }
 
     // Convert view to bmp

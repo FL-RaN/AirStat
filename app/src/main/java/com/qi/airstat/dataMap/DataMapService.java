@@ -13,7 +13,6 @@ import com.qi.airstat.Constants;
 import com.qi.airstat.HttpService;
 
 import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class DataMapService extends Service {
@@ -25,7 +24,6 @@ public class DataMapService extends Service {
 
     public HttpURLConnection conn;
     String strUrl = Constants.HTTP_STR_URL_ONGOING_SESSION;
-    URL url;
 
     @Nullable
     @Override
@@ -38,7 +36,7 @@ public class DataMapService extends Service {
             @Override
             public void run() {
                 HttpService httpService = new HttpService();
-                String rcvdData = httpService.executeConn(null, "GET", Constants.HTTP_STR_URL_ONGOING_SESSION, (ArrayList) null);
+                String rcvdData = httpService.executeConn(null, "GET", strUrl, (ArrayList) null);
 
                 try {
                     if (
@@ -53,23 +51,19 @@ public class DataMapService extends Service {
                     /*PASS*/
                 }
 
-                for (int i = 0; i < clients.size(); i++) {
+                for (int i = 0; i < clients.size(); i++) {  // Send a message to server for drawing map
                     try {
                         clients.get(i).send(Message.obtain(null, Constants.SERVICE_DATA_MAP_DRAW_MAP, rcvdData));
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
-                    // 그림 그리게 메세지 보내기
                 }
 
-                if (isActivityAlive) { //flag
+                if (isActivityAlive) {
                     thread.postDelayed(runnable, Constants.HTTP_DATA_MAP_GET_ONGOING_SESSION_TIME_QUALTUM);
-                } else {
-
                 }
             }
         };
-
         thread.post(runnable);
     }
 
@@ -86,7 +80,6 @@ public class DataMapService extends Service {
                 case Constants.CLIENT_UNREGISTER:
                     clients.remove(msg.replyTo);
                     isActivityAlive = false;
-//                    stopSelf();
                     break;
             }
         }

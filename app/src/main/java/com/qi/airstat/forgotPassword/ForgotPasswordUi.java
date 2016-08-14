@@ -10,7 +10,6 @@ public class ForgotPasswordUi {
     EditText edtEmail;
     Button btnNext;
 
-    static String disabledButtonColor = "#C1C1C1";
-    static String enabledButtonColor = "#009688";
-//    static String enabledButtonColor = "#157FFE";
+    public static String disabledButtonColor = "#C1C1C1";
+    public static String enabledButtonColor = "#009688";
 }

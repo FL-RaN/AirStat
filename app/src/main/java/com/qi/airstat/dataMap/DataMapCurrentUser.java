@@ -1,7 +1,5 @@
 package com.qi.airstat.dataMap;
 
-import android.util.Log;
-
 import com.google.android.gms.maps.model.LatLng;
 import com.qi.airstat.Constants;
 
@@ -15,7 +13,6 @@ Single tone class for notifying my location to server
 public class DataMapCurrentUser {
     private static DataMapCurrentUser instance = new DataMapCurrentUser();
 
-    private static boolean host = true;
     private static int connectionID;
     private static long timeStamp;
     private static DataMapDataSet dataSet;
@@ -45,13 +42,9 @@ public class DataMapCurrentUser {
     }
 
     public static DataMapMarker create() {
-        Log.w("Stored data", "" + lat + "..." + lng);
         DataMapMarker currnetUser = new DataMapMarker(connectionID, timeStamp, new LatLng(lat, lng));
         currnetUser.setDataSet(dataSet);
         return currnetUser;
-    }
-    public static boolean isHost(){
-        return host;
     }
 
     public static void setCurrentUserData(float temparature, float co, float so2, float no2, float o3, float pm) {

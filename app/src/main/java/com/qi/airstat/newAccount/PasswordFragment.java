@@ -29,14 +29,13 @@ public class PasswordFragment extends Fragment {
 
     private NewAccountUi newAccountUi = NewAccountUi.getInstance();
 
+    private iHttpConnection newAccountCommunication;
+
     private String passwordInput;
     private String confirmPassword;
 
-    private iHttpConnection newAccountCommunication;
-
     public static PasswordFragment create() {
         PasswordFragment fragment = new PasswordFragment();
-
         return fragment;
     }
 
@@ -66,9 +65,6 @@ public class PasswordFragment extends Fragment {
                     makeToast("Please check your password");
                     return;
                 }
-                /*
-                Communication part HERE
-                 */
                 newAccountCommunication = new NewAccountCommunication(getContext(), newAccountUi);
                 String receivedData = newAccountCommunication.executeHttpConn();
 
@@ -87,21 +83,25 @@ public class PasswordFragment extends Fragment {
             makeToast("Sorry, try again later...");
         }
 
+        /*
+        Process next step follow as response code
+         */
         switch (responseCode) {
             case Constants.HTTP_RESPONSE_RESULT_OK:
                 new ActivityClosingDialog("Congraturation!", "Check your email\n\n" + newAccountUi.edtEmail.getText(), NewAccountActivity.instance).show(getFragmentManager(), "");
                 break;
+
             case Constants.HTTP_RESPONSE_RESULT_CREATE_NEW_ACCOUNT_FAIL_DUP:
                 new ActivityClosingDialog("Failed!", "You are already registered :(", NewAccountActivity.instance).show(getFragmentManager(), "");
                 break;
+
             case Constants.HTTP_RESPONSE_RESULT_CREATE_NEW_ACCOUNT_FAIL_INCORRECT_FORMAT_PASSWORD:
                 new ActivityClosingDialog("Failed!", "Incorrect password format", null).show(getFragmentManager(), "");
                 break;
+
             case Constants.HTTP_RESPONSE_RESULT_CREATE_NEW_ACCOUNT_FAIL_MISMATCH_PASSWORD:
                 new ActivityClosingDialog("Failed!", "Password mismatched", null).show(getFragmentManager(), "");
                 break;
-            default:
-
         }
     }
 
@@ -119,8 +119,10 @@ public class PasswordFragment extends Fragment {
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             passwordInput = newAccountUi.edtPassword.getText().toString().trim();
             confirmPassword = newAccountUi.edtConfirmPassword.getText().toString().trim();
+
             int passwordInputSize = passwordInput.length();
             int comfirmInputSize = confirmPassword.length();
+
             if (passwordInputSize <= 0 || comfirmInputSize <= 0 || !pwdFormatChecker(passwordInput) || !pwdFormatChecker(confirmPassword)) {
                 newAccountUi.btnPasswordFinish.setTextColor(Color.parseColor(newAccountUi.disabledButtonColor));
                 newAccountUi.btnPasswordFinish.setEnabled(false);

@@ -19,13 +19,15 @@ import com.qi.airstat.R;
  * Created by JUMPSNACK on 8/1/2016.
  */
 public class EmailFragment extends Fragment {
-
     private NewAccountUi newAccountUi = NewAccountUi.getInstance();
+
     private String email;
 
+    /*
+    Create and return instance
+     */
     public static EmailFragment create() {
         EmailFragment fragment = new EmailFragment();
-
         return fragment;
     }
 
@@ -52,6 +54,9 @@ public class EmailFragment extends Fragment {
         });
     }
 
+    /*
+    Catch button state follow as email input
+     */
     private class ButtonStateChanger implements TextWatcher {
 
         @Override
@@ -61,8 +66,10 @@ public class EmailFragment extends Fragment {
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             email = newAccountUi.edtEmail.getText().toString().trim();
+
             int emailInputSize = email.length();
-            if (emailInputSize <= 0 || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+
+            if (emailInputSize <= 0 || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {  // Check format and length
                 newAccountUi.btnEmailNext.setTextColor(Color.parseColor(newAccountUi.disabledButtonColor));
                 newAccountUi.btnEmailNext.setEnabled(false);
             } else {

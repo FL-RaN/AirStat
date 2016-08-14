@@ -25,7 +25,6 @@ public class NewAccountCommunication implements iHttpConnection {
 
     ArrayList<String> params;
 
-
     public NewAccountCommunication(Context context, NewAccountUi newAccountUi) {
         this.context = context;
         this.newAccountUi = newAccountUi;
@@ -37,6 +36,9 @@ public class NewAccountCommunication implements iHttpConnection {
         cpassword = newAccountUi.edtConfirmPassword.getText().toString().trim();
 
 
+        /*
+        Compose a message for send to server
+         */
         params = new ArrayList<>();
         params.add(Constants.HTTP_DATA_CREATE_NEW_ACCOUNT_FIRST_NAME);
         params.add(firstName);
@@ -53,7 +55,7 @@ public class NewAccountCommunication implements iHttpConnection {
 
     @Override
     public String executeHttpConn() {
-        httpService = new HttpService();
+        httpService = new HttpService();    // Communucates with server
         return httpService.executeConn(context,"POST", Constants.HTTP_STR_URL_CREATE_NEW_ACCOUNT, params);
     }
 }

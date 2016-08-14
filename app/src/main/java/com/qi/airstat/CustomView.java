@@ -17,15 +17,18 @@ import com.qi.airstat.dataMap.DataMapActivity;
 /**
  * Created by JUMPSNACK on 8/10/2016.
  */
+/*
+Bottom navigation bar
+ */
 public class CustomView extends LinearLayout implements View.OnClickListener {
-    Button btnDashboard;
-    Button btnMap;
+    private Button btnDashboard;
+    private Button btnMap;
 
-    static boolean isButtonPushed = false;
-    static boolean isPushedDashboard = true;
+    public static boolean isButtonPushed = false;
+    public static boolean isPushedDashboard = true;
 
-    final String SELECTED_COLOR = "#F23434";
-    final String DEFAULT_COLOR = "#88ffffff";
+    private final String SELECTED_COLOR = "#F23434";
+    private final String DEFAULT_COLOR = "#88ffffff";
 
     public CustomView(Context context) {
         super(context);
@@ -37,7 +40,6 @@ public class CustomView extends LinearLayout implements View.OnClickListener {
         initView(context);
     }
 
-
     public void initView(Context context) {
         String infService = Context.LAYOUT_INFLATER_SERVICE;
         LayoutInflater li = (LayoutInflater) getContext().getSystemService(infService);
@@ -46,20 +48,13 @@ public class CustomView extends LinearLayout implements View.OnClickListener {
 
         btnDashboard = (Button) findViewById(R.id.btn_custom_view_left);
         btnMap = (Button) findViewById(R.id.btn_custom_view_right);
-//        if (isButtonPushed) {
-        if (isPushedDashboard) {
+
+        if (isPushedDashboard) {    // Click dashboard button
             btnImgChanger(SELECTED_COLOR, DEFAULT_COLOR);
-        } else {
+        } else {    // Click map button
             btnImgChanger(DEFAULT_COLOR, SELECTED_COLOR);
         }
-        isButtonPushed = false;
-//        }else{
-//            btnImgChanger(SELECTED_COLOR, DEFAULT_COLOR);
-//        }
-
-//        MainActivity.instance.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-//        MainActivity.instance.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        MainActivity.instance.overridePendingTransition(0,0);
+        isButtonPushed = false; // Flag about clicking any button on the bottom navigation bar
 
         btnDashboard.setOnClickListener(this);
         btnMap.setOnClickListener(this);
@@ -70,24 +65,20 @@ public class CustomView extends LinearLayout implements View.OnClickListener {
         Button btnClicked = (Button) view;
         isButtonPushed = true;
 
-
-        if (btnClicked.equals(btnDashboard)) {
-//            isPushedDashboard = true;
+        if (btnClicked.equals(btnDashboard)) {  // Click dashboard button
             MainActivity.instance.finishActivity(300);
-//            MainActivity.instance.finishAffinity();
             MainActivity.instance.startActivityForResult(new Intent(getContext(), SensorDataOverviewActivity.class).addFlags(Intent.FLAG_ACTIVITY_TASK_ON_HOME).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION), 200);
             isPushedDashboard = true;
-//            btnImgChanger(SELECTED_COLOR, DEFAULT_COLOR);
-        } else if (btnClicked.equals(btnMap)) {
-//            isPushedDashboard = false;
+        } else if (btnClicked.equals(btnMap)) { // Click map button
             MainActivity.instance.finishActivity(200);
-//            MainActivity.instance.finishAffinity();
             MainActivity.instance.startActivityForResult(new Intent(getContext(), DataMapActivity.class).addFlags(Intent.FLAG_ACTIVITY_TASK_ON_HOME).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION), 300);
             isPushedDashboard = false;
-//            btnImgChanger(DEFAULT_COLOR, SELECTED_COLOR);
         }
     }
 
+    /*
+    Selected button image changer
+     */
     private void btnImgChanger(String target, String revers) {
         Drawable img = ResourcesCompat.getDrawable(getResources(), R.drawable.icon_bottom_dashboard, null);
 
@@ -95,21 +86,10 @@ public class CustomView extends LinearLayout implements View.OnClickListener {
         btnDashboard.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
         btnDashboard.setTextColor(Color.parseColor(target));
 
-
         img = ResourcesCompat.getDrawable(getResources(), R.drawable.icon_bottom_map, null);
 
         img.setColorFilter(Color.parseColor(revers), PorterDuff.Mode.MULTIPLY);
         btnMap.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
         btnMap.setTextColor(Color.parseColor(revers));
-//isPushedDashboard = !isPushedDashboard;
-//        if (isPushedDashboard) {
-//            btnDashboard.setEnabled(false);
-//            btnMap.setEnabled(true);
-//            isPushedDashboard = false;
-//        } else {
-//            btnDashboard.setEnabled(true);
-//            btnMap.setEnabled(false);
-//            isPushedDashboard = true;
-//        }
     }
 }
