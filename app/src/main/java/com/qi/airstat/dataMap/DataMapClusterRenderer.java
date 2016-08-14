@@ -40,7 +40,7 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
     private Context context;
     private ArrayList<DataMapMarker> markers;
 
-    private final int AT_LEAST_NUMBER_OF_MARKER_FOR_CLUSTER = 3;
+    private final int AT_LEAST_NUMBER_OF_MARKER_FOR_CLUSTER = 5;
 
 
     @Override

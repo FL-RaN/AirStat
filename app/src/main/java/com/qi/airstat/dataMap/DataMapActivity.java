@@ -503,7 +503,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
             if (marker.getConnectionID() == cid) {
                 marker.setDataSet(dataSet);
                 marker.setTimeStamp(timeStamp);
-                if (cid == Constants.CID_BLC) {
+                if (cid == Constants.CID_BLC || DataMapCurrentUser.isHost()) {
                     marker.setLocation(new LatLng(DataMapCurrentUser.getInstance().getLat(), DataMapCurrentUser.getInstance().getLng()));
                 } else {
                     marker.setLocation(new LatLng(lat, lng));

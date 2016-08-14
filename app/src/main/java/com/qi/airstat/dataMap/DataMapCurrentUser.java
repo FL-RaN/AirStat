@@ -15,6 +15,7 @@ Single tone class for notifying my location to server
 public class DataMapCurrentUser {
     private static DataMapCurrentUser instance = new DataMapCurrentUser();
 
+    private static boolean host = true;
     private static int connectionID;
     private static long timeStamp;
     private static DataMapDataSet dataSet;
@@ -45,6 +46,9 @@ public class DataMapCurrentUser {
         DataMapMarker currnetUser = new DataMapMarker(connectionID, timeStamp, new LatLng(lat, lng));
         currnetUser.setDataSet(dataSet);
         return currnetUser;
+    }
+    public static boolean isHost(){
+        return host;
     }
 
     public void setCurrentUserData(float temparature, float co, float so2, float no2, float o3, float pm) {
