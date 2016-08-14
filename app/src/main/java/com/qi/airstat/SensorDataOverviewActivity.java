@@ -27,6 +27,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -40,6 +41,8 @@ import java.util.List;
 
 public class SensorDataOverviewActivity extends FragmentActivity {
     final private BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+    private int backPressCount = 0;
 
     private RelativeLayout locationDisabledLayout = null;
     private RelativeLayout bluetoothDisabledLayout = null;
@@ -645,6 +648,20 @@ public class SensorDataOverviewActivity extends FragmentActivity {
     public void onClickDisconnectBLC(View view) {
         if (BluetoothState.isBLCConnected()) {
             BluetoothState.bluetoothConnector.write(new String("disconnect").getBytes());
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        backPressCount++;
+
+        if (backPressCount < 2) {
+            Toast.makeText(this, "Please press again to exit.", Toast.LENGTH_LONG).show();
+        } else {
+            ActivityManager.instance.logoutUser(); //essential for logout
+            System.gc();
+            System.runFinalization();
+            System.exit(0);
         }
     }
 }
