@@ -13,7 +13,7 @@ public class Constants {
     final static public byte DEVICE_TYPE_POLAR = 0x00;
     final static public byte DEVICE_TYPE_UDOO = 0x01;
 
-    final static public int CID_NONE = 3;
+    final static public int CID_NONE = 0;
     static public int CID_BLE = CID_NONE;
     static public int CID_BLC = CID_NONE;
 
