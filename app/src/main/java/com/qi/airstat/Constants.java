@@ -13,7 +13,7 @@ public class Constants {
     final static public byte DEVICE_TYPE_POLAR = 0x00;
     final static public byte DEVICE_TYPE_UDOO = 0x01;
 
-    final static public int CID_NONE = 0;
+    final static public int CID_NONE = 3;
     static public int CID_BLE = CID_NONE;
     static public int CID_BLC = CID_NONE;
 
@@ -196,7 +196,7 @@ public class Constants {
     final static public String AQI_LEVEL_HAZARDOUS = "#dd7e0123";
 
     final static public int SERVICE_DATA_MAP_DRAW_MAP = 1;
-    final static public int HTTP_DATA_MAP_GET_ONGOING_SESSION_TIME_QUALTUM = 1000;
+    final static public int HTTP_DATA_MAP_GET_ONGOING_SESSION_TIME_QUALTUM = 500;
 
     final static public String HTTP_STR_URL_ONGOING_SESSION = "http://teamc-iot.calit2.net/IOT/public/realtime_json";
 

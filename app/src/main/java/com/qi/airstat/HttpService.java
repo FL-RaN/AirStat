@@ -69,7 +69,7 @@ public class HttpService extends AsyncTask<String, String, String> {
 
         try {
             Log.w("HTTPSERVICE", "FIRST");
-            receivedData = this.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, strUrl).get(600, TimeUnit.MILLISECONDS);
+            receivedData = this.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, strUrl).get(Constants.HTTP_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS);
             return receivedData;
         } catch (InterruptedException e) {
             e.printStackTrace();

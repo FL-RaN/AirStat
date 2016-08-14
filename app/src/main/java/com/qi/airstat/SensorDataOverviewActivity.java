@@ -237,17 +237,19 @@ public class SensorDataOverviewActivity extends FragmentActivity {
         intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
         registerReceiver(bluetoothBroadcastReceiver, intentFilter);
 
-        bindService(
-                new Intent(this, BluetoothClassicService.class),
-                BLCServiceConnection,
-                Context.BIND_AUTO_CREATE
-        );
+        if (BluetoothAdapter.getDefaultAdapter() != null) {
+            bindService(
+                    new Intent(this, BluetoothClassicService.class),
+                    BLCServiceConnection,
+                    Context.BIND_AUTO_CREATE
+            );
 
-        bindService(
-                new Intent(this, BluetoothLeService.class),
-                BLEServiceConnection,
-                Context.BIND_AUTO_CREATE
-        );
+            bindService(
+                    new Intent(this, BluetoothLeService.class),
+                    BLEServiceConnection,
+                    Context.BIND_AUTO_CREATE
+            );
+        }
 
         /*bindService(
                 new Intent(this, FakeDataTransmitService.class),

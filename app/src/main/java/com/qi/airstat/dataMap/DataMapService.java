@@ -86,7 +86,7 @@ public class DataMapService extends Service {
                 case Constants.CLIENT_UNREGISTER:
                     clients.remove(msg.replyTo);
                     isActivityAlive = false;
-                    stopSelf();
+//                    stopSelf();
                     break;
             }
         }
