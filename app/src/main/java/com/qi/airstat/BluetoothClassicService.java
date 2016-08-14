@@ -232,8 +232,10 @@ public class BluetoothClassicService extends Service {
                             database.close();
                         }
                     }
-                    else if(((String)msg.obj).contains("end_")) {
-                        File file = new File(Environment.getExternalStorageDirectory() + "/dataset" + (csvCount++) + ".csv");
+                    else if(((String) msg.obj).contains("end_last_CSV")) {
+                        Log.d("BLCSerivce", "Caught last CSV end");
+
+                        File file = new File(Environment.getExternalStorageDirectory() + "/dataset_last.csv");
 
                         try {
                             FileWriter fw = new FileWriter(file, true);
@@ -245,7 +247,24 @@ public class BluetoothClassicService extends Service {
                             exception.printStackTrace();
                         }
 
-                        InputStream is = null;
+                        disconnect();
+                    }
+                    else if(((String)msg.obj).contains("end_CSV")) {
+                        Log.d("BLCSerivce", "Caught CSV end");
+
+                        File file = new File(Environment.getExternalStorageDirectory() + "/datasett" + (csvCount++) + ".csv");
+
+                        try {
+                            FileWriter fw = new FileWriter(file, true);
+                            fw.write(CSV.toString());
+                            fw.flush();
+                            fw.close();
+                        }
+                        catch (IOException exception) {
+                            exception.printStackTrace();
+                        }
+
+                        /*InputStream is = null;
                         FileInputStream fileInputStream = null;
 
                         try {
@@ -263,6 +282,8 @@ public class BluetoothClassicService extends Service {
                             conn.setDoOutput(true);
                             conn.setRequestMethod("POST");
 
+                            conn.connect();
+
                             OutputStream outputStream = new DataOutputStream(conn.getOutputStream());
                             int bytesAvailable, bufferSize, bytesRead, maxBufferSize = 1 * 1024 * 1024;
                             byte[] buffer;
@@ -278,14 +299,14 @@ public class BluetoothClassicService extends Service {
                                 bytesAvailable = fileInputStream.available();
                                 bufferSize = Math.min(bytesAvailable, maxBufferSize);
                                 bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-                            }
+                            }*/
                             // Starts the query
                             /*conn.connect();
                             int response = conn.getResponseCode();
                             Log.d("CSV RESPONSE", "The response is: " + response);
                             is = conn.getInputStream();*/
 
-                            int res = conn.getResponseCode();
+                            /*int res = conn.getResponseCode();
                             String reply = conn.getResponseMessage();
 
                             is.close();
@@ -310,7 +331,7 @@ public class BluetoothClassicService extends Service {
                             catch (IOException exception) {
                                 exception.printStackTrace();
                             }
-                        }
+                        }*/
 
                         Log.d("BLCService", CSV.toString());
                         CSV = null;
@@ -321,7 +342,11 @@ public class BluetoothClassicService extends Service {
                     }
                     else {
                         String buf = msg.obj.toString();
-                        CSV.append(buf.substring(0, buf.length() - 1));
+
+                        int lastIndex = buf.indexOf('&') == -1 ? buf.length() - 1 : buf.indexOf('&') - 1;
+                        Log.d("BLCService", "Ampersand index was " + buf.indexOf('&'));
+                        Log.d("BLCService", "Buffer length was " + buf.length());
+                        CSV.append(buf.substring(0, lastIndex));
                         Log.d("BLCService", "Caught CSV String: " + buf);
                     }
                     break;
