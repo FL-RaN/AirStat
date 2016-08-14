@@ -126,9 +126,9 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
     public void onBackPressed() {
         backPressCount++;
 
-        if(backPressCount <2){
+        if (backPressCount < 2) {
             makeToast("Please press again to exit.");
-        }else{
+        } else {
             ActivityManager.instance.logoutUser(); //essential for logout
             System.gc();
             System.runFinalization();
@@ -187,6 +187,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
     @Override
     protected void onResume() {
         super.onResume();
+        backPressCount = 0;
         if (!isDataMapServiceBound) {
             isDataMapServiceBound = true;
             bindService(
@@ -238,7 +239,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
             }
 //            DataMapCurrentUser.getInstance().setCurrentUserData((float) Math.random() * 400 + 1, (float) Math.random() * 20, (float) Math.random() * 600, (float) Math.random() * 300 + 1700, (float) Math.random() * 100 + 500, (float) Math.random() * 100 + 400);
 //            DataMapCurrentUser.getInstance().setCurrentUserData(0,50.4f,1004,2049,604,500);
-            refreshMarker(DataMapCurrentUser.create());
+//            refreshMarker(DataMapCurrentUser.create());
 //            for (int j = 1; j < 10; j++) {
 //                refreshMarker(10 * j,
 //                        162737272727l,
@@ -501,8 +502,12 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         for (DataMapMarker marker : markers) {
             if (marker.getConnectionID() == cid) {
                 marker.setDataSet(dataSet);
-                marker.setLocation(new LatLng(lat, lng));
                 marker.setTimeStamp(timeStamp);
+                if (cid == Constants.CID_BLC) {
+                    marker.setLocation(new LatLng(DataMapCurrentUser.getInstance().getLat(), DataMapCurrentUser.getInstance().getLng()));
+                } else {
+                    marker.setLocation(new LatLng(lat, lng));
+                }
                 return true;
             }
         }
@@ -513,7 +518,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
     public boolean refreshMarker(DataMapMarker newMarker) {
         for (DataMapMarker marker : markers) {
             if (marker.getConnectionID() == newMarker.getConnectionID()) {
-                if (marker.getConnectionID() == -1) {
+                if (marker.getConnectionID() == Constants.CID_BLC) {
                     Log.w("FIND!!", "THISISUSER, " + newMarker.getLocation().latitude + "//" + newMarker.getLocation().longitude);
                 }
                 marker.setDataSet(newMarker.getDataSet());
@@ -552,7 +557,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         if (firstCall) {
             addMarker(DataMapCurrentUser.create());
-            panelValueChanger(findMarker(-1));
+            panelValueChanger(findMarker(Constants.CID_BLC));
             map.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(lat, lng)));
             firstCall = false;
         }
@@ -640,7 +645,10 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         float avgO3 = 0;
         float avgPm = 0;
 
+        int countMarker = 0;
         for (DataMapMarker marker : markers) {
+            if (marker.getAqiValue() < 0)
+                continue;
             avgAqiValue += marker.getAqiValue();
             avgTemperature += marker.getTemparature();
             avgCo += marker.getCo();
@@ -648,15 +656,23 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
             avgNo2 += marker.getNo2();
             avgO3 += marker.getO3();
             avgPm += marker.getPm();
+            countMarker++;
         }
 
-        avgAqiValue /= markers.size();
-        avgTemperature /= markers.size();
-        avgCo /= markers.size();
-        avgSo2 /= markers.size();
-        avgNo2 /= markers.size();
-        avgO3 /= markers.size();
-        avgPm /= markers.size();
+//        avgAqiValue /= markers.size();
+//        avgTemperature /= markers.size();
+//        avgCo /= markers.size();
+//        avgSo2 /= markers.size();
+//        avgNo2 /= markers.size();
+//        avgO3 /= markers.size();
+//        avgPm /= markers.size();
+        avgAqiValue /= countMarker;
+        avgTemperature /= countMarker;
+        avgCo /= countMarker;
+        avgSo2 /= countMarker;
+        avgNo2 /= countMarker;
+        avgO3 /= countMarker;
+        avgPm /= countMarker;
 
         ValueAnimator colorAnimator = null;
         int priviousBackground = ((ColorDrawable) (dataMapPanelUi.barTitle.getBackground())).getColor();
@@ -694,6 +710,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
         dataMapPanelUi.tvNo2.setText(String.format("%.1f", avgNo2));
         dataMapPanelUi.tvO3.setText(String.format("%.1f", avgO3));
         dataMapPanelUi.tvPm.setText(String.format("%.1f", avgPm));
+        dataMapPanelUi.slidingUpPanelLayout.setTouchEnabled(true);
     }
 
     public void backgroundAnimator(String color) {
@@ -807,7 +824,7 @@ public class DataMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         @Override
         protected Void doInBackground(DataMapMarker... values) {
-            if (marker.getConnectionID() != -1)
+            if (marker.getConnectionID() != Constants.CID_BLC)
                 regionAddress = getRegionAddress(marker.getLocation().latitude, marker.getLocation().longitude);
             while (flow) {
                 publishProgress(marker);

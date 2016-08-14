@@ -39,6 +39,7 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
     private TextView tvMarker;
     private Context context;
     private ArrayList<DataMapMarker> markers;
+
     private final int AT_LEAST_NUMBER_OF_MARKER_FOR_CLUSTER = 3;
 
 
@@ -64,11 +65,16 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
         IconGenerator clusterIconGenerator = new IconGenerator(context);
 
         float avgAqiValue = 0;
+        int countClusterItem = 0;
         for (DataMapMarker marker : clusteredMarkers) {
+            if (marker.getAqiValue() < 0)
+                continue;
+
             avgAqiValue += marker.getAqiValue();
+            countClusterItem++;
         }
 
-        avgAqiValue = avgAqiValue / clusteredMarkers.size();
+        avgAqiValue = avgAqiValue / countClusterItem;
 
         int clusterColor = 0;
         if (0 <= avgAqiValue && avgAqiValue <= 50) {
@@ -120,7 +126,7 @@ public class DataMapClusterRenderer extends DefaultClusterRenderer<DataMapMarker
         }
 
         int scale;
-        if (clusterItem.getConnectionID() == -1) {
+        if (clusterItem.getConnectionID() == Constants.CID_BLC) {
             tvMarker.setText("ME");
             scale = 2;
         } else {

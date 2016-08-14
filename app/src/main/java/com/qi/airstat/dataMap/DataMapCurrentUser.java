@@ -3,6 +3,7 @@ package com.qi.airstat.dataMap;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.qi.airstat.Constants;
 
 /**
  * Created by JUMPSNACK on 8/8/2016.
@@ -14,7 +15,7 @@ Single tone class for notifying my location to server
 public class DataMapCurrentUser {
     private static DataMapCurrentUser instance = new DataMapCurrentUser();
 
-    private static int id;
+    private static int connectionID;
     private static long timeStamp;
     private static DataMapDataSet dataSet;
 
@@ -27,7 +28,7 @@ public class DataMapCurrentUser {
     private static double maxLng;
 
     private DataMapCurrentUser() {
-        this.id = -1;
+        this.connectionID = Constants.CID_BLC;
         dataSet = new DataMapDataSet();
 
         this.lat = 0;
@@ -41,7 +42,7 @@ public class DataMapCurrentUser {
 
     public static DataMapMarker create() {
         Log.w("Stored data", "" + lat + "..." + lng);
-        DataMapMarker currnetUser = new DataMapMarker(id, timeStamp, new LatLng(lat, lng));
+        DataMapMarker currnetUser = new DataMapMarker(connectionID, timeStamp, new LatLng(lat, lng));
         currnetUser.setDataSet(dataSet);
         return currnetUser;
     }
