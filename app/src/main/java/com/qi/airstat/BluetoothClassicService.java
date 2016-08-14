@@ -19,6 +19,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.qi.airstat.blc.BluetoothConnector;
 import com.qi.airstat.blc.DeviceData;
@@ -27,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -34,6 +36,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -178,12 +181,16 @@ public class BluetoothClassicService extends Service {
                                 e.printStackTrace();
                             }
 
+                            Log.d("BLCService", "UDOO Realtime data sent: " + reformedObject.toString());
+
                             HttpService httpService = new HttpService();
                             String responseCode = httpService.executeConn(
                                     null,
                                     "POST", "http://teamc-iot.calit2.net/IOT/public/rcv_json_data",
                                     reformedObject
                             );
+
+                            Log.d("BLCSerivce", "UDOO Realtime response: " + responseCode);
 
                             sendBroadcast(intent);
                         }
@@ -517,6 +524,17 @@ public class BluetoothClassicService extends Service {
                                     +uploadFileName;
 
                             Log.d("CSVCONN", msg);
+
+                            InputStream inputStream = conn.getInputStream();
+                            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+                            StringBuilder result = new StringBuilder();
+                            String line;
+
+                            while ((line = reader.readLine()) != null) {
+                                result.append(line);
+                            }
+
+                            Log.w("RCV", result.toString());
                         }
 
                         //close the streams //

@@ -412,6 +412,8 @@ public class BluetoothLeService extends Service {
             Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             if (mBluetoothGatt.connect()) {
                 mConnectionState = STATE_CONNECTING;
+                mBluetoothDeviceAddress = address;
+                Constants.MAC_POLAR = mBluetoothDeviceAddress;
                 return true;
             } else {
                 BluetoothState.isBLEConnected(false);
@@ -450,8 +452,8 @@ public class BluetoothLeService extends Service {
             jsonObject.put("devMAC", "x'" + Constants.MAC_POLAR.replaceAll(":", "") + "'");
             jsonObject.put("devType", Constants.DEVICE_TYPE_POLAR);
             jsonObject.put("devPortability", 0x01);
-            jsonObject.put("latitude", "x'" + latitude);
-            jsonObject.put("longitude", "x'" + longitude);
+            jsonObject.put("latitude", latitude);
+            jsonObject.put("longitude", longitude);
         }
         catch (JSONException exception) {
             exception.printStackTrace();

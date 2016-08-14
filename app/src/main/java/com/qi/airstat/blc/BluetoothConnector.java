@@ -129,7 +129,6 @@ public class BluetoothConnector {
         else r.writeData(data);
     }
 
-
     private void connectionFailed() {
         if (D) Log.d(TAG, "connectionFailed");
 
@@ -139,7 +138,6 @@ public class BluetoothConnector {
         mHandler.sendMessage(msg);
         setState(STATE_NONE);
     }
-
 
     private void connectionLost() {
         Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);

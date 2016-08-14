@@ -405,6 +405,7 @@ public class SensorDataOverviewActivity extends FragmentActivity {
 
         if (BluetoothState.isBLCConnected()) {
             udooDisabledLayout.setVisibility(View.GONE);
+            BLCCanceller.setImageResource(R.drawable.bluetooth_button_on);
         }
         else {
             udooDisabledLayout.setVisibility(View.VISIBLE);
@@ -412,6 +413,7 @@ public class SensorDataOverviewActivity extends FragmentActivity {
 
         if (BluetoothState.isBLEConnected()) {
             polarDisabledLayout.setVisibility(View.GONE);
+            BLECanceller.setImageResource(R.drawable.bluetooth_button_on);
         }
         else {
             polarDisabledLayout.setVisibility(View.VISIBLE);
