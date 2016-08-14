@@ -21,6 +21,7 @@ public class CustomView extends LinearLayout implements View.OnClickListener {
     Button btnDashboard;
     Button btnMap;
 
+    static boolean isButtonPushed = false;
     static boolean isPushedDashboard = true;
 
     final String SELECTED_COLOR = "#F23434";
@@ -45,10 +46,20 @@ public class CustomView extends LinearLayout implements View.OnClickListener {
 
         btnDashboard = (Button) findViewById(R.id.btn_custom_view_left);
         btnMap = (Button) findViewById(R.id.btn_custom_view_right);
-        if (isPushedDashboard)
+//        if (isButtonPushed) {
+        if (isPushedDashboard) {
             btnImgChanger(SELECTED_COLOR, DEFAULT_COLOR);
-        else
+        } else {
             btnImgChanger(DEFAULT_COLOR, SELECTED_COLOR);
+        }
+        isButtonPushed = false;
+//        }else{
+//            btnImgChanger(SELECTED_COLOR, DEFAULT_COLOR);
+//        }
+
+//        MainActivity.instance.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+//        MainActivity.instance.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        MainActivity.instance.overridePendingTransition(0,0);
 
         btnDashboard.setOnClickListener(this);
         btnMap.setOnClickListener(this);
@@ -57,19 +68,23 @@ public class CustomView extends LinearLayout implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         Button btnClicked = (Button) view;
+        isButtonPushed = true;
+
 
         if (btnClicked.equals(btnDashboard)) {
-            isPushedDashboard = true;
-            MainActivity.instance.startActivityForResult(new Intent(getContext(), SensorDataOverviewActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NO_ANIMATION), 200);
+//            isPushedDashboard = true;
             MainActivity.instance.finishActivity(300);
-
-            btnImgChanger(SELECTED_COLOR, DEFAULT_COLOR);
+//            MainActivity.instance.finishAffinity();
+            MainActivity.instance.startActivityForResult(new Intent(getContext(), SensorDataOverviewActivity.class).addFlags(Intent.FLAG_ACTIVITY_TASK_ON_HOME).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION), 200);
+            isPushedDashboard = true;
+//            btnImgChanger(SELECTED_COLOR, DEFAULT_COLOR);
         } else if (btnClicked.equals(btnMap)) {
-            isPushedDashboard = false;
-            MainActivity.instance.startActivityForResult(new Intent(getContext(), DataMapActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NO_ANIMATION), 300);
+//            isPushedDashboard = false;
             MainActivity.instance.finishActivity(200);
-
-            btnImgChanger(DEFAULT_COLOR, SELECTED_COLOR);
+//            MainActivity.instance.finishAffinity();
+            MainActivity.instance.startActivityForResult(new Intent(getContext(), DataMapActivity.class).addFlags(Intent.FLAG_ACTIVITY_TASK_ON_HOME).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK).addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY).addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION), 300);
+            isPushedDashboard = false;
+//            btnImgChanger(DEFAULT_COLOR, SELECTED_COLOR);
         }
     }
 
@@ -86,13 +101,15 @@ public class CustomView extends LinearLayout implements View.OnClickListener {
         img.setColorFilter(Color.parseColor(revers), PorterDuff.Mode.MULTIPLY);
         btnMap.setCompoundDrawablesWithIntrinsicBounds(null, img, null, null);
         btnMap.setTextColor(Color.parseColor(revers));
-
-        if(isPushedDashboard){
-            btnDashboard.setEnabled(false);
-            btnMap.setEnabled(true);
-        } else {
-            btnDashboard.setEnabled(true);
-            btnMap.setEnabled(false);
-        }
+//isPushedDashboard = !isPushedDashboard;
+//        if (isPushedDashboard) {
+//            btnDashboard.setEnabled(false);
+//            btnMap.setEnabled(true);
+//            isPushedDashboard = false;
+//        } else {
+//            btnDashboard.setEnabled(true);
+//            btnMap.setEnabled(false);
+//            isPushedDashboard = true;
+//        }
     }
 }
